@@ -80,7 +80,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
                 $definition->setSchema($schema);
                 $definition->generate();
 
-                $arrayResult = $definition->getResult();
+                $definitionResult = $definition->getResult();
             }
         }
 
