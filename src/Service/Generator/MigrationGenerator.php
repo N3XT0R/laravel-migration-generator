@@ -68,7 +68,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
 
-    public function generateMigrationForTable(string $table): bool
+    public function generateMigrationForTable(string $database, string $table): bool
     {
         $result = false;
         $definitions = $this->getDefinitions();
@@ -79,6 +79,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
             if (null !== $schema && $definition instanceof DefinitionInterface) {
                 $definition->setAttributes(
                     [
+                        'database' => $database,
                         'table' => $table,
                     ]
                 );

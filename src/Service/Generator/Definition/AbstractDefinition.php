@@ -31,7 +31,7 @@ abstract class AbstractDefinition implements DefinitionInterface
         $this->attributes[$key] = $value;
     }
 
-    public function GetAttributeByName(string $attribute)
+    public function getAttributeByName(string $attribute)
     {
         $attributeValue = null;
         if ($this->hasAttribute($attribute)) {

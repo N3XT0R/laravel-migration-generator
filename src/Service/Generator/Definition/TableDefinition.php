@@ -9,6 +9,7 @@ class TableDefinition extends AbstractDefinition
     protected function generateData(): array
     {
         $schema = $this->getSchema();
+        $table = $this->getAttributeByName('table');
     }
 
 }

@@ -120,15 +120,17 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
             ['connectionName' => $connectionName]
         );
 
+        $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
+
         $tables = $schemaParser->getSortedTablesFromSchema(
-            $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName()
+            $database
         );
         $bar = $this->output->createProgressBar(count($tables));
         $bar->setFormat('verbose');
         $bar->start();
 
         foreach ($tables as $table) {
-            if (true === $generator->generateMigrationForTable($table)) {
+            if (true === $generator->generateMigrationForTable($database, $table)) {
                 $bar->advance();
             } else {
                 $this->error('there occurred an error by creating migration for ' . $table);

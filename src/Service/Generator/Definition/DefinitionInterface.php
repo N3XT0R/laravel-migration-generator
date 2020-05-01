@@ -16,7 +16,7 @@ interface DefinitionInterface
 
     public function addAttribute(string $key, $value): void;
 
-    public function GetAttributeByName(string $attribute);
+    public function getAttributeByName(string $attribute);
 
     public function setSchema(AbstractSchemaManager $schema): void;
 
