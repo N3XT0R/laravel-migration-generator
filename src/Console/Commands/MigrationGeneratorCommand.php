@@ -72,8 +72,24 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         }
 
         $table = (string)$this->option('table');
+
         $database = $this->option('database') ?? config('database.default');
         $this->prepareDatabase($database);
+
+        if (!empty($table)) {
+            $this->createMigrationForSingleTable($table);
+        } else {
+            $this->createMigrationsForWholeSchema($database);
+        }
+    }
+
+
+    protected function createMigrationForSingleTable(string $table)
+    {
+    }
+
+    protected function createMigrationsForWholeSchema(string $database)
+    {
         $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
         $schemaParser->setConnectionByName($database);
         $tables = $schemaParser->getSortedTablesFromSchema(
