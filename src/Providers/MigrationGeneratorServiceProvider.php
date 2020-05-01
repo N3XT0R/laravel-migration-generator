@@ -49,11 +49,16 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         );
     }
 
-    protected function registerGenerator(): void
+    protected function getDefinitions(): array
     {
-        $definitions = [
+        return [
             'table' => Definition\TableDefinition::class,
         ];
+    }
+
+    protected function registerGenerator(): void
+    {
+        $definitions = $this->getDefinitions();
 
         foreach ($definitions as $definition) {
             $this->app->bind($definition, $definition);
