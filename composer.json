@@ -1,0 +1,17 @@
+{
+    "name": "n3xt0r/laravel-migration-generator",
+    "description": "create migrations from database",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^9.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ilya Beliaev",
+            "email": "info@php-dev.info"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
