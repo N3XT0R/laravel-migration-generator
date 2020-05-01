@@ -29,7 +29,7 @@ abstract class AbstractDefinition implements DefinitionInterface, AttributeAware
         return null !== $this->schema;
     }
 
-    abstract protected function generateData(): void;
+    abstract protected function generateData(): array;
 
     public function generate(): void
     {
@@ -37,7 +37,7 @@ abstract class AbstractDefinition implements DefinitionInterface, AttributeAware
             throw new \RuntimeException('missing Schema on Definition!');
         }
 
-        $this->generateData();
+        $this->setResult($this->generateData());
     }
 
     public function getResult(): array
