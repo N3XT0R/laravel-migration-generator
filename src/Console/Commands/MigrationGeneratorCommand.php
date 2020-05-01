@@ -7,7 +7,7 @@ use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Support\Composer;
-use Psy\Util\Mirror;
+use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 
 class MigrationGeneratorCommand extends MigrateMakeCommand
 {
@@ -72,24 +72,34 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         }
 
         $table = (string)$this->option('table');
-        $this->prepareDatabase();
+        $database = $this->option('database') ?? config('database.default');
+        $this->prepareDatabase($database);
+        $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
+        $schemaParser->setConnectionByName($database);
+        $tables = $schemaParser->getSortedCreateTableStatementsForSchema(
+            $this->getMigrator()->resolveConnection($database)->getDatabaseName()
+        );
+
+        print_r($tables);
+        die();
     }
 
 
     /**
      * Prepare the migration database for running.
      *
+     * @param string|null $database
      * @return void
      */
-    protected function prepareDatabase(): void
+    protected function prepareDatabase(string $database = null): void
     {
         $migrator = $this->getMigrator();
-        $migrator->setConnection($this->option('database'));
+        $migrator->setConnection($database);
 
         if (!$migrator->repositoryExists()) {
             $this->call(
                 'migrate:install',
-                ['--database' => $this->option('database')]
+                ['--database' => $database]
             );
         }
     }

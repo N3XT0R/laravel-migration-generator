@@ -2,9 +2,12 @@
 
 namespace N3XT0R\MigrationGenerator\Providers;
 
-use Illuminate\Database\MigrationServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use N3XT0R\MigrationGenerator\Console\Commands;
+use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
+use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
+use PhpMyAdmin\SqlParser\Parser;
 
 class MigrationGeneratorServiceProvider extends ServiceProvider
 {
@@ -31,6 +34,22 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->register(MigrationServiceProvider::class);
+        $this->registerParser();
+    }
+
+
+    protected function registerParser(): void
+    {
+        $this->app->bind(
+            Parser::class,
+            static function () {
+                return new Parser();
+            }
+        );
+
+        $this->app->bind(
+            SchemaParserInterface::class,
+            SchemaParser::class
+        );
     }
 }
