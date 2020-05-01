@@ -75,7 +75,8 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $schema = $connection->getSchemaManager();
 
         foreach ($definitions as $definition) {
-            if ($definition instanceof DefinitionInterface) {
+            if (null !== $schema && $definition instanceof DefinitionInterface) {
+                $definition->setSchema($schema);
                 $definition->generate();
             }
         }
