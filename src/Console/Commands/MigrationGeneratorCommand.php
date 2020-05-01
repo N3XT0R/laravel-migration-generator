@@ -121,7 +121,6 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         );
 
         $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
-
         $tables = $schemaParser->getSortedTablesFromSchema(
             $database
         );

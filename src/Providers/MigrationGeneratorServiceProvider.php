@@ -73,8 +73,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 }
 
                 $definitionClasses = [];
-                foreach ($definitions as $key => $definitionClass) {
-                    $definitionClasses[$key] = $app->make($definitionClass);
+                foreach ($definitions as $definitionKey => $definitionClass) {
+                    $definitionClasses[$definitionKey] = $app->make($definitionClass);
                 }
 
                 return new MigrationGenerator($params[$key], $definitionClasses);
