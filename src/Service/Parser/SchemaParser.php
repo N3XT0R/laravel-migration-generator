@@ -51,7 +51,7 @@ class SchemaParser implements SchemaParserInterface
         return $tables;
     }
 
-    public function getSortedCreateTableStatementsForSchema(string $schema): array
+    public function getSortedTablesFromSchema(string $schema): array
     {
         return $this->sortTablesByConstraintsRecursive($schema, $this->getTablesFromSchema($schema));
     }

@@ -76,12 +76,12 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         $this->prepareDatabase($database);
         $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
         $schemaParser->setConnectionByName($database);
-        $tables = $schemaParser->getSortedCreateTableStatementsForSchema(
+        $tables = $schemaParser->getSortedTablesFromSchema(
             $this->getMigrator()->resolveConnection($database)->getDatabaseName()
         );
 
-        print_r($tables);
-        die();
+        foreach ($tables as $table) {
+        }
     }
 
 

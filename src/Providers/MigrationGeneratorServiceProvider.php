@@ -41,15 +41,12 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     protected function registerParser(): void
     {
         $this->app->bind(
-            Parser::class,
-            static function () {
-                return new Parser();
-            }
-        );
-
-        $this->app->bind(
             SchemaParserInterface::class,
             SchemaParser::class
         );
+    }
+
+    protected function registerGenerator(): void
+    {
     }
 }
