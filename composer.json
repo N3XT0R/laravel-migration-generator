@@ -5,6 +5,16 @@
     "require-dev": {
         "phpunit/phpunit": "^9.1"
     },
+    "autoload": {
+        "psr-4": {
+            "N3XT0R\\MigrationGenerator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "license": "MIT",
     "authors": [
         {
