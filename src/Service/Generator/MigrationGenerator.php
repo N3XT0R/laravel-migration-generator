@@ -78,6 +78,8 @@ class MigrationGenerator implements MigrationGeneratorInterface
             if (null !== $schema && $definition instanceof DefinitionInterface) {
                 $definition->setSchema($schema);
                 $definition->generate();
+
+                $result = $definition->getResult();
             }
         }
     }

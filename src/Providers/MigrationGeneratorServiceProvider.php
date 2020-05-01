@@ -52,7 +52,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     protected function registerGenerator(): void
     {
         $definitions = [
-            Definition\TableDefinition::class,
+            'table' => Definition\TableDefinition::class,
         ];
 
         foreach ($definitions as $definition) {
@@ -68,8 +68,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 }
 
                 $definitionClasses = [];
-                foreach ($definitions as $definitionClass) {
-                    $definitionClasses[] = $app->make($definitionClass);
+                foreach ($definitions as $key => $definitionClass) {
+                    $definitionClasses[$key] = $app->make($definitionClass);
                 }
 
                 return new MigrationGenerator($params[$key], $definitionClasses);
