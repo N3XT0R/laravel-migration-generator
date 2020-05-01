@@ -68,8 +68,9 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
 
-    public function generateMigrationForTable(string $table)
+    public function generateMigrationForTable(string $table): bool
     {
+        $result = false;
         $definitions = $this->getDefinitions();
         $connection = $this->getDoctrineConnection();
         $schema = $connection->getSchemaManager();
@@ -82,5 +83,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
                 $result = $definition->getResult();
             }
         }
+
+        return $result;
     }
 }

@@ -128,8 +128,12 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         $bar->start();
 
         foreach ($tables as $table) {
-            $generator->generateMigrationForTable($table);
-            $bar->advance(1);
+            if (true === $generator->generateMigrationForTable($table)) {
+                $bar->advance();
+            } else {
+                $this->error('there occurred an error by creating migration for ' . $table);
+                break;
+            }
         }
 
         $bar->finish();
