@@ -77,6 +77,11 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
         foreach ($definitions as $definition) {
             if (null !== $schema && $definition instanceof DefinitionInterface) {
+                $definition->setAttributes(
+                    [
+                        'table' => $table,
+                    ]
+                );
                 $definition->setSchema($schema);
                 $definition->generate();
 

@@ -8,6 +8,16 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 interface DefinitionInterface
 {
 
+    public function getAttributes(): array;
+
+    public function setAttributes(array $attributes): void;
+
+    public function hasAttribute(string $attribute): bool;
+
+    public function addAttribute(string $key, $value): void;
+
+    public function GetAttributeByName(string $attribute);
+
     public function setSchema(AbstractSchemaManager $schema): void;
 
     public function getSchema(): AbstractSchemaManager;

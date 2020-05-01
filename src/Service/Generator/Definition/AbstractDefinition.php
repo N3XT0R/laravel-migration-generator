@@ -4,15 +4,42 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition\Traits\AttributeAwareInterface;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition\Traits\AttributeAwareTrait;
 
-abstract class AbstractDefinition implements DefinitionInterface, AttributeAwareInterface
+abstract class AbstractDefinition implements DefinitionInterface
 {
     protected $result = [];
     protected $schema;
+    protected $attributes;
 
-    use AttributeAwareTrait;
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    public function setAttributes(array $attributes): void
+    {
+        $this->attributes = $attributes;
+    }
+
+    public function hasAttribute(string $attribute): bool
+    {
+        return array_key_exists($attribute, $this->getAttributes());
+    }
+
+    public function addAttribute(string $key, $value): void
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    public function GetAttributeByName(string $attribute)
+    {
+        $attributeValue = null;
+        if ($this->hasAttribute($attribute)) {
+            $attributeValue = $this->getAttributes()[$attribute];
+        }
+
+        return $attributeValue;
+    }
 
     public function setSchema(AbstractSchemaManager $schema): void
     {
