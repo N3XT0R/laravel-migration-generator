@@ -5,9 +5,11 @@ namespace N3XT0R\MigrationGenerator\Providers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use N3XT0R\MigrationGenerator\Console\Commands;
+use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
+use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
-use PhpMyAdmin\SqlParser\Parser;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 class MigrationGeneratorServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerParser();
+        $this->registerGenerator();
     }
 
 
@@ -48,5 +51,29 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerGenerator(): void
     {
+        $definitions = [
+            Definition\TableDefinition::class,
+        ];
+
+        foreach ($definitions as $definition) {
+            $this->app->bind($definition, $definition);
+        }
+
+        $this->app->bind(
+            MigrationGeneratorInterface::class,
+            static function (Application $app, array $params) use ($definitions) {
+                $key = 'connectionName';
+                if (!array_key_exists($key, $params)) {
+                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
+                }
+
+                $definitionClasses = [];
+                foreach ($definitions as $definitionClass) {
+                    $definitionClasses[] = $app->make($definitionClass);
+                }
+
+                return new MigrationGenerator($params[$key], $definitionClasses);
+            }
+        );
     }
 }

@@ -7,7 +7,10 @@ use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Support\Composer;
+use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
+use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrationGeneratorCommand extends MigrateMakeCommand
 {
@@ -73,31 +76,64 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
 
         $table = (string)$this->option('table');
 
-        $database = $this->option('database') ?? config('database.default');
-        $this->prepareDatabase($database);
+        $connectionName = $this->option('database') ?? config('database.default');
+        $this->prepareDatabase($connectionName);
+
+        $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
+        $schemaParser->setConnectionByName($connectionName);
+
+        $databaseName = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
 
         if (!empty($table)) {
-            $this->createMigrationForSingleTable($table);
+            $this->createMigrationForSingleTable($schemaParser, $connectionName, $table);
         } else {
-            $this->createMigrationsForWholeSchema($database);
+            $this->createMigrationsForWholeSchema($schemaParser, $connectionName);
         }
     }
 
 
-    protected function createMigrationForSingleTable(string $table)
-    {
+    protected function createMigrationForSingleTable(
+        SchemaParserInterface $schemaParser,
+        string $connectionName,
+        string $table
+    ): void {
+        $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
+        $tables = $schemaParser->getTablesFromSchema(
+            $database
+        );
+        if (!in_array($table, $tables, true)) {
+            $this->error('Table "' . $table . '" not exists in Schema "' . $database . '"');
+        } else {
+            /**
+             * @todo
+             */
+        }
     }
 
-    protected function createMigrationsForWholeSchema(string $database)
+    protected function createMigrationsForWholeSchema(SchemaParserInterface $schemaParser, string $connectionName): void
     {
-        $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
-        $schemaParser->setConnectionByName($database);
-        $tables = $schemaParser->getSortedTablesFromSchema(
-            $this->getMigrator()->resolveConnection($database)->getDatabaseName()
+        /**
+         * @var MigrationGenerator $generator
+         */
+        $generator = $this->getLaravel()->make(
+            MigrationGeneratorInterface::class,
+            ['connectionName' => $connectionName]
         );
 
+        $tables = $schemaParser->getSortedTablesFromSchema(
+            $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName()
+        );
+        $bar = $this->output->createProgressBar(count($tables));
+        $bar->setFormat('verbose');
+        $bar->start();
+
         foreach ($tables as $table) {
+            $generator->generateMigrationForTable($table);
+            $bar->advance(1);
         }
+
+        $bar->finish();
+        $this->line('');
     }
 
 
