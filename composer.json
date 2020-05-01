@@ -23,5 +23,12 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "N3XT0R\\MigrationGenerator\\MigrationGeneratorServiceProvider"
+            ]
+        }
+    }
 }
