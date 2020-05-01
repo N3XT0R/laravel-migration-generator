@@ -2,6 +2,9 @@
     "name": "n3xt0r/laravel-migration-generator",
     "description": "create migrations from database",
     "type": "library",
+    "require": {
+        "php": ">=7.2.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.1"
     },
@@ -23,7 +26,6 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
     "extra": {
         "laravel": {
             "providers": [
