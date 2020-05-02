@@ -7,6 +7,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Resolver;
 use Doctrine\DBAL\Connection as DoctrineConnection;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
 use MJS\TopSort\Implementations\GroupedStringSort;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 
 class DefinitionResolver implements DefinitionResolverInterface
 {
@@ -71,7 +72,7 @@ class DefinitionResolver implements DefinitionResolverInterface
         return $this->doctrineConnection;
     }
 
-    public function resolveTableSchema(string $schema, string $table): array
+    public function resolveTableSchema(string $schema, string $table): ResultEntity
     {
         $definitions = $this->getDefinitions();
         $sortedDefinitions = $this->sortDefinitions($definitions);
@@ -100,7 +101,6 @@ class DefinitionResolver implements DefinitionResolverInterface
                 try {
                     $definitionClass->generate();
                 } catch (\Exception $e) {
-                    var_dump($e);
                     /**
                      * @todo
                      */
@@ -115,8 +115,10 @@ class DefinitionResolver implements DefinitionResolverInterface
             }
         }
 
+        $result = new ResultEntity();
+        $result->setResults($definitionResult);
 
-        return $definitionResult;
+        return $result;
     }
 
     private function sortDefinitions(array $definitions): array
