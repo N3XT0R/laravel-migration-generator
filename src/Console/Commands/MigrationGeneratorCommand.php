@@ -10,7 +10,6 @@ use Illuminate\Support\Composer;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrationGeneratorCommand extends MigrateMakeCommand
 {
