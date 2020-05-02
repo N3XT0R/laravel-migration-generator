@@ -75,7 +75,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $connection = $this->getDoctrineConnection();
         $schema = $connection->getSchemaManager();
 
-        foreach ($definitions as $definition) {
+        foreach ($definitions as $name => $definition) {
             if (null !== $schema && $definition instanceof DefinitionInterface) {
                 $definition->setAttributes(
                     [
