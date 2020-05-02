@@ -27,6 +27,13 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 ]
             );
         }
+
+        $this->publishes(
+            [
+                __DIR__ . '/../Config/migration-definition.php' => config_path('migration-definition.php'),
+            ],
+            'migration-definition'
+        );
     }
 
     /**
@@ -36,6 +43,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-definition.php', 'migration-definition');
         $this->registerParser();
         $this->registerGenerator();
     }
@@ -51,9 +59,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getDefinitions(): array
     {
-        return [
-            'table' => Definition\TableDefinition::class,
-        ];
+        return (array)config('migration-definition');
     }
 
     protected function registerGenerator(): void

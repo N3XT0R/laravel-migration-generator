@@ -5,7 +5,6 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Index;
-use Doctrine\DBAL\Schema\AbstractAsset;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
 
@@ -55,6 +54,7 @@ class TableDefinition extends AbstractDefinition
 
         $fields = $this->generateFields($table, $columns);
         $combinedIndexes = $this->generateIndexes($fields, $indexes);
+        $this->generateForeignKeys($fields, $foreignKeys);
 
 
         return [
@@ -179,5 +179,9 @@ class TableDefinition extends AbstractDefinition
         }
 
         return $combinedIndexes;
+    }
+
+    protected function generateForeignKeys(array $fields, array $foreignKeys): void
+    {
     }
 }
