@@ -14,8 +14,6 @@ class IndexDefinition extends AbstractDefinition
     {
         $table = $this->getAttributeByName('tableName');
         $tableResult = $this->getAttributeByName('table');
-        var_dump($this->getAttributes());
-        die();
         $schema = $this->getSchema();
 
         $result = [];

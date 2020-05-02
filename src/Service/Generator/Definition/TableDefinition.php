@@ -47,14 +47,9 @@ class TableDefinition extends AbstractDefinition
         $table = $this->getAttributeByName('tableName');
 
         $schema = $this->getSchema();
-        $foreignKeys = $schema->listTableForeignKeys($table);
         $columns = $schema->listTableColumns($table);
 
-        $fields = $this->generateFields($table, $columns);
-        $this->generateForeignKeys($fields, $foreignKeys);
-        
-
-        return $fields;
+        return $this->generateFields($table, $columns);
     }
 
 
@@ -127,9 +122,5 @@ class TableDefinition extends AbstractDefinition
         }
 
         return $result;
-    }
-
-    protected function generateForeignKeys(array $fields, array $foreignKeys): void
-    {
     }
 }

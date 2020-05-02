@@ -112,6 +112,11 @@ class FieldEntity
         $this->foreignKeys = $foreignKeys;
     }
 
+    public function addForeignKey(ForeignKeyEntity $entity): void
+    {
+        $this->foreignKeys[] = $entity;
+    }
+
     /**
      * @return string
      */
