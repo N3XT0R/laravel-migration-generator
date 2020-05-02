@@ -101,6 +101,14 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         string $connectionName,
         string $table
     ): void {
+        /**
+         * @var MigrationGenerator $generator
+         */
+        $generator = $this->getLaravel()->make(
+            MigrationGeneratorInterface::class,
+            ['connectionName' => $connectionName]
+        );
+
         $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
         $tables = $schemaParser->getTablesFromSchema(
             $database
@@ -108,9 +116,13 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         if (!in_array($table, $tables, true)) {
             $this->error('Table "' . $table . '" not exists in Schema "' . $database . '"');
         } else {
-            /**
-             * @todo
-             */
+            if (true === $generator->generateMigrationForTable($database, $table)) {
+                /**
+                 * @todo
+                 */
+            } else {
+                $this->error('there occurred an error by creating migration for ' . $table);
+            }
         }
     }
 
