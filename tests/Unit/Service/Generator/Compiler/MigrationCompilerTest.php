@@ -28,6 +28,7 @@ class MigrationCompilerTest extends TestCase
         $resultEntity = new ResultEntity();
         $resultEntity->setResultByKey('table', ['da_attributevalue' => [$field]]);
         $this->compiler->initializeMigration('CreateTableBla');
+        $this->compiler->createByResult($resultEntity);
         var_dump($this->compiler->getContent());
     }
 }

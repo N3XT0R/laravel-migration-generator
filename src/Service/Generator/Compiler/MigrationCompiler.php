@@ -14,18 +14,36 @@ use Nette\PhpGenerator\Method;
 class MigrationCompiler
 {
 
-    protected $class;
+    protected $namespace;
+    protected $name = '';
 
 
-    public function setNamespace(PhpNamespace $classType): void
+    public function setNamespace(PhpNamespace $namespace): void
     {
-        $this->class = $classType;
+        $this->namespace = $namespace;
     }
 
     public function getNamespace(): PhpNamespace
     {
-        return $this->class;
+        return $this->namespace;
     }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
 
     public function initializeMigration(string $name, string $customMigrationClass = ''): void
     {
@@ -52,12 +70,13 @@ class MigrationCompiler
         $namespace->add($class);
 
         $this->setNamespace($namespace);
+        $this->setName($name);
     }
 
     public function createByResult(ResultEntity $entity): void
     {
         $namespace = $this->getNamespace();
-        $class = $namespace->getClasses()[0];
+        $class = $namespace->getClasses()[$this->getName()];
 
         $this->addCreateTable($class->getMethod('up'), $entity->getResultByKey('table'));
     }
