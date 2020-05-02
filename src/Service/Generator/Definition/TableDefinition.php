@@ -4,7 +4,10 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\AbstractAsset;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
 
 class TableDefinition extends AbstractDefinition
 {
@@ -49,10 +52,14 @@ class TableDefinition extends AbstractDefinition
         $indexes = $schema->listTableIndexes($table);
         $foreignKeys = $schema->listTableForeignKeys($table);
         $columns = $schema->listTableColumns($table);
+
+        $fields = $this->generateFields($table, $columns);
+        $combinedIndexes = $this->generateIndexes($fields, $indexes);
+
+
         return [
-            'fields' => $this->generateFields($table, $columns),
-            'indexes' => $this->generateIndexes($indexes),
-            'foreignKeys' => [],
+            'fields' => $fields,
+            'combinedIndexes' => $combinedIndexes,
         ];
     }
 
@@ -128,15 +135,49 @@ class TableDefinition extends AbstractDefinition
         return $result;
     }
 
-    protected function generateIndexes(array $indexes): array
+    protected function generateIndexes(array $fields, array $indexes): array
     {
-        $result = [];
+        $combinedIndexes = [];
         foreach ($indexes as $index) {
-            print_r($indexes);
-            die();
+            if ($index instanceof Index === false) {
+                continue;
+            }
+
+            $fieldEntity = null;
+            $columns = $index->getColumns();
+            $isCombinedIndex = count($columns) > 1;
+
+            switch (true) {
+                case true === $index->isUnique():
+                    $type = 'unique';
+                    break;
+
+                case true === $index->isPrimary():
+                    $type = 'primary';
+                    break;
+
+                default:
+                    $type = 'index';
+                    break;
+            }
+
+            $indexEntity = new IndexEntity();
+            $indexEntity->setType($type);
+            $indexEntity->setName($index->getName());
+
+            if (false === $isCombinedIndex) {
+                $column = current($columns);
+                /**
+                 * @var FieldEntity $fieldEntity
+                 */
+                $fieldEntity = $fields[$column];
+                $fieldEntity->addIndex($indexEntity);
+            } else {
+                $indexEntity->setColumns($columns);
+                $combinedIndexes[] = $indexEntity;
+            }
         }
 
-        return $result;
+        return $combinedIndexes;
     }
-
 }

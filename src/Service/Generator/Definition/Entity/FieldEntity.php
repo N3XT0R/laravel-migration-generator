@@ -12,6 +12,7 @@ class FieldEntity
     protected $arguments = [];
     protected $length = 0;
     protected $options = [];
+    protected $indexes = [];
     protected $foreignKeys = [];
 
     /**
@@ -143,5 +144,29 @@ class FieldEntity
         $this->arguments = $arguments;
     }
 
+    /**
+     * @return array
+     */
+    public function getIndexes(): array
+    {
+        return $this->indexes;
+    }
 
+    /**
+     * @param array $indexes
+     */
+    public function setIndexes(array $indexes): void
+    {
+        $this->indexes = $indexes;
+    }
+
+    public function addIndex(IndexEntity $indexEntity): void
+    {
+        $this->indexes[] = $indexEntity;
+    }
+
+    public function hasIndexes(): bool
+    {
+        return 0 !== count($this->getIndexes());
+    }
 }
