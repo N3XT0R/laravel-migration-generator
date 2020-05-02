@@ -3,92 +3,33 @@
 
 namespace N3XT0R\MigrationGenerator\Service\Generator;
 
-use Illuminate\Support\Facades\DB;
-use Doctrine\DBAL\Connection as DoctrineConnection;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 
 class MigrationGenerator implements MigrationGeneratorInterface
 {
 
-    protected $doctrineConnection;
-    protected $definitions = [];
+    protected $resolver;
 
-    public function __construct(string $connectionName, array $definitions)
+    public function __construct(DefinitionResolverInterface $resolver)
     {
-        $connection = DB::connection($connectionName)->getDoctrineConnection();
-        $this->registerDoctrineTypeMappings($connection);
-        $this->setDoctrineConnection($connection);
-        $this->setDefinitions($definitions);
+        $this->setResolver($resolver);
     }
 
-    public function setDefinitions(array $definitions): void
+    public function setResolver(DefinitionResolverInterface $resolver): void
     {
-        $this->definitions = $definitions;
+        $this->resolver = $resolver;
     }
 
-    public function getDefinitions(): array
+    public function getResolver(): DefinitionResolverInterface
     {
-        return $this->definitions;
+        return $this->resolver;
     }
-
-    public function addDefinition(string $name, DefinitionInterface $definition): void
-    {
-        $this->definitions[$name] = $definition;
-    }
-
-    public function getDefinitionByName(string $name): ?DefinitionInterface
-    {
-        $definition = null;
-        $definitions = $this->getDefinitions();
-
-        if (array_key_exists($name, $definitions)) {
-            $definition = $definitions[$name];
-        }
-
-        return $definition;
-    }
-
-    public function hasDefinition(string $name): bool
-    {
-        return null !== $this->getDefinitionByName($name);
-    }
-
-    protected function registerDoctrineTypeMappings(DoctrineConnection $doctrineConnection): void
-    {
-    }
-
-    public function setDoctrineConnection(DoctrineConnection $doctrineConnection): void
-    {
-        $this->doctrineConnection = $doctrineConnection;
-    }
-
-    public function getDoctrineConnection(): DoctrineConnection
-    {
-        return $this->doctrineConnection;
-    }
-
 
     public function generateMigrationForTable(string $database, string $table): bool
     {
         $result = false;
-        $definitions = $this->getDefinitions();
-        $connection = $this->getDoctrineConnection();
-        $schema = $connection->getSchemaManager();
-
-        foreach ($definitions as $name => $definition) {
-            if (null !== $schema && $definition instanceof DefinitionInterface) {
-                $definition->setAttributes(
-                    [
-                        'database' => $database,
-                        'table' => $table,
-                    ]
-                );
-                $definition->setSchema($schema);
-                $definition->generate();
-
-                $definitionResult = $definition->getResult();
-            }
-        }
+        $resolver = $this->getResolver();
+        $schema = $resolver->resolveTableSchema($database, $table);
 
         return $result;
     }

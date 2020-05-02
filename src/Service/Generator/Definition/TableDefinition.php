@@ -44,23 +44,17 @@ class TableDefinition extends AbstractDefinition
 
     protected function generateData(): array
     {
-        $table = $this->getAttributeByName('table');
-        $table = 'da_attribute';
+        $table = $this->getAttributeByName('tableName');
 
         $schema = $this->getSchema();
-        $indexes = $schema->listTableIndexes($table);
         $foreignKeys = $schema->listTableForeignKeys($table);
         $columns = $schema->listTableColumns($table);
 
         $fields = $this->generateFields($table, $columns);
-        $combinedIndexes = $this->generateIndexes($fields, $indexes);
         $this->generateForeignKeys($fields, $foreignKeys);
+        
 
-
-        return [
-            'fields' => $fields,
-            'combinedIndexes' => $combinedIndexes,
-        ];
+        return $fields;
     }
 
 
@@ -133,52 +127,6 @@ class TableDefinition extends AbstractDefinition
         }
 
         return $result;
-    }
-
-    protected function generateIndexes(array $fields, array $indexes): array
-    {
-        $combinedIndexes = [];
-        foreach ($indexes as $index) {
-            if ($index instanceof Index === false) {
-                continue;
-            }
-
-            $fieldEntity = null;
-            $columns = $index->getColumns();
-            $isCombinedIndex = count($columns) > 1;
-
-            switch (true) {
-                case true === $index->isUnique():
-                    $type = 'unique';
-                    break;
-
-                case true === $index->isPrimary():
-                    $type = 'primary';
-                    break;
-
-                default:
-                    $type = 'index';
-                    break;
-            }
-
-            $indexEntity = new IndexEntity();
-            $indexEntity->setType($type);
-            $indexEntity->setName($index->getName());
-
-            if (false === $isCombinedIndex) {
-                $column = current($columns);
-                /**
-                 * @var FieldEntity $fieldEntity
-                 */
-                $fieldEntity = $fields[$column];
-                $fieldEntity->addIndex($indexEntity);
-            } else {
-                $indexEntity->setColumns($columns);
-                $combinedIndexes[] = $indexEntity;
-            }
-        }
-
-        return $combinedIndexes;
     }
 
     protected function generateForeignKeys(array $fields, array $foreignKeys): void

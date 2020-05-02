@@ -3,13 +3,15 @@
 namespace N3XT0R\MigrationGenerator\Providers;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 use N3XT0R\MigrationGenerator\Console\Commands;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
+use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 class MigrationGeneratorServiceProvider extends ServiceProvider
 {
@@ -67,23 +69,38 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $definitions = $this->getDefinitions();
 
         foreach ($definitions as $definition) {
-            $this->app->bind($definition, $definition);
+            $this->app->bind($definition['class'], $definition['class']);
         }
 
         $this->app->bind(
-            MigrationGeneratorInterface::class,
+            DefinitionResolverInterface::class,
             static function (Application $app, array $params) use ($definitions) {
+                $key = 'connection';
+                if (!array_key_exists($key, $params)) {
+                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
+                }
+
+                return new DefinitionResolver($params[$key], $definitions);
+            }
+        );
+
+        $this->app->bind(
+            MigrationGeneratorInterface::class,
+            static function (Application $app, array $params) {
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
                     throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
                 }
 
-                $definitionClasses = [];
-                foreach ($definitions as $definitionKey => $definitionData) {
-                    $definitionClasses[$definitionKey] = $app->make($definitionData['class']);
-                }
+                /**
+                 * @var DatabaseManager $dbManager
+                 */
+                $dbManager = $app->get('db');
+                $connection = $dbManager->connection($params[$key])->getDoctrineConnection();
 
-                return new MigrationGenerator($params[$key], $definitionClasses);
+                return new MigrationGenerator(
+                    $app->make(DefinitionResolverInterface::class, ['connection' => $connection])
+                );
             }
         );
     }
