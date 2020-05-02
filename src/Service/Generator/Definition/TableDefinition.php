@@ -70,11 +70,12 @@ class TableDefinition extends AbstractDefinition
                 $fieldEntity = new FieldEntity();
                 $fieldEntity->setTable($table);
                 $fieldEntity->setColumnName($column->getName());
+                $fieldEntity->setComment((string)$column->getComment());
                 $defaultValue = $column->getDefault();
                 $notNullable = $column->getNotnull();
                 $type = $this->convertTypeToBluePrintType($column->getType()->getName());
-                $comment = $column->getComment();
 
+                $arguments = [];
                 $options = [
                     'nullable' => !$notNullable,
                 ];
@@ -86,6 +87,9 @@ class TableDefinition extends AbstractDefinition
                     case 'smallInteger':
                     case 'bigInteger':
                         $options['unsigned'] = $column->getUnsigned();
+                        if (true === $column->getAutoincrement()) {
+                            $type = $this->convertTypeToBluePrintType($type);
+                        }
                         $options['autoIncrement'] = $column->getAutoincrement();
 
                         break;
@@ -94,14 +98,15 @@ class TableDefinition extends AbstractDefinition
                         if ('CURRENT_TIMESTAMP' === $defaultValue) {
                             $defaultValue = 'DB::raw(\'CURRENT_TIMESTAMP\')';
                         }
-                        
+
                         break;
 
                     case 'double':
                     case 'float':
                     case 'decimal':
-                        $column->getPrecision();
-                        $column->getScale();
+                        $options['unsigned'] = $column->getUnsigned();
+                        $arguments['total'] = $column->getPrecision();
+                        $arguments['places'] = $column->getScale();
                         break;
 
                     default:
@@ -115,9 +120,12 @@ class TableDefinition extends AbstractDefinition
                 $fieldEntity->setType($type);
                 $options['default'] = $defaultValue;
                 $fieldEntity->setOptions($options);
+                $fieldEntity->setArguments($arguments);
                 $result[] = $fieldEntity;
             }
         }
+
+        print_r($result);
 
         return $result;
     }

@@ -23,7 +23,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      * @var string
      */
     protected $signature = 'migrate:regenerate {{--table= : specific table}} 
-        {{--database= : The database connection to use}}';
+        {{--database= : The database connection to use}} {{--force : force re-init in migrations-table}}';
 
     /**
      * The console command description.
@@ -75,19 +75,23 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         }
 
         $table = (string)$this->option('table');
-
+        $force = (bool)$this->option('force');
         $connectionName = $this->option('database') ?? config('database.default');
         $this->prepareDatabase($connectionName);
 
         $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
         $schemaParser->setConnectionByName($connectionName);
 
-        $databaseName = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
-
         if (!empty($table)) {
             $this->createMigrationForSingleTable($schemaParser, $connectionName, $table);
         } else {
             $this->createMigrationsForWholeSchema($schemaParser, $connectionName);
+        }
+
+        if (true === $force) {
+            /**
+             * @todo reinitialize migrations table
+             */
         }
     }
 

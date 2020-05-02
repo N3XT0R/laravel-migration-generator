@@ -8,6 +8,8 @@ class FieldEntity
     protected $table = '';
     protected $columnName = '';
     protected $type = '';
+    protected $comment = '';
+    protected $arguments = [];
     protected $length = 0;
     protected $options = [];
     protected $foreignKeys = [];
@@ -108,5 +110,38 @@ class FieldEntity
     {
         $this->foreignKeys = $foreignKeys;
     }
+
+    /**
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArguments(): array
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * @param array $arguments
+     */
+    public function setArguments(array $arguments): void
+    {
+        $this->arguments = $arguments;
+    }
+
 
 }
