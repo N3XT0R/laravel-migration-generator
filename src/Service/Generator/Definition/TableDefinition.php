@@ -3,7 +3,8 @@
 
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
-use  Doctrine\DBAL\Types;
+use Doctrine\DBAL\Schema\Column;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 
 class TableDefinition extends AbstractDefinition
 {
@@ -41,21 +42,42 @@ class TableDefinition extends AbstractDefinition
 
     protected function generateData(): array
     {
-        $result = [];
         $table = $this->getAttributeByName('table');
-        $table = 't_case';
+        $table = 'da_attribute';
+
         $schema = $this->getSchema();
+        $indexes = $schema->listTableIndexes($table);
+        $foreignKeys = $schema->listTableForeignKeys($table);
         $columns = $schema->listTableColumns($table);
+        return [
+            'fields' => $this->generateFields($table, $columns),
+            'indexes' => [],
+            'foreignKeys' => [],
+        ];
+    }
+
+
+    protected function generateFields(string $table, array $columns): array
+    {
+        $result = [];
+
         if (0 !== count($columns)) {
             foreach ($columns as $column) {
-                $columnName = $column->getName();
+                if ($column instanceof Column === false) {
+                    continue;
+                }
+
+                $fieldEntity = new FieldEntity();
+                $fieldEntity->setTable($table);
+                $fieldEntity->setColumnName($column->getName());
                 $defaultValue = $column->getDefault();
                 $notNullable = $column->getNotnull();
-                $length = $column->getLength();
                 $type = $this->convertTypeToBluePrintType($column->getType()->getName());
-                var_dump($type);
                 $comment = $column->getComment();
-                $isUnsigned = $column->getUnsigned();
+
+                $options = [
+                    'nullable' => !$notNullable,
+                ];
 
 
                 switch ($type) {
@@ -63,13 +85,37 @@ class TableDefinition extends AbstractDefinition
                     case 'integer':
                     case 'smallInteger':
                     case 'bigInteger':
+                        $options['unsigned'] = $column->getUnsigned();
+                        $options['autoIncrement'] = $column->getAutoincrement();
 
+                        break;
+
+                    case 'dateTime':
+                        if ('CURRENT_TIMESTAMP' === $defaultValue) {
+                            $defaultValue = 'DB::raw(\'CURRENT_TIMESTAMP\')';
+                        }
+                        
+                        break;
+
+                    case 'double':
+                    case 'float':
+                    case 'decimal':
+                        $column->getPrecision();
+                        $column->getScale();
+                        break;
+
+                    default:
+                        if ('string' === $type && true === $column->getFixed()) {
+                            $type = 'char';
+                            $fieldEntity->setLength($column->getLength());
+                        }
                         break;
                 }
 
-                $result['field'][$columnName] = [
-
-                ];
+                $fieldEntity->setType($type);
+                $options['default'] = $defaultValue;
+                $fieldEntity->setOptions($options);
+                $result[] = $fieldEntity;
             }
         }
 
