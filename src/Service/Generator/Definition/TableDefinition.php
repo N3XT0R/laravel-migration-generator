@@ -51,7 +51,7 @@ class TableDefinition extends AbstractDefinition
         $columns = $schema->listTableColumns($table);
         return [
             'fields' => $this->generateFields($table, $columns),
-            'indexes' => [],
+            'indexes' => $this->generateIndexes($indexes),
             'foreignKeys' => [],
         ];
     }
@@ -86,11 +86,11 @@ class TableDefinition extends AbstractDefinition
                     case 'integer':
                     case 'smallInteger':
                     case 'bigInteger':
-                        $options['unsigned'] = $column->getUnsigned();
                         if (true === $column->getAutoincrement()) {
                             $type = $this->convertTypeToBluePrintType($type);
                         }
-                        $options['autoIncrement'] = $column->getAutoincrement();
+                        $arguments['unsigned'] = $column->getUnsigned();
+                        $arguments['autoIncrement'] = $column->getAutoincrement();
 
                         break;
 
@@ -104,7 +104,7 @@ class TableDefinition extends AbstractDefinition
                     case 'double':
                     case 'float':
                     case 'decimal':
-                        $options['unsigned'] = $column->getUnsigned();
+                        $arguments['unsigned'] = $column->getUnsigned();
                         $arguments['total'] = $column->getPrecision();
                         $arguments['places'] = $column->getScale();
                         break;
@@ -121,11 +121,20 @@ class TableDefinition extends AbstractDefinition
                 $options['default'] = $defaultValue;
                 $fieldEntity->setOptions($options);
                 $fieldEntity->setArguments($arguments);
-                $result[] = $fieldEntity;
+                $result[$fieldEntity->getColumnName()] = $fieldEntity;
             }
         }
 
-        print_r($result);
+        return $result;
+    }
+
+    protected function generateIndexes(array $indexes): array
+    {
+        $result = [];
+        foreach ($indexes as $index) {
+            print_r($indexes);
+            die();
+        }
 
         return $result;
     }
