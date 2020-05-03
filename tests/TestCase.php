@@ -2,9 +2,21 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Database\MigrationServiceProvider;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
-abstract class TestCase extends BaseTestCase
+abstract class TestCase extends OrchestraTestCase
 {
-    use CreatesApplication;
+    protected function getPackageProviders($app): array
+    {
+        return [
+            MigrationServiceProvider::class,
+        ];
+    }
+
+    protected function getPackageAliases($app): array
+    {
+        return [
+        ];
+    }
 }
