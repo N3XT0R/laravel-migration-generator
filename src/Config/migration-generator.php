@@ -27,5 +27,9 @@ return [
             'class' => Mapper\IndexMapper::class,
             'requires' => ['table'],
         ],
+        'foreignKey' => [
+            'class' => Mapper\ForeignKeyMapper::class,
+            'requires' => ['table'],
+        ],
     ],
 ];
