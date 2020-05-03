@@ -100,9 +100,12 @@ class TableDefinition extends AbstractDefinition
                     case 'decimal':
                         $arguments['total'] = $column->getPrecision();
                         $arguments['places'] = $column->getScale();
+                        $unsigned = $column->getUnsigned();
 
-                        if ('float' !== $type && $column->getUnsigned()) {
+                        if ('float' !== $type && $unsigned) {
                             $type = 'unsigned' . ucfirst($type);
+                        } else {
+                            $options['unsigned'] = $unsigned;
                         }
                         break;
 
