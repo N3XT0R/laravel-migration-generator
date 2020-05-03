@@ -8,6 +8,7 @@ use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\MapperInterface;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\Filesystem\Filesystem;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
 class MigrationCompiler implements MigrationCompilerInterface
 {
@@ -86,7 +87,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void
     {
         $tableName = $resultEntity->getTableName();
-        $mapper = $this->getMapper();
+        $mapper = TopSort::sort($this->getMapper());
 
         $data = [
             'migrationNamespace' => 'use ' . Migration::class . ';',

@@ -72,6 +72,11 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         return (array)config('migration-generator.definitions');
     }
 
+    protected function getMapper(): array
+    {
+        return (array)config('migration-generator.mapper');
+    }
+
     protected function registerGenerator(): void
     {
         $definitions = $this->getDefinitions();
@@ -115,6 +120,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerCompiler(): void
     {
+        $mapper = $this->getMapper();
         $this->app->bind(ReplaceEngine::class, ReplaceEngine::class);
 
         $this->app->extend(
@@ -130,17 +136,20 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 return $resolver;
             }
         );
-
-
+        
         $this->app->bind(
             MigrationCompilerInterface::class,
-            static function (Application $app) {
+            static function (Application $app) use ($mapper) {
                 $view = $app->make(ViewFactory::class);
                 $view->addExtension(
                     'stub',
                     'replace'
                 );
-                return new MigrationCompiler($view, $app->make('files'));
+
+                $compiler = new MigrationCompiler($view, $app->make('files'));
+                $compiler->setMapper($mapper);
+
+                return $compiler;
             }
         );
     }
