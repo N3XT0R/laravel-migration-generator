@@ -13,9 +13,12 @@ class {{$className}} extends {{MigrationClass}}
      */
     public function up(): void
     {
-        Schema::create({{$tableName}}, function (Blueprint $table) {
-            {{$columns}}
-        });
+        Schema::create(
+            {{$tableName}},
+            static function (Blueprint $table) {
+                {{$columns}}
+            }
+        );
     }
 
 
