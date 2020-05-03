@@ -4,7 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler;
 
 use Illuminate\Database\Migrations\Migration;
-use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Engine\ReplaceEngine;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\FieldMapperInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use Illuminate\View\Factory as ViewFactory;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
@@ -13,6 +13,7 @@ class MigrationCompiler implements MigrationCompilerInterface
 {
     protected $view;
     protected $renderedTemplate;
+    protected $mapper = [];
 
     public function __construct(ViewFactory $view)
     {
@@ -27,6 +28,22 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function getView(): ViewFactory
     {
         return $this->view;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMapper(): array
+    {
+        return $this->mapper;
+    }
+
+    /**
+     * @param array $mapper
+     */
+    public function setMapper(array $mapper): void
+    {
+        $this->mapper = $mapper;
     }
 
     public function setRenderedTemplate(string $renderedTemplate): void
@@ -51,6 +68,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void
     {
         $tableName = $resultEntity->getTableName();
+        $mapper = $this->getMapper();
 
         $data = [
             'migrationNamespace' => 'use ' . Migration::class . ';',
@@ -62,6 +80,11 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         if (!empty($customMigrationClass) && class_exists($customMigrationClass)) {
             $data['migrationClass'] = $customMigrationClass;
+        }
+
+        foreach ($mapper as $mapping) {
+            if ($mapping instanceof FieldMapperInterface) {
+            }
         }
 
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
