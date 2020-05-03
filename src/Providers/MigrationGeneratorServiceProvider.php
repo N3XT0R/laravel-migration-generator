@@ -5,7 +5,9 @@ namespace N3XT0R\MigrationGenerator\Providers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Engines\EngineResolver;
 use N3XT0R\MigrationGenerator\Console\Commands;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Engine\ReplaceEngine;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
@@ -113,6 +115,23 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerCompiler(): void
     {
+        $this->app->bind(ReplaceEngine::class, ReplaceEngine::class);
+
+        $this->app->extend(
+            'view.engine.resolver',
+            static function (EngineResolver $resolver, Application $app) {
+                $resolver->register(
+                    'replace',
+                    static function () use ($app) {
+                        return $app->make(ReplaceEngine::class);
+                    }
+                );
+
+                return $resolver;
+            }
+        );
+
+
         $this->app->bind(
             MigrationCompilerInterface::class,
             static function (Application $app) {

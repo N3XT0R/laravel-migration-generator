@@ -16,15 +16,17 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     public function __construct(ViewFactory $view)
     {
+        $this->registerExtension($view);
+        $this->setView($view);
+    }
+
+
+    protected function registerExtension(ViewFactory $view): void
+    {
         $view->addExtension(
             'stub',
-            'file',
-            static function () {
-                return new ReplaceEngine();
-            }
+            'replace'
         );
-
-        $this->setView($view);
     }
 
 
