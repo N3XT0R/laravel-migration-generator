@@ -75,7 +75,7 @@ class MigrationCompiler implements MigrationCompilerInterface
             'migrationClass' => Migration::class,
             'tableName' => $tableName,
             'className' => 'Create' . ucfirst($tableName) . 'Table',
-            'columns' => '',
+            'columns' => [],
         ];
 
         if (!empty($customMigrationClass) && class_exists($customMigrationClass)) {
