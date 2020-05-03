@@ -4,7 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper;
 
 
-interface FieldMapperInterface
+interface MapperInterface
 {
     public function map(array $data): array;
 }

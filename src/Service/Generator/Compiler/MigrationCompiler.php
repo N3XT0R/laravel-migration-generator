@@ -4,8 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler;
 
 use Illuminate\Database\Migrations\Migration;
-use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\FieldMapperInterface;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\MapperInterface;
 use Illuminate\View\Factory as ViewFactory;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 
@@ -87,7 +86,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         $data['migrationClass'] = $namespaceParts[count($namespaceParts) - 1];
 
         foreach ($mapper as $key => $mapping) {
-            if ($mapping instanceof FieldMapperInterface) {
+            if ($mapping instanceof MapperInterface) {
                 $resultData = $resultEntity->getResultByKey($key);
                 $extractedLines = $mapping->map($resultData);
             }
