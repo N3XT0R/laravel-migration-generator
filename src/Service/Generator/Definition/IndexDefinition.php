@@ -30,7 +30,7 @@ class IndexDefinition extends AbstractDefinition
     {
         $combinedIndexes = [];
         foreach ($indexes as $index) {
-            if ($index instanceof Index === false) {
+            if ($index instanceof Index === false || $index->getName() === 'PRIMARY') {
                 continue;
             }
 
