@@ -93,7 +93,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         $data = [
             'migrationNamespace' => 'use ' . Migration::class . ';',
             'tableName' => $tableName,
-            'className' => 'Create' . ucfirst($tableName) . 'Table',
+            'className' => 'DummyClass',
             'columns' => [],
         ];
 
@@ -114,7 +114,7 @@ class MigrationCompiler implements MigrationCompilerInterface
                 $data['columns'] = array_merge($data['columns'], $extractedLines);
             }
         }
-        
+
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 
