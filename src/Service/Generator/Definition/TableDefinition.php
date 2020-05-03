@@ -4,9 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\Index;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
 
 class TableDefinition extends AbstractDefinition
 {
@@ -97,12 +95,14 @@ class TableDefinition extends AbstractDefinition
 
                         break;
 
-                    case 'double':
                     case 'float':
-                    case 'decimal':
-                        $arguments['unsigned'] = $column->getUnsigned();
                         $arguments['total'] = $column->getPrecision();
                         $arguments['places'] = $column->getScale();
+                    case 'double':
+                    case 'decimal':
+                        if ($column->getUnsigned()) {
+                            $type = 'unsigned' . ucfirst($type);
+                        }
                         break;
 
                     default:

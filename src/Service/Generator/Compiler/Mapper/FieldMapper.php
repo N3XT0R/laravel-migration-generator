@@ -23,6 +23,11 @@ class FieldMapper extends AbstractMapper
 
     protected function generate(FieldEntity $fieldEntity): string
     {
-        return '';
+        $arguments = $fieldEntity->getArguments();
+        $methods = [
+            $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . "')",
+        ];
+
+        return $this->chainMethodsToString($methods);
     }
 }

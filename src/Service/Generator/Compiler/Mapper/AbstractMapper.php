@@ -6,6 +6,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper;
 
 abstract class AbstractMapper implements MapperInterface
 {
+
     public function chainMethodsToString(array $methods): string
     {
         $result = '';
