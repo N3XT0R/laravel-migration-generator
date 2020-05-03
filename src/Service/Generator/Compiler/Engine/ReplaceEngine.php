@@ -28,7 +28,7 @@ class ReplaceEngine implements Engine
                     }
                     $content = $this->populateData($content, $value);
                 } else {
-                    $content = str_replace('{{$' . $key . '}}', $value, $content);
+                    $content = str_replace('{{$' . $key . '}}', (string)$value, $content);
                 }
             }
         }
