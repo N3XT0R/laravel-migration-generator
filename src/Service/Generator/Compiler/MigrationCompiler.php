@@ -85,7 +85,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         foreach ($mapper as $key => $mapping) {
             if ($mapping instanceof FieldMapperInterface) {
                 $resultData = $resultEntity->getResultByKey($key);
-                $extracted = $mapping->map($resultData);
+                $extractedLines = $mapping->map($resultData);
             }
         }
 
