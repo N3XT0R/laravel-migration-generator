@@ -22,7 +22,19 @@ class ForeignKeyMapper extends AbstractMapper
 
     protected function generateForeign(ForeignKeyEntity $foreignKey): string
     {
-        $methods = [];
+        $methods = [
+            "foreign('" . $foreignKey->getLocalColumn() . "')",
+            "references('" . $foreignKey->getReferencedColumn() . "')",
+            "on('" . $foreignKey->getReferencedTable() . "')",
+        ];
+
+        if (!empty($foreignKey->getOnUpdate())) {
+            $methods[] = "onUpdate('" . $foreignKey->getOnUpdate() . "')";
+        }
+
+        if (!empty($foreignKey->getOnDelete())) {
+            $methods[] = "onDelete('" . $foreignKey->getOnDelete() . "')";
+        }
 
         return $this->chainMethodsToString($methods);
     }
