@@ -4,6 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler;
 
 use Illuminate\Database\Migrations\Migration;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Engine\ReplaceEngine;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use Illuminate\View\Factory as ViewFactory;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
@@ -15,6 +16,14 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     public function __construct(ViewFactory $view)
     {
+        $view->addExtension(
+            'stub',
+            'file',
+            static function () {
+                return new ReplaceEngine();
+            }
+        );
+        
         $this->setView($view);
     }
 
@@ -43,8 +52,9 @@ class MigrationCompiler implements MigrationCompilerInterface
     {
         $viewFactory = $this->getView();
         $viewFactory->flushFinderCache();
+        $viewObj = $viewFactory->make($view, $data);
 
-        return $viewFactory->make($view, $data)->render();
+        return $viewObj->render();
     }
 
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void
@@ -52,12 +62,17 @@ class MigrationCompiler implements MigrationCompilerInterface
         $tableName = $resultEntity->getTableName();
 
         $data = [
+            'migrationNamespace' => 'use ' . Migration::class . ';',
             'migrationClass' => Migration::class,
             'tableName' => $tableName,
             'classname' => 'Create' . ucfirst($tableName) . 'Table',
             'columns' => '',
         ];
 
-        $this->setRenderedTemplate($this->render('migration-generator.CreateTableStub', $data));
+        if (!empty($customMigrationClass) && class_exists($customMigrationClass)) {
+            $data['migrationClass'] = $customMigrationClass;
+        }
+
+        $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 }

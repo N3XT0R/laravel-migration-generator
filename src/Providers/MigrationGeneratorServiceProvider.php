@@ -33,14 +33,14 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
             );
         }
 
+        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
+
         $this->publishes(
             [
                 __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
             ],
             'migration-generator'
         );
-
-        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
     }
 
     /**
