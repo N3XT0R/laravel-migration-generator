@@ -110,7 +110,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         foreach ($sortedMapper as $key => $mappingName) {
             $mapping = app()->make($mapper[$mappingName]['class']);
             if ($mapping instanceof MapperInterface) {
-                $resultData = $resultEntity->getResultByKey($mappingName);
+                $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
                 $extractedLines = $mapping->map($resultData);
                 $data['columns'] = array_merge($data['columns'], $extractedLines);
             }

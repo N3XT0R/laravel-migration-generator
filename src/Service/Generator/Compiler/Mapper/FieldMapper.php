@@ -16,7 +16,7 @@ class FieldMapper extends AbstractMapper
                 $result[] = $this->generateField($field);
             }
         }
-        
+
         return $result;
     }
 
@@ -26,11 +26,18 @@ class FieldMapper extends AbstractMapper
         $arguments = $fieldEntity->getArguments();
         $options = $fieldEntity->getOptions();
         foreach ($arguments as $argument) {
-            $argumentString .= "', '" . $argument;
+            if (null !== $argument) {
+                $argumentString .= ', ';
+                if (is_bool($argument)) {
+                    $argumentString .= $argument ? 'true' : 'false';
+                } else {
+                    $argumentString .= "'" . $argument . "'";
+                }
+            }
         }
 
         $methods = [
-            $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . $argumentString . "')",
+            $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . "'" . $argumentString . ")",
         ];
 
         if (array_key_exists('nullable', $options) && true === $options['nullable']) {
@@ -38,14 +45,20 @@ class FieldMapper extends AbstractMapper
         }
 
         if (array_key_exists('default', $options) && null !== $options['default']) {
-            $methods[] = "default('" . $options['default'] . "')";
+            if ('CURRENT_TIMESTAMP' === $options['default']) {
+                $default = "default(DB::raw('CURRENT_TIMESTAMP'))";
+            } else {
+                $default = "default('" . $options['default'] . "')";
+            }
+
+            $methods[] = $default;
         }
 
         if (array_key_exists('unsigned', $options) && true === $options['unsigned']) {
             $methods[] = "unsigned()";
         }
 
-        if (array_key_exists('comment', $options) && null === $options['comment']) {
+        if (array_key_exists('comment', $options) && !empty($options['comment'])) {
             $methods[] = "comment('" . addcslashes($options['comment'], "\\'") . "')";
         }
 

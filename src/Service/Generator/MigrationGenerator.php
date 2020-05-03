@@ -49,6 +49,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $compiler->generateByResult($schemaResult);
         $renderedShit = $compiler->getRenderedTemplate();
         print_r($renderedShit);
+        die();
 
         return $result;
     }

@@ -4,6 +4,8 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 
+use phpDocumentor\Reflection\Types\Boolean;
+
 class ResultEntity
 {
     protected $results = [];
@@ -34,13 +36,13 @@ class ResultEntity
     {
         $this->tableName = $tableName;
     }
-    
 
-    public function getResultByKey(string $key): array
+
+    public function getResultByTableNameAndKey(string $tableName, string $key): array
     {
         $result = [];
-        if ($this->hasResult($key)) {
-            $result = $this->getResults()[$key];
+        if ($this->hasResultForTableNameAndKey($tableName, $key)) {
+            $result = $this->getResults()[$tableName][$key];
         }
 
         return $result;
@@ -51,8 +53,13 @@ class ResultEntity
         $this->results[$key] = $data;
     }
 
-    public function hasResult(string $key): bool
+    public function hasResultForTable(string $tableName): bool
     {
-        return array_key_exists($key, $this->results);
+        return array_key_exists($tableName, $this->results);
+    }
+
+    public function hasResultForTableNameAndKey(string $tableName, string $key): bool
+    {
+        return $this->hasResultForTable($tableName) && array_key_exists($key, $this->getResults()[$tableName]);
     }
 }

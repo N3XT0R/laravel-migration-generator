@@ -91,10 +91,6 @@ class TableDefinition extends AbstractDefinition
 
                     case 'dateTime':
                         $type = 'timestamp';
-                        if ('CURRENT_TIMESTAMP' === $defaultValue) {
-                            $defaultValue = 'DB::raw(\'CURRENT_TIMESTAMP\')';
-                        }
-
                         break;
 
                     case 'float':
