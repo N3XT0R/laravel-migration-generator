@@ -72,7 +72,12 @@ class TableDefinition extends AbstractDefinition
                 $arguments = [];
                 $options = [
                     'nullable' => !$notNullable,
+                    'comment' => null,
                 ];
+
+                if (null !== $column->getComment()) {
+                    $options['comment'] = $column->getComment();
+                }
 
 
                 switch ($type) {

@@ -44,9 +44,9 @@ class MigrationCompilerTest extends TestCase
         $field = new FieldEntity();
         $field->setColumnName('id');
         $field->setType('bigInteger');
-        $field->setComment('fuck that shit');
         $field->setTable('da_attributevalue');
-        $field->setArguments(['default' => 1, 'nullable' => 1, 'autoIncrement' => 1]);
+        $field->setArguments(['autoIncrement' => 1]);
+        $field->setOptions(['nullable' => 1, 'default' => '1', 'comment' => 'fuck you']);
 
         $result->setResultByKey('table', [$field]);
 

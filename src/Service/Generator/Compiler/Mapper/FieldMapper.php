@@ -13,7 +13,7 @@ class FieldMapper extends AbstractMapper
         $result = [];
         foreach ($data as $field) {
             if ($field instanceof FieldEntity) {
-                $column = '';
+                $result[] = $this->generate($field);
             }
         }
 
@@ -23,10 +23,24 @@ class FieldMapper extends AbstractMapper
 
     protected function generate(FieldEntity $fieldEntity): string
     {
+        $argumentString = '';
         $arguments = $fieldEntity->getArguments();
+        $options = $fieldEntity->getOptions();
+        foreach ($arguments as $argument) {
+            $argumentString .= "', '" . $argument;
+        }
+
         $methods = [
-            $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . "')",
+            $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . $argumentString . "')",
         ];
+
+        if (array_key_exists('nullable', $options) && true === $options['nullable']) {
+            $methods[] = 'nullable()';
+        }
+
+        if (array_key_exists('default', $options) && null !== $options['default']) {
+            $methods[] = "default('" . $options['default'] . "')";
+        }
 
         return $this->chainMethodsToString($methods);
     }
