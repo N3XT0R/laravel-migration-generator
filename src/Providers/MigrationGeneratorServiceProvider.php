@@ -54,8 +54,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
         $this->registerParser();
-        $this->registerGenerator();
         $this->registerCompiler();
+        $this->registerGenerator();
     }
 
 
@@ -112,7 +112,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 $connection = $dbManager->connection($params[$key])->getDoctrineConnection();
 
                 return new MigrationGenerator(
-                    $app->make(DefinitionResolverInterface::class, ['connection' => $connection])
+                    $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
+                    $app->make(MigrationCompilerInterface::class)
                 );
             }
         );

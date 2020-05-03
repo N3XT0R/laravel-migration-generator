@@ -42,9 +42,13 @@ class MigrationGenerator implements MigrationGeneratorInterface
     {
         $result = false;
         $resolver = $this->getResolver();
+        $compiler = $this->getCompiler();
         $table = 'da_attributevalue';
         $schemaResult = $resolver->resolveTableSchema($database, $table);
 
+        $compiler->generateByResult($schemaResult);
+        $renderedShit = $compiler->getRenderedTemplate();
+        print_r($renderedShit);
 
         return $result;
     }
