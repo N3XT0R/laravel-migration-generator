@@ -114,8 +114,7 @@ class MigrationCompiler implements MigrationCompilerInterface
                 $data['columns'] = array_merge($data['columns'], $extractedLines);
             }
         }
-
-        var_dump($data);
+        
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 
