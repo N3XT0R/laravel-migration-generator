@@ -1,9 +1,9 @@
 <?php
 
-{{MigrationNamespace}}
+{{$migrationNamespace}}
 use Illuminate\Database\Schema\Blueprint;
 
-class {{$className}} extends {{MigrationClass}}
+class {{$className}} extends {{$migrationClass}}
 {
 
     /**
