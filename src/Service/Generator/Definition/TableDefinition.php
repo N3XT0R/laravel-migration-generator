@@ -86,6 +86,7 @@ class TableDefinition extends AbstractDefinition
                         break;
 
                     case 'dateTime':
+                        $type = 'timestamp';
                         if ('CURRENT_TIMESTAMP' === $defaultValue) {
                             $defaultValue = 'DB::raw(\'CURRENT_TIMESTAMP\')';
                         }
@@ -109,7 +110,7 @@ class TableDefinition extends AbstractDefinition
                     default:
                         if ('string' === $type && true === $column->getFixed()) {
                             $type = 'char';
-                            $fieldEntity->setLength($column->getLength());
+                            $arguments['length'] = $column->getLength();
                         }
                         break;
                 }
