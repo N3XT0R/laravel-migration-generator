@@ -13,6 +13,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     protected $view;
     protected $renderedTemplate;
     protected $mapper = [];
+    protected $repository;
 
     public function __construct(ViewFactory $view)
     {
