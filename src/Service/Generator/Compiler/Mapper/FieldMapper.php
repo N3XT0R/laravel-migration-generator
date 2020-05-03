@@ -42,6 +42,14 @@ class FieldMapper extends AbstractMapper
             $methods[] = "default('" . $options['default'] . "')";
         }
 
+        if (array_key_exists('unsigned', $options) && true === $options['unsigned']) {
+            $methods[] = "unsigned()";
+        }
+
+        if (array_key_exists('comment', $options) && null === $options['comment']) {
+            $methods[] = "comment('" . $options['comment'] . "')";
+        }
+
         return $this->chainMethodsToString($methods);
     }
 }
