@@ -17,6 +17,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     protected $renderedTemplate;
     protected $mapper = [];
     protected $filesystem;
+    protected $migrationFiles = [];
 
     public function __construct(ViewFactory $view, Filesystem $filesystem)
     {
@@ -76,6 +77,27 @@ class MigrationCompiler implements MigrationCompilerInterface
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * @return array
+     */
+    public function getMigrationFiles(): array
+    {
+        return $this->migrationFiles;
+    }
+
+    /**
+     * @param array $migrationFiles
+     */
+    public function setMigrationFiles(array $migrationFiles): void
+    {
+        $this->migrationFiles = $migrationFiles;
+    }
+
+    public function addMigrationFile(string $file): void
+    {
+        $this->migrationFiles[] = $file;
+    }
+
     protected function render(string $view, array $data = []): string
     {
         $viewFactory = $this->getView();
@@ -87,6 +109,7 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void
     {
+        $this->setMigrationFiles([]);
         $tableName = $resultEntity->getTableName();
         $mapper = $this->getMapper();
         $sortedMapper = TopSort::sort($mapper);
@@ -121,21 +144,25 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     public function writeToDisk(string $name, string $path, bool $clearFolder = false): bool
     {
+        $this->setMigrationFiles([]);
         $result = false;
         $tpl = $this->getRenderedTemplate();
         if (!empty($tpl)) {
             $filesystem = $this->getFilesystem();
-            $fileName = date('Y_m_d_His') . '_' . Str::snake($name) . '.php';
+            $fileName = date('Y_m_d_His') . '_' . microtime() . '_' . Str::snake($name) . '.php';
             $renderedTemplate = str_replace('DummyClass', $name, $tpl);
 
             if ($filesystem->exists($path)) {
                 if (true === $clearFolder) {
                     $filesystem->cleanDirectory($path);
                 }
-                
+
                 $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
                 if (false === $filesystem->exists($fileLocation)) {
                     $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
+                    if (true === $result) {
+                        $this->addMigrationFile($fileName);
+                    }
                 }
             }
         }
