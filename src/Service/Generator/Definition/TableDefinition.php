@@ -80,10 +80,7 @@ class TableDefinition extends AbstractDefinition
                     case 'integer':
                     case 'smallInteger':
                     case 'bigInteger':
-                        if (true === $column->getAutoincrement()) {
-                            $type = $this->convertTypeToBluePrintType($type);
-                        }
-                        $arguments['unsigned'] = $column->getUnsigned();
+                        $options['unsigned'] = $column->getUnsigned();
                         $arguments['autoIncrement'] = $column->getAutoincrement();
 
                         break;
