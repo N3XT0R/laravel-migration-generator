@@ -13,11 +13,7 @@ class FieldMapper extends AbstractMapper
         $result = [];
         foreach ($data as $field) {
             if ($field instanceof FieldEntity) {
-                $prefix = '';
-                if (count($result) > 1) {
-                    $prefix = '                ';
-                }
-                $result[] = $prefix . $this->generate($field);
+                $result[] = $this->generateField($field);
             }
         }
 
@@ -25,7 +21,7 @@ class FieldMapper extends AbstractMapper
         return $result;
     }
 
-    protected function generate(FieldEntity $fieldEntity): string
+    protected function generateField(FieldEntity $fieldEntity): string
     {
         $argumentString = '';
         $arguments = $fieldEntity->getArguments();
@@ -51,10 +47,7 @@ class FieldMapper extends AbstractMapper
         }
 
         if (array_key_exists('comment', $options) && null === $options['comment']) {
-            $methods[] = "comment('" . $options['comment'] . "')";
-        }
-
-        if ($fieldEntity->hasIndexes()) {
+            $methods[] = "comment('" . addcslashes($options['comment'], "\\'") . "')";
         }
 
         return $this->chainMethodsToString($methods);

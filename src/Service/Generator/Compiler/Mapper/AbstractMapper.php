@@ -15,7 +15,7 @@ abstract class AbstractMapper implements MapperInterface
             foreach ($methods as $method) {
                 $result .= '->' . $method;
             }
-            $result .= ';' . PHP_EOL;
+            $result .= ';' . PHP_EOL . '                ';
         }
 
 
