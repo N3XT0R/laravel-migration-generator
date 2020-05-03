@@ -2,12 +2,19 @@
   "name": "n3xt0r/laravel-migration-generator",
   "description": "create migrations from database",
   "type": "library",
+  "keywords": [
+    "laravel",
+    "migrations",
+    "migration-generator",
+    "referential integrity"
+  ],
   "require": {
     "php": ">=7.2.0",
     "doctrine/dbal": "^2.10",
     "illuminate/database": "^5.6",
     "illuminate/view": "^5.6",
     "illuminate/support": "^5.6",
+    "illuminate/container": "^5.6",
     "marcj/topsort": "^1.1"
   },
   "require-dev": {
