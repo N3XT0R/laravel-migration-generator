@@ -35,10 +35,12 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
         $this->publishes(
             [
-                __DIR__ . '/../Config/migration-definition.php' => config_path('migration-definition.php'),
+                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
             ],
-            'migration-definition'
+            'migration-generator'
         );
+
+        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
     }
 
     /**
@@ -48,7 +50,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-definition.php', 'migration-definition');
+        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
         $this->registerParser();
         $this->registerGenerator();
         $this->registerCompiler();
@@ -65,7 +67,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getDefinitions(): array
     {
-        return (array)config('migration-definition');
+        return (array)config('migration-generator.definitions');
     }
 
     protected function registerGenerator(): void

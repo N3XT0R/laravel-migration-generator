@@ -3,9 +3,9 @@
 namespace Tests\Unit\Service\Generator\Compiler;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
-use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use Tests\TestCase;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class MigrationCompilerTest extends TestCase
 {
@@ -14,7 +14,7 @@ class MigrationCompilerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->compiler = new MigrationCompiler();
+        $this->compiler = new MigrationCompiler($this->app->make(ViewFactory::class));
     }
 
     public function testCreateMigrationClass(): void
@@ -25,9 +25,5 @@ class MigrationCompilerTest extends TestCase
         $field->setComment('fuck you');
         $field->setTable('da_attributevalue');
         $field->setArguments(['default' => 1, 'nullable' => 1, 'autoIncrement' => 1]);
-        $resultEntity = new ResultEntity();
-        $this->compiler->initializeMigration('CreateTableBla');
-        $this->compiler->createByFields('da_attributevalue', [$field]);
-        var_dump($this->compiler->getContent());
     }
 }
