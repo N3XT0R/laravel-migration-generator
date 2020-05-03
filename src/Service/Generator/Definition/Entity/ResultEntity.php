@@ -7,6 +7,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 class ResultEntity
 {
     protected $results = [];
+    protected $tableName = '';
 
     public function setResults(array $results): void
     {
@@ -17,6 +18,23 @@ class ResultEntity
     {
         return $this->results;
     }
+
+    /**
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * @param string $tableName
+     */
+    public function setTableName(string $tableName): void
+    {
+        $this->tableName = $tableName;
+    }
+    
 
     public function getResultByKey(string $key): array
     {

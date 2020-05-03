@@ -116,6 +116,7 @@ class DefinitionResolver implements DefinitionResolverInterface
         }
 
         $result = new ResultEntity();
+        $result->setTableName($table);
         $result->setResults($definitionResult);
 
         return $result;
