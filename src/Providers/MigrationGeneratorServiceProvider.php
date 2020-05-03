@@ -136,6 +136,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
             MigrationCompilerInterface::class,
             static function (Application $app) {
                 $view = $app->make(ViewFactory::class);
+                $view->addExtension(
+                    'stub',
+                    'replace'
+                );
                 return new MigrationCompiler($view);
             }
         );

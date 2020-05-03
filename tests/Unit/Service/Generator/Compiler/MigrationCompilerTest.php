@@ -15,7 +15,12 @@ class MigrationCompilerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->compiler = new MigrationCompiler($this->app->make(ViewFactory::class));
+        $view = $this->app->make(ViewFactory::class);
+        $view->addExtension(
+            'stub',
+            'replace'
+        );
+        $this->compiler = new MigrationCompiler($view);
     }
 
     public function testCreateMigrationClass(): void
