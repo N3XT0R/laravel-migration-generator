@@ -1,3 +1,0 @@
-plugins:
-phpcodesniffer: enabled: true
-config: standard: "PSR-12"
