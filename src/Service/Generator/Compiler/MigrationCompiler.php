@@ -82,8 +82,10 @@ class MigrationCompiler implements MigrationCompilerInterface
             $data['migrationClass'] = $customMigrationClass;
         }
 
-        foreach ($mapper as $mapping) {
+        foreach ($mapper as $key => $mapping) {
             if ($mapping instanceof FieldMapperInterface) {
+                $resultData = $resultEntity->getResultByKey($key);
+                $extracted = $mapping->map($resultData);
             }
         }
 
