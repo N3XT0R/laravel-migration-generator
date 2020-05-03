@@ -16,7 +16,6 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     public function __construct(ViewFactory $view)
     {
-        var_dump($view->getExtensions());
         $this->setView($view);
     }
 
