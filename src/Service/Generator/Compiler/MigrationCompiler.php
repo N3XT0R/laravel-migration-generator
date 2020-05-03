@@ -122,16 +122,20 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function writeToDisk(string $name, string $path, bool $clearFolder = false): bool
     {
         $result = false;
-        $filesystem = $this->getFilesystem();
-        $fileName = date('Y_m_d_His') . '_' . Str::snake($name) . '.php';
-        $renderedTemplate = str_replace('DummyClass', $name, $this->getRenderedTemplate());
+        $tpl = $this->getRenderedTemplate();
+        if (!empty($tpl)) {
+            $filesystem = $this->getFilesystem();
+            $fileName = date('Y_m_d_His') . '_' . Str::snake($name) . '.php';
+            $renderedTemplate = str_replace('DummyClass', $name, $tpl);
 
-        if ($filesystem->exists($path)) {
-            $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
-            if (false === $filesystem->exists($fileLocation)) {
-                $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
+            if ($filesystem->exists($path)) {
+                $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
+                if (false === $filesystem->exists($fileLocation)) {
+                    $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
+                }
             }
         }
+
 
         return $result;
     }
