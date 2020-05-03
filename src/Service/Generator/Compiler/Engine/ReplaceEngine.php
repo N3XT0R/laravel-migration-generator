@@ -23,13 +23,14 @@ class ReplaceEngine implements Engine
         foreach ($data as $key => $value) {
             if (!is_object($value)) {
                 if (is_array($value)) {
-                    if (0 === count($value)) {
-                        $value = [$key => ''];
+                    $string = '';
+                    foreach ($value as $val) {
+                        $string .= $val;
                     }
-                    $content = $this->populateData($content, $value);
-                } else {
-                    $content = str_replace('{{$' . $key . '}}', (string)$value, $content);
+                    
+                    $value = $string;
                 }
+                $content = str_replace('{{$' . $key . '}}', (string)$value, $content);
             }
         }
 

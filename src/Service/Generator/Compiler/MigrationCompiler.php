@@ -112,10 +112,10 @@ class MigrationCompiler implements MigrationCompilerInterface
                 $resultData = $resultEntity->getResultByKey($mappingName);
                 $extractedLines = $mapping->map($resultData);
                 $data['columns'] = array_merge($data['columns'], $extractedLines);
-                print_r($data['columns']);
             }
         }
 
+        var_dump($data);
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 
