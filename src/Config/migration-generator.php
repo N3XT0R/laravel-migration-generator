@@ -23,5 +23,9 @@ return [
             'class' => Mapper\FieldMapper::class,
             'requires' => [],
         ],
+        'index' => [
+            'class' => Mapper\IndexMapper::class,
+            'requires' => ['table'],
+        ],
     ],
 ];

@@ -87,7 +87,8 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void
     {
         $tableName = $resultEntity->getTableName();
-        $mapper = TopSort::sort($this->getMapper());
+        $mapper = $this->getMapper();
+        $sortedMapper = TopSort::sort($mapper);
 
         $data = [
             'migrationNamespace' => 'use ' . Migration::class . ';',
@@ -105,7 +106,8 @@ class MigrationCompiler implements MigrationCompilerInterface
         $namespaceParts = explode('\\', str_replace(';', '', $data['migrationNamespace']));
         $data['migrationClass'] = $namespaceParts[count($namespaceParts) - 1];
 
-        foreach ($mapper as $key => $mapping) {
+        foreach ($sortedMapper as $key => $mappingName) {
+            $mapping = app()->make($mapper[$mappingName]['class']);
             if ($mapping instanceof MapperInterface) {
                 $resultData = $resultEntity->getResultByKey($key);
                 $extractedLines = $mapping->map($resultData);

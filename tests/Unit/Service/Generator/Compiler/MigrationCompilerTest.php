@@ -7,6 +7,7 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use Tests\TestCase;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper;
 
 class MigrationCompilerTest extends TestCase
 {
@@ -20,7 +21,20 @@ class MigrationCompilerTest extends TestCase
             'stub',
             'replace'
         );
-        $this->compiler = new MigrationCompiler($view, $this->app->make('files'));
+        $compiler = new MigrationCompiler($view, $this->app->make('files'));
+        $compiler->setMapper(
+            [
+                'table' => [
+                    'class' => Mapper\FieldMapper::class,
+                    'requires' => [],
+                ],
+                'index' => [
+                    'class' => Mapper\IndexMapper::class,
+                    'requires' => ['table'],
+                ],
+            ]
+        );
+        $this->compiler = $compiler;
     }
 
     public function testCreateMigrationClass(): void
@@ -37,5 +51,6 @@ class MigrationCompilerTest extends TestCase
         $result->setResultByKey('table', [$field]);
 
         $this->compiler->generateByResult($result);
+        print_r($this->compiler->getRenderedTemplate());
     }
 }

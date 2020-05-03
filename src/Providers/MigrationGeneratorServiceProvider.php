@@ -121,6 +121,11 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     protected function registerCompiler(): void
     {
         $mapper = $this->getMapper();
+
+        foreach ($mapper as $map) {
+            $this->app->bind($map['class'], $map['class']);
+        }
+
         $this->app->bind(ReplaceEngine::class, ReplaceEngine::class);
 
         $this->app->extend(
@@ -136,7 +141,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 return $resolver;
             }
         );
-        
+
         $this->app->bind(
             MigrationCompilerInterface::class,
             static function (Application $app) use ($mapper) {
