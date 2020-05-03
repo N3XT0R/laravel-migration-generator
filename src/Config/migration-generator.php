@@ -1,6 +1,7 @@
 <?php
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper;
 
 return [
     'definitions' => [
@@ -15,6 +16,12 @@ return [
         'foreignKey' => [
             'class' => Definition\ForeignKeyDefinition::class,
             'requires' => ['table'],
+        ],
+    ],
+    'mapper' => [
+        'table' => [
+            'class' => Mapper\FieldMapper::class,
+            'requires' => [],
         ],
     ],
 ];
