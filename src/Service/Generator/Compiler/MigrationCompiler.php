@@ -142,21 +142,17 @@ class MigrationCompiler implements MigrationCompilerInterface
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 
-    public function writeToDisk(string $name, string $path, bool $clearFolder = false): bool
+    public function writeToDisk(string $name, string $path): bool
     {
         $this->setMigrationFiles([]);
         $result = false;
         $tpl = $this->getRenderedTemplate();
         if (!empty($tpl)) {
             $filesystem = $this->getFilesystem();
-            $fileName = date('Y_m_d_His') . '_' . microtime() . '_' . Str::snake($name) . '.php';
+            $fileName = date('Y_m_d_His') . '_' . microtime(true) . '_' . Str::snake($name) . '.php';
             $renderedTemplate = str_replace('DummyClass', $name, $tpl);
 
             if ($filesystem->exists($path)) {
-                if (true === $clearFolder) {
-                    $filesystem->cleanDirectory($path);
-                }
-
                 $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
                 if (false === $filesystem->exists($fileLocation)) {
                     $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
