@@ -21,6 +21,7 @@ class MigrationCompilerTest extends TestCase
     public function testCreateMigrationClass(): void
     {
         $result = new ResultEntity();
+        $result->setTableName('test');
         $field = new FieldEntity();
         $field->setColumnName('id');
         $field->setType('bigInteger');
