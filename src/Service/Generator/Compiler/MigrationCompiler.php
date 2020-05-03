@@ -72,15 +72,19 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         $data = [
             'migrationNamespace' => 'use ' . Migration::class . ';',
-            'migrationClass' => Migration::class,
             'tableName' => $tableName,
             'className' => 'Create' . ucfirst($tableName) . 'Table',
             'columns' => [],
         ];
 
         if (!empty($customMigrationClass) && class_exists($customMigrationClass)) {
-            $data['migrationClass'] = $customMigrationClass;
+            $data['migrationNamespace'] = 'use ' . $customMigrationClass . ';';
+        } else {
+            $data['migrationNamespace'] = 'use ' . Migration::class . ';';
         }
+
+        $namespaceParts = explode('\\', str_replace(';', '', $data['migrationNamespace']));
+        $data['migrationClass'] = $namespaceParts[count($namespaceParts) - 1];
 
         foreach ($mapper as $key => $mapping) {
             if ($mapping instanceof FieldMapperInterface) {
