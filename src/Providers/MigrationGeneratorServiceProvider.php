@@ -140,7 +140,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'stub',
                     'replace'
                 );
-                return new MigrationCompiler($view);
+                return new MigrationCompiler($view, $app->make('files'));
             }
         );
     }

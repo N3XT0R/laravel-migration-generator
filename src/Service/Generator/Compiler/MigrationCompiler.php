@@ -113,4 +113,8 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
+
+    public function writeToDisk(string $name, string $path = ''): bool
+    {
+    }
 }

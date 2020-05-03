@@ -20,7 +20,7 @@ class MigrationCompilerTest extends TestCase
             'stub',
             'replace'
         );
-        $this->compiler = new MigrationCompiler($view);
+        $this->compiler = new MigrationCompiler($view, $this->app->make('files'));
     }
 
     public function testCreateMigrationClass(): void
