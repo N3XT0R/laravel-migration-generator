@@ -129,6 +129,10 @@ class MigrationCompiler implements MigrationCompilerInterface
             $renderedTemplate = str_replace('DummyClass', $name, $tpl);
 
             if ($filesystem->exists($path)) {
+                if (true === $clearFolder) {
+                    $filesystem->cleanDirectory($path);
+                }
+                
                 $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
                 if (false === $filesystem->exists($fileLocation)) {
                     $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
