@@ -11,9 +11,11 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
     protected $resolver;
     protected $compiler;
+    protected $migrationDir = '';
 
     public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
     {
+        $this->setMigrationDir(database_path() . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR);
         $this->setResolver($resolver);
         $this->setCompiler($compiler);
     }
@@ -38,6 +40,23 @@ class MigrationGenerator implements MigrationGeneratorInterface
         return $this->compiler;
     }
 
+    /**
+     * @return string
+     */
+    public function getMigrationDir(): string
+    {
+        return $this->migrationDir;
+    }
+
+    /**
+     * @param string $migrationDir
+     */
+    public function setMigrationDir(string $migrationDir): void
+    {
+        $this->migrationDir = $migrationDir;
+    }
+
+
     public function generateMigrationForTable(string $database, string $table): bool
     {
         $result = false;
@@ -47,10 +66,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $schemaResult = $resolver->resolveTableSchema($database, $table);
 
         $compiler->generateByResult($schemaResult);
-        $renderedShit = $compiler->getRenderedTemplate();
-        print_r($renderedShit);
-        die();
 
-        return $result;
+        return $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
     }
 }
