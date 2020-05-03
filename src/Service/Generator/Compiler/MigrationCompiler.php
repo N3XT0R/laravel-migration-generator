@@ -6,6 +6,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler;
 use Illuminate\Database\Migrations\Migration;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\MapperInterface;
 use Illuminate\View\Factory as ViewFactory;
+use Illuminate\Filesystem\Filesystem;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 
 class MigrationCompiler implements MigrationCompilerInterface
@@ -13,11 +14,12 @@ class MigrationCompiler implements MigrationCompilerInterface
     protected $view;
     protected $renderedTemplate;
     protected $mapper = [];
-    protected $repository;
+    protected $filesystem;
 
-    public function __construct(ViewFactory $view)
+    public function __construct(ViewFactory $view, Filesystem $filesystem)
     {
         $this->setView($view);
+        $this->setFilesystem($filesystem);
     }
 
     public function setView(ViewFactory $view): void
@@ -54,6 +56,22 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function getRenderedTemplate(): string
     {
         return $this->renderedTemplate;
+    }
+
+    /**
+     * @return Filesystem
+     */
+    public function getFilesystem(): Filesystem
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @param Filesystem $filesystem
+     */
+    public function setFilesystem(Filesystem $filesystem): void
+    {
+        $this->filesystem = $filesystem;
     }
 
     protected function render(string $view, array $data = []): string
