@@ -59,10 +59,8 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
     public function generateMigrationForTable(string $database, string $table): bool
     {
-        $result = false;
         $resolver = $this->getResolver();
         $compiler = $this->getCompiler();
-        $table = 'da_attributevalue';
         $schemaResult = $resolver->resolveTableSchema($database, $table);
 
         $compiler->generateByResult($schemaResult);
