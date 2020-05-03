@@ -43,7 +43,7 @@ class IndexDefinition extends AbstractDefinition
                     break;
 
                 case true === $index->isPrimary():
-                    $type = 'primary';
+                    continue 2;
                     break;
 
                 default:
