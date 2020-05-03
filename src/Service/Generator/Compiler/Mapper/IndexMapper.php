@@ -22,7 +22,6 @@ class IndexMapper extends AbstractMapper
 
     public function generateIndex(IndexEntity $index): string
     {
-        print_r($index);
         if ('unique' === $index->getType()) {
             $method = 'unique(';
         } else {
