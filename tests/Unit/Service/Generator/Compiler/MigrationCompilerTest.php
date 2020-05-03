@@ -37,6 +37,5 @@ class MigrationCompilerTest extends TestCase
         $result->setResultByKey('table', [$field]);
 
         $this->compiler->generateByResult($result);
-        print_r($this->compiler->getRenderedTemplate());
     }
 }

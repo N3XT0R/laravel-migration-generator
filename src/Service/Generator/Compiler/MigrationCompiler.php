@@ -108,6 +108,7 @@ class MigrationCompiler implements MigrationCompilerInterface
             if ($mapping instanceof MapperInterface) {
                 $resultData = $resultEntity->getResultByKey($key);
                 $extractedLines = $mapping->map($resultData);
+                $data['columns'] = array_merge($data['columns'], $extractedLines);
             }
         }
 
@@ -116,5 +117,6 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     public function writeToDisk(string $name, string $path = ''): bool
     {
+        return false;
     }
 }
