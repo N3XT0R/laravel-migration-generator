@@ -40,10 +40,6 @@ class FieldMapper extends AbstractMapper
             $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . "'" . $argumentString . ")",
         ];
 
-        if (array_key_exists('nullable', $options) && true === $options['nullable']) {
-            $methods[] = 'nullable()';
-        }
-
         if (array_key_exists('default', $options) && null !== $options['default']) {
             if ('CURRENT_TIMESTAMP' === $options['default']) {
                 $default = "default(DB::raw('CURRENT_TIMESTAMP'))";
@@ -56,6 +52,10 @@ class FieldMapper extends AbstractMapper
 
         if (array_key_exists('unsigned', $options) && true === $options['unsigned']) {
             $methods[] = "unsigned()";
+        }
+
+        if (array_key_exists('nullable', $options) && true === $options['nullable']) {
+            $methods[] = 'nullable()';
         }
 
         if (array_key_exists('comment', $options) && !empty($options['comment'])) {
