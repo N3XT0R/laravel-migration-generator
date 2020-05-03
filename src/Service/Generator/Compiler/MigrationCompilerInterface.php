@@ -8,10 +8,10 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 
 interface MigrationCompilerInterface
 {
-    
+
     public function getRenderedTemplate(): string;
 
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void;
 
-    public function writeToDisk(string $name, string $path = ''): bool;
+    public function writeToDisk(string $name, string $path, bool $clearFolder = false): bool;
 }

@@ -9,6 +9,7 @@ use Illuminate\View\Factory as ViewFactory;
 use Illuminate\Filesystem\Filesystem;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
+use Illuminate\Support\Str;
 
 class MigrationCompiler implements MigrationCompilerInterface
 {
@@ -118,8 +119,20 @@ class MigrationCompiler implements MigrationCompilerInterface
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 
-    public function writeToDisk(string $name, string $path = ''): bool
+    public function writeToDisk(string $name, string $path, bool $clearFolder = false): bool
     {
-        return false;
+        $result = false;
+        $filesystem = $this->getFilesystem();
+        $fileName = date('Y_m_d_His') . '_' . Str::snake($name) . '.php';
+        $renderedTemplate = str_replace('DummyClass', $name, $this->getRenderedTemplate());
+
+        if ($filesystem->exists($path)) {
+            $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
+            if (false === $filesystem->exists($fileLocation)) {
+                $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
+            }
+        }
+
+        return $result;
     }
 }
