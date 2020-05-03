@@ -64,7 +64,6 @@ class TableDefinition extends AbstractDefinition
                 $fieldEntity = new FieldEntity();
                 $fieldEntity->setTable($table);
                 $fieldEntity->setColumnName($column->getName());
-                $fieldEntity->setComment((string)$column->getComment());
                 $defaultValue = $column->getDefault();
                 $notNullable = $column->getNotnull();
                 $type = $this->convertTypeToBluePrintType($column->getType()->getName());

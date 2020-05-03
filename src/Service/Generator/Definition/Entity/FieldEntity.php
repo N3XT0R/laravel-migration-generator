@@ -8,12 +8,8 @@ class FieldEntity
     protected $table = '';
     protected $columnName = '';
     protected $type = '';
-    protected $comment = '';
     protected $arguments = [];
-    protected $length = 0;
     protected $options = [];
-    protected $indexes = [];
-    protected $foreignKeys = [];
 
     /**
      * @return string
@@ -64,23 +60,6 @@ class FieldEntity
     }
 
     /**
-     * @return int
-     */
-    public function getLength(): int
-    {
-        return $this->length;
-    }
-
-    /**
-     * @param int $length
-     */
-    public function setLength(int $length): void
-    {
-        $this->length = $length;
-    }
-
-
-    /**
      * @return array
      */
     public function getOptions(): array
@@ -99,43 +78,6 @@ class FieldEntity
     /**
      * @return array
      */
-    public function getForeignKeys(): array
-    {
-        return $this->foreignKeys;
-    }
-
-    /**
-     * @param array $foreignKeys
-     */
-    public function setForeignKeys(array $foreignKeys): void
-    {
-        $this->foreignKeys = $foreignKeys;
-    }
-
-    public function addForeignKey(ForeignKeyEntity $entity): void
-    {
-        $this->foreignKeys[] = $entity;
-    }
-
-    /**
-     * @return string
-     */
-    public function getComment(): string
-    {
-        return $this->comment;
-    }
-
-    /**
-     * @param string $comment
-     */
-    public function setComment(string $comment): void
-    {
-        $this->comment = $comment;
-    }
-
-    /**
-     * @return array
-     */
     public function getArguments(): array
     {
         return $this->arguments;
@@ -149,29 +91,4 @@ class FieldEntity
         $this->arguments = $arguments;
     }
 
-    /**
-     * @return array
-     */
-    public function getIndexes(): array
-    {
-        return $this->indexes;
-    }
-
-    /**
-     * @param array $indexes
-     */
-    public function setIndexes(array $indexes): void
-    {
-        $this->indexes = $indexes;
-    }
-
-    public function addIndex(IndexEntity $indexEntity): void
-    {
-        $this->indexes[] = $indexEntity;
-    }
-
-    public function hasIndexes(): bool
-    {
-        return 0 !== count($this->getIndexes());
-    }
 }
