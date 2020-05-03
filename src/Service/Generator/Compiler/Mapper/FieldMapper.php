@@ -16,8 +16,7 @@ class FieldMapper extends AbstractMapper
                 $result[] = $this->generateField($field);
             }
         }
-
-
+        
         return $result;
     }
 

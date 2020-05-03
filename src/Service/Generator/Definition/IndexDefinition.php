@@ -19,14 +19,14 @@ class IndexDefinition extends AbstractDefinition
         $result = [];
 
         if (count($tableResult) !== 0) {
-            $result = $this->generateIndexes($tableResult, $schema->listTableIndexes($table));
+            $result = $this->generateIndexes($schema->listTableIndexes($table));
         }
 
         return $result;
     }
 
 
-    protected function generateIndexes(array $fields, array $indexes): array
+    protected function generateIndexes(array $indexes): array
     {
         $combinedIndexes = [];
         foreach ($indexes as $index) {
@@ -36,7 +36,6 @@ class IndexDefinition extends AbstractDefinition
 
             $fieldEntity = null;
             $columns = $index->getColumns();
-            $isCombinedIndex = count($columns) > 1;
 
             switch (true) {
                 case true === $index->isUnique():
@@ -55,22 +54,8 @@ class IndexDefinition extends AbstractDefinition
             $indexEntity = new IndexEntity();
             $indexEntity->setType($type);
             $indexEntity->setName($index->getName());
-
-            if (false === $isCombinedIndex) {
-                $column = current($columns);
-                /**
-                 * @var FieldEntity $fieldEntity
-                 */
-                if ($column === 'email') {
-                    var_dump($fields);
-                    die();
-                }
-                $fieldEntity = $fields[$column];
-                $fieldEntity->addIndex($indexEntity);
-            } else {
-                $indexEntity->setColumns($columns);
-                $combinedIndexes[] = $indexEntity;
-            }
+            $indexEntity->setColumns($columns);
+            $combinedIndexes[] = $indexEntity;
         }
 
         return $combinedIndexes;

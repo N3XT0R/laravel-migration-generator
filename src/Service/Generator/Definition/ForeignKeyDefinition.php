@@ -14,18 +14,17 @@ class ForeignKeyDefinition extends AbstractDefinition
     {
         $table = $this->getAttributeByName('tableName');
         $schema = $this->getSchema();
-        $fields = $this->getAttributeByName('table');
         $foreignKeys = $schema->listTableForeignKeys($table);
 
         $result = [];
         if (0 !== count($foreignKeys)) {
-            $result = $this->generateForeignKeys($table, $fields, $foreignKeys);
+            $result = $this->generateForeignKeys($table, $foreignKeys);
         }
 
         return $result;
     }
 
-    protected function generateForeignKeys(string $table, array $fields, array $foreignKeys): array
+    protected function generateForeignKeys(string $table, array $foreignKeys): array
     {
         $result = [];
 
@@ -51,15 +50,7 @@ class ForeignKeyDefinition extends AbstractDefinition
                 $foreignKeyEntity->setOnDelete($foreignKey->getOption('onDelete'));
             }
 
-            if (array_key_exists($localColumn, $fields)) {
-                /**
-                 * @var FieldEntity $fieldEntity
-                 */
-                $fieldEntity = $fields[$localColumn];
-                $fieldEntity->addForeignKey($foreignKeyEntity);
-            } else {
-                $result[] = $foreignKeyEntity;
-            }
+            $result[] = $foreignKeyEntity;
         }
 
         return $result;
