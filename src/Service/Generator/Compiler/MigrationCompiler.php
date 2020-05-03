@@ -23,7 +23,7 @@ class MigrationCompiler implements MigrationCompilerInterface
                 return new ReplaceEngine();
             }
         );
-        
+
         $this->setView($view);
     }
 
@@ -65,7 +65,7 @@ class MigrationCompiler implements MigrationCompilerInterface
             'migrationNamespace' => 'use ' . Migration::class . ';',
             'migrationClass' => Migration::class,
             'tableName' => $tableName,
-            'classname' => 'Create' . ucfirst($tableName) . 'Table',
+            'className' => 'Create' . ucfirst($tableName) . 'Table',
             'columns' => '',
         ];
 
