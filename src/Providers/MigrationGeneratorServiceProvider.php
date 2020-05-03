@@ -6,12 +6,15 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 use N3XT0R\MigrationGenerator\Console\Commands;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class MigrationGeneratorServiceProvider extends ServiceProvider
 {
@@ -48,6 +51,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../Config/migration-definition.php', 'migration-definition');
         $this->registerParser();
         $this->registerGenerator();
+        $this->registerCompiler();
     }
 
 
@@ -101,6 +105,17 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection])
                 );
+            }
+        );
+    }
+
+    protected function registerCompiler(): void
+    {
+        $this->app->bind(
+            MigrationCompilerInterface::class,
+            static function (Application $app) {
+                $view = $app->make(ViewFactory::class);
+                return new MigrationCompiler($view);
             }
         );
     }
