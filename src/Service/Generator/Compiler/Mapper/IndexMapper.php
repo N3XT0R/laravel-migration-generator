@@ -30,9 +30,9 @@ class IndexMapper extends AbstractMapper
 
         $columns = $index->getColumns();
         if (1 < count($columns)) {
-            $method .= "['" . implode('", "', $columns) . "']";
+            $method .= "['" . implode("', '", $columns) . "']";
         } else {
-            $method .= $columns[0];
+            $method .= "'" . $columns[0] . "'";
         }
 
         $method .= ", '" . $index->getName() . "')";
