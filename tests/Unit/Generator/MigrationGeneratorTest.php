@@ -47,4 +47,12 @@ class MigrationGeneratorTest extends TestCase
         $gotCompiler = $this->generator->getCompiler();
         $this->assertSame($compiler, $gotCompiler);
     }
+
+    public function testSetAndGetMigrationDirIsSame(): void
+    {
+        $migrationDir = uniqid('/', true);
+        $this->generator->setMigrationDir($migrationDir);
+        $gotDir = $this->generator->getMigrationDir();
+        $this->assertSame($migrationDir, $gotDir);
+    }
 }
