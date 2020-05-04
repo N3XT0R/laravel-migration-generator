@@ -77,4 +77,25 @@ class AbstractDefinitionTest extends TestCase
         $gotSchema = $this->definition->getSchema();
         $this->assertSame($schema, $gotSchema);
     }
+
+    /**
+     * @param bool $expectedResult
+     * @testWith    [true]
+     *              [false]
+     */
+    public function testHasSchema(bool $expectedResult): void
+    {
+        if (true === $expectedResult) {
+            /**
+             * @var DatabaseManager $dbManager
+             */
+            $dbManager = $this->app->get('db');
+            $doctrine = $dbManager->connection()->getDoctrineConnection();
+            $schema = new MySqlSchemaManager($doctrine);
+
+            $this->definition->setSchema($schema);
+        }
+
+        $this->assertSame($expectedResult, $this->definition->hasSchema());
+    }
 }
