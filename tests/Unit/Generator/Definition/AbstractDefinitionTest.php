@@ -47,4 +47,18 @@ class AbstractDefinitionTest extends TestCase
 
         $this->assertSame($expectedResult, $this->definition->hasAttribute($attributeName));
     }
+
+
+    public function testGetAttributeByNameWorks(): void
+    {
+        $value = uniqid('value', true);
+        $this->definition->addAttribute('test', $value);
+
+        $this->assertSame($value, $this->definition->getAttributeByName('test'));
+    }
+
+    public function testGetAttributeByNameReturnsNull(): void
+    {
+        $this->assertNull($this->definition->getAttributeByName('test'));
+    }
 }
