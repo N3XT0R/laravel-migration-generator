@@ -54,6 +54,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
         $this->registerParser();
+        $this->registerCompilerEngine();
         $this->registerCompiler();
         $this->registerGenerator();
     }
@@ -119,14 +120,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         );
     }
 
-    protected function registerCompiler(): void
+    protected function registerCompilerEngine(): void
     {
-        $mapper = $this->getMapper();
-
-        foreach ($mapper as $map) {
-            $this->app->bind($map['class'], $map['class']);
-        }
-
         $this->app->bind(ReplaceEngine::class, ReplaceEngine::class);
 
         $this->app->extend(
@@ -142,6 +137,14 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 return $resolver;
             }
         );
+    }
+
+    protected function registerCompiler(): void
+    {
+        $mapper = $this->getMapper();
+        foreach ($mapper as $map) {
+            $this->app->bind($map['class'], $map['class']);
+        }
 
         $this->app->bind(
             MigrationCompilerInterface::class,
