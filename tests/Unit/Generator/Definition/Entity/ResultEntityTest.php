@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Unit\Generator\Definition;
+namespace Tests\Unit\Generator\Definition\Entity;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
