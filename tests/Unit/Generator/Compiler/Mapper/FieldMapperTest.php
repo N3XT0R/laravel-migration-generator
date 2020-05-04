@@ -102,7 +102,7 @@ class FieldMapperTest extends TestCase
                 [
                     'default' => 'CURRENT_TIMESTAMP',
                 ],
-                "default(DB::raw('CURRENT_TIMESTAMP'))"
+                "->default(DB::raw('CURRENT_TIMESTAMP'))"
             ],
         ];
     }
@@ -125,7 +125,7 @@ class FieldMapperTest extends TestCase
         $result = $this->mapper->map($data);
         $this->assertCount(1, $result);
         $this->assertStringContainsString(
-            sprintf("\$table->bigInteger(%s)%s;", "'id', true)", $expectedResult),
+            sprintf("\$table->bigInteger(%s)%s;", "'id', true", $expectedResult),
             $result[0]
         );
     }
