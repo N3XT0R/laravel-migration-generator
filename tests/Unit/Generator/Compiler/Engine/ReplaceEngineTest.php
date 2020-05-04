@@ -17,12 +17,27 @@ class ReplaceEngineTest extends TestCase
         $this->engine = new ReplaceEngine();
     }
 
-    public function testGetPopulatesData(): void
+    public function testGetPopulatesDataWithString(): void
     {
         $data = $this->engine->get(
             dirname(__DIR__, 5) . '/src/Stubs/CreateTableStub.stub',
             [
                 'columns' => 'test'
+            ]
+        );
+        $this->assertStringNotContainsString('{{$columns}}', $data);
+    }
+
+    public function testGetPopulatesDataWithArray(): void
+    {
+        $data = $this->engine->get(
+            dirname(__DIR__, 5) . '/src/Stubs/CreateTableStub.stub',
+            [
+                'columns' => [
+                    1,
+                    2,
+                    3
+                ]
             ]
         );
         $this->assertStringNotContainsString('{{$columns}}', $data);
