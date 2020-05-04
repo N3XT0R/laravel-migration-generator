@@ -94,4 +94,39 @@ class FieldMapperTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertStringContainsString(sprintf("\$table->bigInteger(%s);", "'id'" . $expectedResult), $result[0]);
     }
+
+    public function optionProvider(): array
+    {
+        return [
+            [
+                [
+                    'default' => 'CURRENT_TIMESTAMP',
+                ],
+                "default(DB::raw('CURRENT_TIMESTAMP'))"
+            ],
+        ];
+    }
+
+    /**
+     * @param array $options
+     * @param string $expectedResult
+     * @dataProvider optionProvider
+     */
+    public function testMapWorksWithArgumentsAndWithOptions(array $options, string $expectedResult): void
+    {
+        $field = new FieldEntity();
+        $field->setType('bigInteger');
+        $field->setColumnName('id');
+        $field->setArguments([true]);
+        $field->setOptions($options);
+
+        $data = [$field];
+
+        $result = $this->mapper->map($data);
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString(
+            sprintf("\$table->bigInteger(%s)%s;", "'id', true)", $expectedResult),
+            $result[0]
+        );
+    }
 }
