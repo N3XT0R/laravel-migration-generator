@@ -48,11 +48,6 @@ class ResultEntity
         return $result;
     }
 
-    public function setResultByKey(string $key, array $data): void
-    {
-        $this->results[$key] = $data;
-    }
-
     public function hasResultForTable(string $tableName): bool
     {
         return array_key_exists($tableName, $this->results);
