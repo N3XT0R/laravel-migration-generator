@@ -56,14 +56,22 @@ class FieldMapperTest extends TestCase
                     true,
                     1
                 ],
-                ", true, '1'"
+                ", true, 1"
             ],
             [
                 [
                     false,
                     0
                 ],
-                ", false, '0'"
+                ", false, 0"
+            ],
+            [
+                [
+                    false,
+                    0,
+                    'string'
+                ],
+                ", false, 0, 'string'"
             ],
         ];
     }

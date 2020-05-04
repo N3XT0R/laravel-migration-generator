@@ -30,6 +30,8 @@ class FieldMapper extends AbstractMapper
                 $argumentString .= ', ';
                 if (is_bool($argument)) {
                     $argumentString .= $argument ? 'true' : 'false';
+                } elseif (is_int($argument)) {
+                    $argumentString .= $argument;
                 } else {
                     $argumentString .= "'" . $argument . "'";
                 }
