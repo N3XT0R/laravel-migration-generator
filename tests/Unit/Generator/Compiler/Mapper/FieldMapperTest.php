@@ -104,6 +104,36 @@ class FieldMapperTest extends TestCase
                 ],
                 "->default(DB::raw('CURRENT_TIMESTAMP'))"
             ],
+            [
+                [
+                    'default' => '1',
+                ],
+                "->default('1')"
+            ],
+            [
+                [
+                    'default' => 'string',
+                ],
+                "->default('string')"
+            ],
+            [
+                [
+                    'unsigned' => true,
+                ],
+                "->unsigned()"
+            ],
+            [
+                [
+                    'nullable' => true,
+                ],
+                "->nullable()"
+            ],
+            [
+                [
+                    'comment' => 'test',
+                ],
+                "->comment('test')"
+            ],
         ];
     }
 
