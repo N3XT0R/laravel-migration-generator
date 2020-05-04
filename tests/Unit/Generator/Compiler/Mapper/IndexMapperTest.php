@@ -41,4 +41,22 @@ class IndexMapperTest extends TestCase
 
         $this->assertStringContainsString('$table->index(\'test\', \'testIndex\');', $result[0]);
     }
+
+    /**
+     * @param string $type
+     * @testWith    ["index"]
+     *              ["unique"]
+     */
+    public function testMapWithMultipleIndexWorks(string $type): void
+    {
+        $index = new IndexEntity();
+        $index->setType('index');
+        $index->setColumns(['test', 'test2']);
+        $index->setName('testIndex2');
+
+        $result = $this->mapper->map([$index]);
+        $this->assertCount(1, $result);
+
+        $this->assertStringContainsString('$table->index([\'test\', \'test2\'], \'testIndex2\');', $result[0]);
+    }
 }
