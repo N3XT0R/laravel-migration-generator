@@ -5,6 +5,8 @@ namespace Tests\Unit\Generator;
 
 
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
@@ -36,5 +38,13 @@ class MigrationGeneratorTest extends TestCase
         $this->generator->setResolver($resolver);
         $gotResolver = $this->generator->getResolver();
         $this->assertSame($resolver, $gotResolver);
+    }
+
+    public function testSetAndGetCompilerAreSame(): void
+    {
+        $compiler = new MigrationCompiler($this->app->make(ViewFactory::class), $this->app->make('files'));
+        $this->generator->setCompiler($compiler);
+        $gotCompiler = $this->generator->getCompiler();
+        $this->assertSame($compiler, $gotCompiler);
     }
 }
