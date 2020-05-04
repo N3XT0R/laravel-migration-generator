@@ -35,4 +35,55 @@ class FieldMapperTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertStringContainsString("\$table->bigInteger('id');", $result[0]);
     }
+
+    public function argumentProvider(): array
+    {
+        return [
+            [
+                [
+                    true,
+                ],
+                ', true'
+            ],
+            [
+                [
+                    false,
+                ],
+                ', false'
+            ],
+            [
+                [
+                    true,
+                    1
+                ],
+                ", true, '1'"
+            ],
+            [
+                [
+                    false,
+                    0
+                ],
+                ", false, '0'"
+            ],
+        ];
+    }
+
+    /**
+     * @param array $arguments
+     * @param string $expectedResult
+     * @dataProvider argumentProvider
+     */
+    public function testMapWorksWithArgumentsAndWithoutOptions(array $arguments, string $expectedResult): void
+    {
+        $field = new FieldEntity();
+        $field->setType('bigInteger');
+        $field->setColumnName('id');
+        $field->setArguments($arguments);
+
+        $data = [$field];
+
+        $result = $this->mapper->map($data);
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString(sprintf("\$table->bigInteger(%s);", "'id'" . $expectedResult), $result[0]);
+    }
 }
