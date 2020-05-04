@@ -27,6 +27,18 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->bootCommand();
+        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
+        $this->publishes(
+            [
+                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
+            ],
+            'migration-generator'
+        );
+    }
+
+    protected function bootCommand(): void
+    {
         if ($this->app->runningInConsole()) {
             $this->commands(
                 [
@@ -34,15 +46,6 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 ]
             );
         }
-
-        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
-
-        $this->publishes(
-            [
-                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
-            ],
-            'migration-generator'
-        );
     }
 
     /**
@@ -56,6 +59,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->registerParser();
         $this->registerCompilerEngine();
         $this->registerCompiler();
+        $this->registerDefinitionResolver();
         $this->registerGenerator();
     }
 
@@ -78,7 +82,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         return (array)config('migration-generator.mapper');
     }
 
-    protected function registerGenerator(): void
+    protected function registerDefinitionResolver(): void
     {
         $definitions = $this->getDefinitions();
 
@@ -97,7 +101,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 return new DefinitionResolver($params[$key], $definitions);
             }
         );
+    }
 
+    protected function registerGenerator(): void
+    {
         $this->app->bind(
             MigrationGeneratorInterface::class,
             static function (Application $app, array $params) {
