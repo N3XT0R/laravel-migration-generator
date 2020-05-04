@@ -9,9 +9,15 @@ jobs:
     - php: nightly
       env: COMPOSER_OPTION=--ignore-platform-reqs
 
+service:
+  - mysql
+
 cache:
   directories:
     - vendor
+
+before_install:
+  - mysql -e 'CREATE DATABASE testing;'
 
 before_script:
   - travis_retry composer install --no-interaction $COMPOSER_OPTION

@@ -4,7 +4,8 @@
 namespace Tests\Unit\Generator;
 
 
-use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
+use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use Tests\TestCase;
 
 class MigrationGeneratorTest extends TestCase
@@ -14,6 +15,10 @@ class MigrationGeneratorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->generator = $this->app->get(MigrationGeneratorInterface::class);
+        $resolver = new DefinitionResolver();
+        $generator = new MigrationGenerator();
+
+
+        $this->generator = $generator;
     }
 }

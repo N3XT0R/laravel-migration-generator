@@ -1,9 +1,23 @@
 version: '3.7'
 
 services:
+  db_migration:
+    image: mysql:5.7
+    volumes:
+      - ./build/data/db/:/var/lib/mysql
+    restart: always
+    ports:
+      - "3321:3306"
+    environment:
+      - MYSQL_DATABASE=testing
+      - MYSQL_USER=migration
+      - MYSQL_PASSWORD=migration
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
   php:
     build:
       context: .
       dockerfile: app.Dockerfile
     volumes:
       - .:/var/www/html/:consistent
+    depends_on:
+      - db_migration
