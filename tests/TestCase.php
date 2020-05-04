@@ -38,6 +38,7 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set(
             'database.connections.mysql',
             [
+                'host' => env('DB_HOST', 'db_migration'),
                 'driver' => 'mysql',
                 'database' => 'testing',
                 'username' => 'root',

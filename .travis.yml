@@ -12,6 +12,8 @@ jobs:
 service:
   - mysql
 
+env:
+  - DB_HOST="127.0.0.1"
 cache:
   directories:
     - vendor
