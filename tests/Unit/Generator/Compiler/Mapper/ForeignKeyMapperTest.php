@@ -24,7 +24,7 @@ class ForeignKeyMapperTest extends TestCase
         $this->assertCount(0, $this->mapper->map($data));
     }
 
-    public function testMapWithOneForeignKey(): void
+    public function testMapWithOneForeignKeyAndWithoutOnStatements(): void
     {
         $foreignKey = new ForeignKeyEntity();
         $foreignKey->setLocalColumn('test');
@@ -36,6 +36,24 @@ class ForeignKeyMapperTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertStringContainsString(
             '$table->foreign(\'test\')->references(\'id\')->on(\'reference\');',
+            $result[0]
+        );
+    }
+
+    public function testMapWithOneForeignKeyAndWithoutStatements(): void
+    {
+        $foreignKey = new ForeignKeyEntity();
+        $foreignKey->setLocalColumn('test');
+        $foreignKey->setLocalTable('table');
+        $foreignKey->setReferencedColumn('id');
+        $foreignKey->setReferencedTable('reference');
+        $foreignKey->setOnDelete('CASCADE');
+        $foreignKey->setOnUpdate('CASCADE');
+
+        $result = $this->mapper->map([$foreignKey]);
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString(
+            '$table->foreign(\'test\')->references(\'id\')->on(\'reference\')->onUpdate(\'CASCADE\')->onDelete(\'CASCADE\');',
             $result[0]
         );
     }
