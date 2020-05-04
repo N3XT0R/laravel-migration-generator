@@ -32,4 +32,19 @@ class AbstractDefinitionTest extends TestCase
         $gotValue = $this->definition->getResult();
         $this->assertSame($value, $gotValue);
     }
+
+    /**
+     * @param string $attributeName
+     * @param bool $expectedResult
+     * @testWith ["test", true]
+     *           ["test2", false]
+     */
+    public function testHasAttribute(string $attributeName, bool $expectedResult): void
+    {
+        if ($expectedResult) {
+            $this->definition->addAttribute($attributeName, 'test');
+        }
+
+        $this->assertSame($expectedResult, $this->definition->hasAttribute($attributeName));
+    }
 }
