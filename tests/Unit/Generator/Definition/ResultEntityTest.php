@@ -71,4 +71,13 @@ class ResultEntityTest extends TestCase
 
         $this->assertSame($expectedResult, $this->entity->hasResultForTableNameAndKey($tableName, $key));
     }
+
+    public function testGetResultByTableNameAndKeyWorks(): void
+    {
+        $results = ['testTable' => ['testKey' => ['test']]];
+        $this->entity->setResults($results);
+
+        $result = $this->entity->getResultByTableNameAndKey('testTable', 'testKey');
+        $this->assertEquals(['test'], $result);
+    }
 }
