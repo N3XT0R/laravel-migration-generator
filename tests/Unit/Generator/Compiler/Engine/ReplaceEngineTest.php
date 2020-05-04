@@ -19,13 +19,15 @@ class ReplaceEngineTest extends TestCase
 
     public function testGetPopulatesDataWithString(): void
     {
+        $columns = uniqid('test', true);
         $data = $this->engine->get(
             dirname(__DIR__, 5) . '/src/Stubs/CreateTableStub.stub',
             [
-                'columns' => 'test'
+                'columns' => $columns
             ]
         );
         $this->assertStringNotContainsString('{{$columns}}', $data);
+        $this->assertStringContainsString($columns, $data);
     }
 
     public function testGetPopulatesDataWithArray(): void
@@ -41,5 +43,6 @@ class ReplaceEngineTest extends TestCase
             ]
         );
         $this->assertStringNotContainsString('{{$columns}}', $data);
+        $this->assertStringContainsString(123, $data);
     }
 }
