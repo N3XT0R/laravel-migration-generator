@@ -9,7 +9,7 @@ abstract class AbstractDefinition implements DefinitionInterface
 {
     protected $result = [];
     protected $schema;
-    protected $attributes;
+    protected $attributes = [];
 
     public function getAttributes(): array
     {
