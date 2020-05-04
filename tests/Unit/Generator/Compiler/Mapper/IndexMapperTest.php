@@ -32,14 +32,14 @@ class IndexMapperTest extends TestCase
     public function testMapWithSingleIndexWorks(string $type): void
     {
         $index = new IndexEntity();
-        $index->setType('index');
+        $index->setType($type);
         $index->setColumns(['test']);
         $index->setName('testIndex');
 
         $result = $this->mapper->map([$index]);
         $this->assertCount(1, $result);
 
-        $this->assertStringContainsString('$table->index(\'test\', \'testIndex\');', $result[0]);
+        $this->assertStringContainsString('$table->' . $index->getType() . '(\'test\', \'testIndex\');', $result[0]);
     }
 
     /**
@@ -50,13 +50,16 @@ class IndexMapperTest extends TestCase
     public function testMapWithMultipleIndexWorks(string $type): void
     {
         $index = new IndexEntity();
-        $index->setType('index');
+        $index->setType($type);
         $index->setColumns(['test', 'test2']);
         $index->setName('testIndex2');
 
         $result = $this->mapper->map([$index]);
         $this->assertCount(1, $result);
 
-        $this->assertStringContainsString('$table->index([\'test\', \'test2\'], \'testIndex2\');', $result[0]);
+        $this->assertStringContainsString(
+            '$table->' . $index->getType() . '([\'test\', \'test2\'], \'testIndex2\');',
+            $result[0]
+        );
     }
 }
