@@ -98,4 +98,11 @@ class AbstractDefinitionTest extends TestCase
 
         $this->assertSame($expectedResult, $this->definition->hasSchema());
     }
+
+    public function testGenerateThrowsRuntimeException(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('missing Schema on Definition!');
+        $this->definition->generate();
+    }
 }
