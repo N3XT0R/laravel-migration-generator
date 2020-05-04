@@ -33,4 +33,22 @@ class ResultEntityTest extends TestCase
         $gotTableName = $this->entity->getTableName();
         $this->assertSame($tableName, $gotTableName);
     }
+
+    /**
+     * @param string $tableName
+     * @param bool $expectedResult
+     * @testWith    ["testTable", true]
+     *              ["testTable", false]
+     */
+    public function testHasResultForTable(string $tableName, bool $expectedResult): void
+    {
+        if ($expectedResult === true) {
+            $value = [$tableName => []];
+        } else {
+            $value = [time() => []];
+        }
+        $this->entity->setResults($value);
+
+        $this->assertSame($expectedResult, $this->entity->hasResultForTable($tableName));
+    }
 }
