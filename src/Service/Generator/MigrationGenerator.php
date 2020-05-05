@@ -59,12 +59,18 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
     public function generateMigrationForTable(string $database, string $table): bool
     {
+        $result = false;
         $resolver = $this->getResolver();
         $compiler = $this->getCompiler();
         $schemaResult = $resolver->resolveTableSchema($database, $table);
 
-        $compiler->generateByResult($schemaResult);
+        try {
+            $compiler->generateByResult($schemaResult);
+            $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
+        } catch (\Exception $e) {
+        }
 
-        return $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
+
+        return $result;
     }
 }

@@ -36,14 +36,7 @@ class DefinitionResolver extends AbstractResolver
                 }
 
                 $definitionClass->setSchema($schemaManager);
-                try {
-                    $definitionClass->generate();
-                } catch (\Exception $e) {
-                    /**
-                     * @todo
-                     */
-                    break;
-                }
+                $definitionClass->generate();
 
                 if (!array_key_exists($table, $definitionResult)) {
                     $definitionResult[$table] = [];
