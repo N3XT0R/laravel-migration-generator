@@ -59,70 +59,7 @@ class TableDefinition extends AbstractDefinition
         if (0 !== count($columns)) {
             foreach ($columns as $column) {
                 if ($column instanceof Column) {
-                    $fieldEntity = new FieldEntity();
-                    $fieldEntity->setTable($table);
-                    $fieldEntity->setColumnName($column->getName());
-                    $defaultValue = $column->getDefault();
-                    $notNullable = $column->getNotnull();
-                    $type = $this->convertTypeToBluePrintType($column->getType()->getName());
-
-                    $arguments = [];
-                    $options = [
-                        'nullable' => !$notNullable,
-                        'comment' => null,
-                    ];
-
-                    if (null !== $column->getComment()) {
-                        $options['comment'] = $column->getComment();
-                    }
-
-
-                    switch ($type) {
-                        case 'tinyInteger':
-                        case 'integer':
-                        case 'smallInteger':
-                        case 'bigInteger':
-                            $unsigned = $column->getUnsigned();
-                            $autoIncrement = $column->getAutoincrement();
-                            if (true === $autoIncrement) {
-                                $arguments['autoIncrement'] = $autoIncrement;
-                            }
-
-                            if (true === $unsigned) {
-                                $options['unsigned'] = $unsigned;
-                            }
-
-                            break;
-
-                        case 'dateTime':
-                            $type = 'timestamp';
-                            break;
-
-                        case 'double':
-                        case 'decimal':
-                            $arguments['total'] = $column->getPrecision();
-                            $arguments['places'] = $column->getScale();
-                            $unsigned = $column->getUnsigned();
-
-                            if ('float' !== $type && $unsigned) {
-                                $type = 'unsigned' . ucfirst($type);
-                            } elseif (true === $unsigned) {
-                                $options['unsigned'] = $unsigned;
-                            }
-                            break;
-
-                        default:
-                            if ('string' === $type && true === $column->getFixed()) {
-                                $type = 'char';
-                                $arguments['length'] = $column->getLength();
-                            }
-                            break;
-                    }
-
-                    $fieldEntity->setType($type);
-                    $options['default'] = $defaultValue;
-                    $fieldEntity->setOptions($options);
-                    $fieldEntity->setArguments($arguments);
+                    $fieldEntity = $this->convertColumnToFieldEntity($table, $column);
                     $result[$fieldEntity->getColumnName()] = $fieldEntity;
                 }
             }
@@ -130,5 +67,89 @@ class TableDefinition extends AbstractDefinition
 
         return $result;
     }
-    
+
+    protected function convertColumnToFieldEntity(string $table, Column $column): FieldEntity
+    {
+        $fieldEntity = new FieldEntity();
+        $fieldEntity->setTable($table);
+        $fieldEntity->setColumnName($column->getName());
+        $defaultValue = $column->getDefault();
+        $notNullable = $column->getNotnull();
+        $fieldEntity->setType($this->convertTypeToBluePrintType($column->getType()->getName()));
+        $fieldEntity->addOption('nullable', !$notNullable);
+
+        if (null !== $column->getComment()) {
+            $fieldEntity->addOption('comment', $column->getComment());
+        }
+
+
+        switch ($fieldEntity->getType()) {
+            case 'tinyInteger':
+            case 'integer':
+            case 'smallInteger':
+            case 'bigInteger':
+                $this->prepareInteger($fieldEntity, $column);
+                break;
+
+            case 'dateTime':
+                $this->prepareDateTime($fieldEntity);
+                break;
+
+            case 'double':
+            case 'decimal':
+                $this->prepareFloatingField($fieldEntity, $column);
+                break;
+
+            default:
+                $this->prepareMixedTypes($fieldEntity, $column);
+                break;
+        }
+
+        $fieldEntity->addOption('default', $defaultValue);
+
+        return $fieldEntity;
+    }
+
+    private function prepareInteger(FieldEntity $fieldEntity, Column $column): void
+    {
+        $unsigned = $column->getUnsigned();
+        $autoIncrement = $column->getAutoincrement();
+        if (true === $autoIncrement) {
+            $fieldEntity->addArgument('autoIncrement', $autoIncrement);
+        }
+
+        if (true === $unsigned) {
+            $fieldEntity->addOption('unsigned', $unsigned);
+        }
+    }
+
+    private function prepareDateTime(FieldEntity $fieldEntity): void
+    {
+        $fieldEntity->setType('timestamp');
+    }
+
+    private function prepareFloatingField(FieldEntity $fieldEntity, Column $column): void
+    {
+        $fieldEntity->addArgument('total', $column->getPrecision());
+        $fieldEntity->addArgument('places', $column->getScale());
+        $unsigned = $column->getUnsigned();
+        $type = $fieldEntity->getType();
+
+        if (true === $unsigned && 'float' !== $type) {
+            $fieldEntity->setType('unsigned' . ucfirst($type));
+        } elseif (true === $unsigned) {
+            $fieldEntity->addOption('unsigned', $unsigned);
+        }
+    }
+
+    private function prepareMixedTypes(FieldEntity $fieldEntity, Column $column): void
+    {
+        $type = $fieldEntity->getType();
+
+        if ('string' === $type && true === $column->getFixed()) {
+            $fieldEntity->setType('char');
+            $fieldEntity->addArgument('length', $column->getLength());
+        }
+    }
+
 }

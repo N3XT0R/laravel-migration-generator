@@ -75,6 +75,11 @@ class FieldEntity
         $this->options = $options;
     }
 
+    public function addOption(string $name, $value): void
+    {
+        $this->options[$name] = $value;
+    }
+
     /**
      * @return array
      */
@@ -89,6 +94,11 @@ class FieldEntity
     public function setArguments(array $arguments): void
     {
         $this->arguments = $arguments;
+    }
+
+    public function addArgument(string $name, $value): void
+    {
+        $this->arguments[$name] = $value;
     }
 
 }

@@ -60,11 +60,10 @@ class TableDefinitionTest extends DbTestCase
             ],
             $bigInteger->getArguments()
         );
-        $this->assertCount(4, $bigInteger->getOptions());
+        $this->assertCount(3, $bigInteger->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'unsigned' => true,
                 'default' => null,
             ],
@@ -86,11 +85,10 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('small_int', $field->getColumnName());
         $this->assertEquals('smallInteger', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => true,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -111,11 +109,10 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('medium_int', $field->getColumnName());
         $this->assertEquals('integer', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -161,11 +158,10 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('created_at', $field->getColumnName());
         $this->assertEquals('timestamp', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => 'CURRENT_TIMESTAMP',
             ],
             $field->getOptions()
@@ -186,11 +182,10 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('any_date', $field->getColumnName());
         $this->assertEquals('timestamp', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -218,11 +213,10 @@ class TableDefinitionTest extends DbTestCase
             ],
             $field->getArguments()
         );
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -250,11 +244,10 @@ class TableDefinitionTest extends DbTestCase
             ],
             $field->getArguments()
         );
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -282,11 +275,10 @@ class TableDefinitionTest extends DbTestCase
             ],
             $field->getArguments()
         );
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -307,11 +299,10 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('string', $field->getColumnName());
         $this->assertEquals('string', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -338,11 +329,10 @@ class TableDefinitionTest extends DbTestCase
             ],
             $field->getArguments()
         );
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
@@ -363,11 +353,10 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('boolean', $field->getColumnName());
         $this->assertEquals('boolean', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(3, $field->getOptions());
+        $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
                 'default' => null,
             ],
             $field->getOptions()
