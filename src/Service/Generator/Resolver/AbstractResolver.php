@@ -31,7 +31,7 @@ abstract class AbstractResolver implements DefinitionResolverInterface
         return $this->definitions;
     }
 
-    public function addDefinition(string $name, string $definition): void
+    public function addDefinition(string $name, array $definition): void
     {
         $this->definitions[$name] = $definition;
     }
@@ -41,14 +41,15 @@ abstract class AbstractResolver implements DefinitionResolverInterface
         $definition = null;
         $definitions = $this->getDefinitions();
 
-        if (array_key_exists($name, $definitions)) {
-            $definition = $definitions[$name];
+        if (array_key_exists($name, $definitions) && array_key_exists('class', $definitions[$name]) && app()->has(
+                $definitions[$name]['class']
+            )) {
+            /**
+             * @var DefinitionInterface $definition
+             */
+            $definition = app()->make($definitions[$name]['class']);
         }
 
-        /**
-         * @var DefinitionInterface $definition
-         */
-        $definition = app()->make($definition['class']);
 
         return $definition;
     }
