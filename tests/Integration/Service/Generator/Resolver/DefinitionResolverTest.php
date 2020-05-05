@@ -7,7 +7,6 @@ namespace Tests\Integration\Service\Generator\Resolver;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use Tests\DbTestCase;
-use Tests\TestCase;
 
 class DefinitionResolverTest extends DbTestCase
 {
