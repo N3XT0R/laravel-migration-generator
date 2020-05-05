@@ -74,7 +74,8 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         }
 
         $table = (string)$this->option('table');
-        $force = (bool)$this->option('force');
+        $force = false;
+        //$force = (bool)$this->option('force');
         $connectionName = $this->option('database') ?? config('database.default');
         $this->prepareDatabase($connectionName);
 
