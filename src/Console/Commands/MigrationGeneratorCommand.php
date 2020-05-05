@@ -22,7 +22,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      * @var string
      */
     protected $signature = 'migrate:regenerate {{--table= : specific table}} 
-        {{--database= : The database connection to use}} {{--force : force re-init in migrations-table}}';
+        {{--database= : The database connection to use}} '; //later for 1.1 : {{--force : force re-init in migrations-table}}
 
     /**
      * The console command description.
