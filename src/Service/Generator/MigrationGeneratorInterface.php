@@ -11,5 +11,9 @@ interface MigrationGeneratorInterface
 {
     public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler);
 
+    public function setMigrationDir(string $migrationDir): void;
+
+    public function getMigrationDir(): string;
+
     public function generateMigrationForTable(string $database, string $table): bool;
 }

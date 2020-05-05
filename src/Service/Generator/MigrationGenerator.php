@@ -13,6 +13,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     protected $compiler;
     protected $migrationDir = '';
     protected $errorMessages = [];
+    protected $migrationFiles = [];
 
     public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
     {
@@ -77,7 +78,23 @@ class MigrationGenerator implements MigrationGeneratorInterface
     {
         $this->errorMessages[] = $errorMessage;
     }
-    
+
+    /**
+     * @return array
+     */
+    public function getMigrationFiles(): array
+    {
+        return $this->migrationFiles;
+    }
+
+    /**
+     * @param array $migrationFiles
+     */
+    public function setMigrationFiles(array $migrationFiles): void
+    {
+        $this->migrationFiles = $migrationFiles;
+    }
+
     public function generateMigrationForTable(string $database, string $table): bool
     {
         $this->setErrorMessages([]);
@@ -89,6 +106,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
         try {
             $compiler->generateByResult($schemaResult);
             $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
+            $this->setMigrationFiles($compiler->getMigrationFiles());
         } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());
         }

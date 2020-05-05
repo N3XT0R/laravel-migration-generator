@@ -70,4 +70,19 @@ class MigrationGeneratorTest extends TestCase
         $this->generator->addErrorMessage('test');
         $this->assertCount(1, $this->generator->getErrorMessages());
     }
+
+    public function testSetAndGetMigrationFilesAreSame(): void
+    {
+        $files = [uniqid('Test', true) => time()];
+        $this->generator->setMigrationFiles($files);
+        $gotFiles = $this->generator->getMigrationFiles();
+        $this->assertSame($files, $gotFiles);
+    }
+
+    public function testAddMigrationFileWorks(): void
+    {
+        $this->assertCount(0, $this->generator->getMigrationFiles());
+        $this->compiler->addMigrationFile('test');
+        $this->assertCount(1, $this->generator->getMigrationFiles());
+    }
 }
