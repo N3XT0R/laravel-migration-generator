@@ -82,7 +82,7 @@ class MigrationGeneratorTest extends TestCase
     public function testAddMigrationFileWorks(): void
     {
         $this->assertCount(0, $this->generator->getMigrationFiles());
-        $this->compiler->addMigrationFile('test');
+        $this->generator->addMigrationFile('test');
         $this->assertCount(1, $this->generator->getMigrationFiles());
     }
 }
