@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Integration\Service\Generator;
+namespace Tests\Integration\Service\Generator\Compiler;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
