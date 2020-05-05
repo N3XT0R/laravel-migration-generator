@@ -77,8 +77,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     {
         $this->errorMessages[] = $errorMessage;
     }
-
-
+    
     public function generateMigrationForTable(string $database, string $table): bool
     {
         $this->setErrorMessages([]);
