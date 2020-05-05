@@ -22,4 +22,10 @@ class DefinitionResolverTest extends TestCase
         $doctrine = $dbManager->connection()->getDoctrineConnection();
         $this->resolver = $this->app->make(DefinitionResolverInterface::class, ['connection' => $doctrine]);
     }
+
+    public function testResolveTableSchemaWorksCorrect(): void
+    {
+        $result = $this->resolver->resolveTableSchema('testing', 'fields_test');
+        $this->assertTrue($result->hasResultForTable('fields_test'));
+    }
 }
