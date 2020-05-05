@@ -10,7 +10,7 @@ class CreatePackageTestTables extends Migration
 
     public function up(): void
     {
-        Schema::table(
+        Schema::create(
             'fields_test',
             static function (Blueprint $table) {
                 $table->bigInteger('id', true)->unsigned();

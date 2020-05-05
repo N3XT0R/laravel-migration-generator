@@ -10,5 +10,6 @@ class DbTestCase extends TestCase
     {
         parent::setUp();
         $this->loadMigrationsFrom(__DIR__ . '/Resources/Database/Migrations/');
+        $this->artisan('migrate', ['--database' => 'mysql']);
     }
 }
