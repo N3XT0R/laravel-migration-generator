@@ -83,8 +83,11 @@ class TableDefinition extends AbstractDefinition
                         case 'smallInteger':
                         case 'bigInteger':
                             $options['unsigned'] = $column->getUnsigned();
-                            $arguments['autoIncrement'] = $column->getAutoincrement();
-
+                            $autoIncrement = $column->getAutoincrement();
+                            if (true === $autoIncrement) {
+                                $arguments['autoIncrement'] = $autoIncrement;
+                            }
+                            
                             break;
 
                         case 'dateTime':

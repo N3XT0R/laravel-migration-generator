@@ -72,4 +72,29 @@ class TableDefinitionTest extends DbTestCase
             $bigInteger->getOptions()
         );
     }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testSmallIntegerIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['small_int'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('small_int', $field->getColumnName());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(4, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => true,
+                'comment' => null,
+                'unsigned' => false,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
 }
