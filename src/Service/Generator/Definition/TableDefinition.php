@@ -106,7 +106,7 @@ class TableDefinition extends AbstractDefinition
 
                             if ('float' !== $type && $unsigned) {
                                 $type = 'unsigned' . ucfirst($type);
-                            } else {
+                            } elseif (true === $unsigned) {
                                 $options['unsigned'] = $unsigned;
                             }
                             break;
@@ -130,4 +130,5 @@ class TableDefinition extends AbstractDefinition
 
         return $result;
     }
+    
 }

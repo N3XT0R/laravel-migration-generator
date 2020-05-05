@@ -146,4 +146,231 @@ class TableDefinitionTest extends DbTestCase
             $field->getOptions()
         );
     }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testTimestampIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['created_at'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('created_at', $field->getColumnName());
+        $this->assertEquals('timestamp', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => 'CURRENT_TIMESTAMP',
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testDateTimeIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['any_date'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('any_date', $field->getColumnName());
+        $this->assertEquals('timestamp', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testDoubleIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['double_value'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('double_value', $field->getColumnName());
+        $this->assertEquals('double', $field->getType());
+        $this->assertCount(2, $field->getArguments());
+        $this->assertSame(
+            [
+                'total' => 4,
+                'places' => 2,
+            ],
+            $field->getArguments()
+        );
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testFloatIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['float_value'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('float_value', $field->getColumnName());
+        $this->assertEquals('double', $field->getType());
+        $this->assertCount(2, $field->getArguments());
+        $this->assertSame(
+            [
+                'total' => 6,
+                'places' => 3,
+            ],
+            $field->getArguments()
+        );
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testDecimalIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['decimal_value'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('decimal_value', $field->getColumnName());
+        $this->assertEquals('unsignedDecimal', $field->getType());
+        $this->assertCount(2, $field->getArguments());
+        $this->assertSame(
+            [
+                'total' => 2,
+                'places' => 1,
+            ],
+            $field->getArguments()
+        );
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testStringIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['string'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('string', $field->getColumnName());
+        $this->assertEquals('string', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testCharIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['char'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('char', $field->getColumnName());
+        $this->assertEquals('char', $field->getType());
+        $this->assertCount(1, $field->getArguments());
+        $this->assertSame(
+            [
+                'length' => 5
+            ],
+            $field->getArguments()
+        );
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testBooleanIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['boolean'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('boolean', $field->getColumnName());
+        $this->assertEquals('boolean', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(3, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
 }
