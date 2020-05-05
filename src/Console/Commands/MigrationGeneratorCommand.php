@@ -122,6 +122,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
                  */
             } else {
                 $this->error('there occurred an error by creating migration for ' . $table);
+                $this->error(implode(', ', $generator->getErrorMessages()));
             }
         }
     }
@@ -149,6 +150,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
                 $bar->advance();
             } else {
                 $this->error('there occurred an error by creating migration for ' . $table);
+                $this->error(implode(', ', $generator->getErrorMessages()));
                 break;
             }
         }
