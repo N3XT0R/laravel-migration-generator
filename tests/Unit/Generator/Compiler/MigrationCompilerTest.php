@@ -54,4 +54,19 @@ class MigrationCompilerTest extends TestCase
         $got = $this->compiler->getFilesystem();
         $this->assertSame($filesystem, $got);
     }
+
+    public function testSetAndGetMigrationFilesAreSame(): void
+    {
+        $files = [uniqid('Test', true) => time()];
+        $this->compiler->setMigrationFiles($files);
+        $gotFiles = $this->compiler->getMigrationFiles();
+        $this->assertSame($files, $gotFiles);
+    }
+
+    public function testAddMigrationFileWorks(): void
+    {
+        $this->assertCount(0, $this->compiler->getMigrationFiles());
+        $this->compiler->addMigrationFile('test');
+        $this->assertCount(1, $this->compiler->getMigrationFiles());
+    }
 }
