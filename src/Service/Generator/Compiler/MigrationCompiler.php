@@ -147,7 +147,6 @@ class MigrationCompiler implements MigrationCompilerInterface
         $this->setMigrationFiles([]);
         $result = false;
         $tpl = $this->getRenderedTemplate();
-        var_dump($tpl);
         if (!empty($tpl)) {
             $filesystem = $this->getFilesystem();
             $fileName = date('Y_m_d_His') . '_' . microtime(true) . '_' . Str::snake($name) . '.php';
