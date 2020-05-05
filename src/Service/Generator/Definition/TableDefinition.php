@@ -44,7 +44,6 @@ class TableDefinition extends AbstractDefinition
     protected function generateData(): array
     {
         $table = $this->getAttributeByName('tableName');
-
         $schema = $this->getSchema();
         $columns = $schema->listTableColumns($table);
 
@@ -80,7 +79,7 @@ class TableDefinition extends AbstractDefinition
         if (null !== $column->getComment()) {
             $fieldEntity->addOption('comment', $column->getComment());
         }
-        
+
         switch ($fieldEntity->getType()) {
             case 'tinyInteger':
             case 'integer':
