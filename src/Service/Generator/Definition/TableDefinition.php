@@ -58,69 +58,67 @@ class TableDefinition extends AbstractDefinition
 
         if (0 !== count($columns)) {
             foreach ($columns as $column) {
-                if ($column instanceof Column === false) {
-                    continue;
+                if ($column instanceof Column) {
+                    $fieldEntity = new FieldEntity();
+                    $fieldEntity->setTable($table);
+                    $fieldEntity->setColumnName($column->getName());
+                    $defaultValue = $column->getDefault();
+                    $notNullable = $column->getNotnull();
+                    $type = $this->convertTypeToBluePrintType($column->getType()->getName());
+
+                    $arguments = [];
+                    $options = [
+                        'nullable' => !$notNullable,
+                        'comment' => null,
+                    ];
+
+                    if (null !== $column->getComment()) {
+                        $options['comment'] = $column->getComment();
+                    }
+
+
+                    switch ($type) {
+                        case 'tinyInteger':
+                        case 'integer':
+                        case 'smallInteger':
+                        case 'bigInteger':
+                            $options['unsigned'] = $column->getUnsigned();
+                            $arguments['autoIncrement'] = $column->getAutoincrement();
+
+                            break;
+
+                        case 'dateTime':
+                            $type = 'timestamp';
+                            break;
+
+                        case 'float':
+                        case 'double':
+                        case 'decimal':
+                            $arguments['total'] = $column->getPrecision();
+                            $arguments['places'] = $column->getScale();
+                            $unsigned = $column->getUnsigned();
+
+                            if ('float' !== $type && $unsigned) {
+                                $type = 'unsigned' . ucfirst($type);
+                            } else {
+                                $options['unsigned'] = $unsigned;
+                            }
+                            break;
+
+                        default:
+                            if ('string' === $type && true === $column->getFixed()) {
+                                $type = 'char';
+                                $arguments['length'] = $column->getLength();
+                            }
+                            break;
+                    }
+
+                    $fieldEntity->setType($type);
+                    $options['default'] = $defaultValue;
+                    $fieldEntity->setOptions($options);
+                    $fieldEntity->setArguments($arguments);
+                    $result[$fieldEntity->getColumnName()] = $fieldEntity;
                 }
-
-                $fieldEntity = new FieldEntity();
-                $fieldEntity->setTable($table);
-                $fieldEntity->setColumnName($column->getName());
-                $defaultValue = $column->getDefault();
-                $notNullable = $column->getNotnull();
-                $type = $this->convertTypeToBluePrintType($column->getType()->getName());
-
-                $arguments = [];
-                $options = [
-                    'nullable' => !$notNullable,
-                    'comment' => null,
-                ];
-
-                if (null !== $column->getComment()) {
-                    $options['comment'] = $column->getComment();
-                }
-
-
-                switch ($type) {
-                    case 'tinyInteger':
-                    case 'integer':
-                    case 'smallInteger':
-                    case 'bigInteger':
-                        $options['unsigned'] = $column->getUnsigned();
-                        $arguments['autoIncrement'] = $column->getAutoincrement();
-
-                        break;
-
-                    case 'dateTime':
-                        $type = 'timestamp';
-                        break;
-
-                    case 'float':
-                    case 'double':
-                    case 'decimal':
-                        $arguments['total'] = $column->getPrecision();
-                        $arguments['places'] = $column->getScale();
-                        $unsigned = $column->getUnsigned();
-
-                        if ('float' !== $type && $unsigned) {
-                            $type = 'unsigned' . ucfirst($type);
-                        } else {
-                            $options['unsigned'] = $unsigned;
-                        }
-                        break;
-
-                    default:
-                        if ('string' === $type && true === $column->getFixed()) {
-                            $type = 'char';
-                            $arguments['length'] = $column->getLength();
-                        }
-                        break;
-                }
-
-                $fieldEntity->setType($type);
-                $options['default'] = $defaultValue;
-                $fieldEntity->setOptions($options);
-                $fieldEntity->setArguments($arguments);
-                $result[$fieldEntity->getColumnName()] = $fieldEntity;
             }
         }
 
