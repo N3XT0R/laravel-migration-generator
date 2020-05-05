@@ -60,7 +60,6 @@ class MigrationCompilerTest extends TestCase
         );
         $this->compiler->generateByResult($result, CustomMigration::class);
         $result = $this->compiler->getRenderedTemplate();
-        file_put_contents($this->resourceFolder . '/ExpectedResults/migrationCompilerResult_custom.txt', $result);
         $this->assertStringEqualsFile(
             $this->resourceFolder . '/ExpectedResults/migrationCompilerResult_custom.txt',
             $result

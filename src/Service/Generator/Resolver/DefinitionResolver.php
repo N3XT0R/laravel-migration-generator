@@ -12,13 +12,17 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
 {
     public function registerDoctrineTypeMappings(DoctrineConnection $doctrineConnection): void
     {
-        /**
-         * @todo implement own types for doctrineRegistry
-         */
-        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'text');
-        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('jsonb', 'text');
-        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('bit', 'boolean');
+        $databasePlatform = $doctrineConnection->getDatabasePlatform();
+
+        if ($databasePlatform) {
+            /**
+             * @todo implement own types for doctrineRegistry
+             */
+            $databasePlatform->registerDoctrineTypeMapping('json', 'text');
+            $databasePlatform->registerDoctrineTypeMapping('jsonb', 'text');
+            $databasePlatform->registerDoctrineTypeMapping('enum', 'string');
+            $databasePlatform->registerDoctrineTypeMapping('bit', 'boolean');
+        }
     }
 
 
