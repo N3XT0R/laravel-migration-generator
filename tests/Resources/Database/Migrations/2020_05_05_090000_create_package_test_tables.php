@@ -10,7 +10,7 @@ class CreatePackageTestTables extends Migration
     public function up(): void
     {
         Schema::table(
-            'test',
+            'fields_test',
             static function (Blueprint $table) {
                 $table->bigInteger('id', true);
                 $table->smallInteger('small_int')->nullable();
@@ -22,6 +22,6 @@ class CreatePackageTestTables extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('test');
+        Schema::dropIfExists('fields_test');
     }
 }
