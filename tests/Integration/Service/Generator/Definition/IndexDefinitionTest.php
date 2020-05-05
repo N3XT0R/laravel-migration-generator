@@ -48,4 +48,45 @@ class IndexDefinitionTest extends DbTestCase
 
         return $result;
     }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testIndexWorks(array $result): void
+    {
+        /**
+         * @var IndexEntity $index
+         */
+        $index = $result['testi'];
+        $this->assertEquals('index', $index->getType());
+        $this->assertEquals('testi', $index->getName());
+        $this->assertEquals(
+            [
+                'any_date'
+            ],
+            $index->getColumns()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testUniqueIndexWorks(array $result): void
+    {
+        /**
+         * @var IndexEntity $index
+         */
+        $index = $result['fields_test_medium_int_unique'];
+        $this->assertEquals('unique', $index->getType());
+        $this->assertEquals(
+            [
+                'medium_int'
+            ],
+            $index->getColumns()
+        );
+    }
+
+
 }

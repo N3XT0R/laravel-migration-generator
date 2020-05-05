@@ -54,7 +54,7 @@ class IndexDefinition extends AbstractDefinition
             $indexEntity->setType($type);
             $indexEntity->setName($index->getName());
             $indexEntity->setColumns($columns);
-            $combinedIndexes[] = $indexEntity;
+            $combinedIndexes[$index->getName()] = $indexEntity;
         }
 
         return $combinedIndexes;
