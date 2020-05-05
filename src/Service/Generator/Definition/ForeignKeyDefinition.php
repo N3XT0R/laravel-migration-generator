@@ -14,11 +14,10 @@ class ForeignKeyDefinition extends AbstractDefinition
     {
         $table = $this->getAttributeByName('tableName');
         $schema = $this->getSchema();
-        $foreignKeys = $schema->listTableForeignKeys($table);
-
+        $tableResult = (array)$this->getAttributeByName('table');
         $result = [];
-        if (0 !== count($foreignKeys)) {
-            $result = $this->generateForeignKeys($table, $foreignKeys);
+        if (0 !== count($tableResult)) {
+            $result = $this->generateForeignKeys($table, $schema->listTableForeignKeys($table));
         }
 
         return $result;
