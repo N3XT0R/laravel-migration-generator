@@ -82,10 +82,14 @@ class TableDefinition extends AbstractDefinition
                         case 'integer':
                         case 'smallInteger':
                         case 'bigInteger':
-                            $options['unsigned'] = $column->getUnsigned();
+                            $unsigned = $column->getUnsigned();
                             $autoIncrement = $column->getAutoincrement();
                             if (true === $autoIncrement) {
                                 $arguments['autoIncrement'] = $autoIncrement;
+                            }
+
+                            if (true === $unsigned) {
+                                $options['unsigned'] = $unsigned;
                             }
 
                             break;

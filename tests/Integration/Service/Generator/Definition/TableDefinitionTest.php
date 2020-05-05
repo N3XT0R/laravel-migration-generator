@@ -86,12 +86,11 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('small_int', $field->getColumnName());
         $this->assertEquals('smallInteger', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(4, $field->getOptions());
+        $this->assertCount(3, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => true,
                 'comment' => null,
-                'unsigned' => false,
                 'default' => null,
             ],
             $field->getOptions()
@@ -110,14 +109,13 @@ class TableDefinitionTest extends DbTestCase
         $field = $result['medium_int'];
         $this->assertEquals('fields_test', $field->getTable());
         $this->assertEquals('medium_int', $field->getColumnName());
-        $this->assertEquals('mediumInteger', $field->getType());
+        $this->assertEquals('integer', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(4, $field->getOptions());
+        $this->assertCount(3, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
                 'comment' => null,
-                'unsigned' => false,
                 'default' => null,
             ],
             $field->getOptions()
@@ -136,15 +134,14 @@ class TableDefinitionTest extends DbTestCase
         $field = $result['tiny_int'];
         $this->assertEquals('fields_test', $field->getTable());
         $this->assertEquals('tiny_int', $field->getColumnName());
-        $this->assertEquals('tinyInteger', $field->getType());
+        $this->assertEquals('boolean', $field->getType());
         $this->assertCount(0, $field->getArguments());
-        $this->assertCount(4, $field->getOptions());
+        $this->assertCount(3, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => false,
-                'comment' => null,
-                'unsigned' => false,
-                'default' => null,
+                'comment' => 'my tiny int',
+                'default' => '1',
             ],
             $field->getOptions()
         );
