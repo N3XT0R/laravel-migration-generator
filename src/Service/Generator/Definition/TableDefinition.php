@@ -73,16 +73,14 @@ class TableDefinition extends AbstractDefinition
         $fieldEntity = new FieldEntity();
         $fieldEntity->setTable($table);
         $fieldEntity->setColumnName($column->getName());
-        $defaultValue = $column->getDefault();
-        $notNullable = $column->getNotnull();
+        $fieldEntity->addOption('default', $column->getDefault());
         $fieldEntity->setType($this->convertTypeToBluePrintType($column->getType()->getName()));
-        $fieldEntity->addOption('nullable', !$notNullable);
+        $fieldEntity->addOption('nullable', !$column->getNotnull());
 
         if (null !== $column->getComment()) {
             $fieldEntity->addOption('comment', $column->getComment());
         }
-
-
+        
         switch ($fieldEntity->getType()) {
             case 'tinyInteger':
             case 'integer':
@@ -104,8 +102,6 @@ class TableDefinition extends AbstractDefinition
                 $this->prepareMixedTypes($fieldEntity, $column);
                 break;
         }
-
-        $fieldEntity->addOption('default', $defaultValue);
 
         return $fieldEntity;
     }
