@@ -4,7 +4,6 @@
 namespace Tests\Integration\Service\Generator\Definition;
 
 
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\TableDefinition;
@@ -35,7 +34,7 @@ class TableDefinitionTest extends DbTestCase
     {
         $this->definition->generate();
         $result = $this->definition->getResult();
-        $this->assertCount(11, $result);
+        $this->assertCount(12, $result);
         $this->assertContainsOnlyInstancesOf(FieldEntity::class, $result);
 
         return $result;
@@ -85,11 +84,64 @@ class TableDefinitionTest extends DbTestCase
         $field = $result['small_int'];
         $this->assertEquals('fields_test', $field->getTable());
         $this->assertEquals('small_int', $field->getColumnName());
+        $this->assertEquals('smallInteger', $field->getType());
         $this->assertCount(0, $field->getArguments());
         $this->assertCount(4, $field->getOptions());
         $this->assertSame(
             [
                 'nullable' => true,
+                'comment' => null,
+                'unsigned' => false,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testMediumIntegerIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['medium_int'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('medium_int', $field->getColumnName());
+        $this->assertEquals('mediumInteger', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(4, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
+                'comment' => null,
+                'unsigned' => false,
+                'default' => null,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testTinyIntegerIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['tiny_int'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('tiny_int', $field->getColumnName());
+        $this->assertEquals('tinyInteger', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(4, $field->getOptions());
+        $this->assertSame(
+            [
+                'nullable' => false,
                 'comment' => null,
                 'unsigned' => false,
                 'default' => null,

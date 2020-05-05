@@ -24,6 +24,7 @@ class CreatePackageTestTables extends Migration
                 $table->decimal('decimal_value', 2, 1)->unsigned();
                 $table->string('string');
                 $table->char('char', 5);
+                $table->boolean('boolean');
             }
         );
     }

@@ -3,74 +3,12 @@
 
 namespace N3XT0R\MigrationGenerator\Service\Generator\Resolver;
 
-
-use Doctrine\DBAL\Connection as DoctrineConnection;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
-class DefinitionResolver implements DefinitionResolverInterface
+class DefinitionResolver extends AbstractResolver
 {
-    protected $doctrineConnection;
-    protected $definitions = [];
-
-    public function __construct(DoctrineConnection $connection, array $definitions)
-    {
-        $this->registerDoctrineTypeMappings($connection);
-        $this->setDoctrineConnection($connection);
-        $this->setDefinitions($definitions);
-    }
-
-    public function setDefinitions(array $definitions): void
-    {
-        $this->definitions = $definitions;
-    }
-
-    public function getDefinitions(): array
-    {
-        return $this->definitions;
-    }
-
-    public function addDefinition(string $name, string $definition): void
-    {
-        $this->definitions[$name] = $definition;
-    }
-
-    public function getDefinitionByName(string $name): ?DefinitionInterface
-    {
-        $definition = null;
-        $definitions = $this->getDefinitions();
-
-        if (array_key_exists($name, $definitions)) {
-            $definition = $definitions[$name];
-        }
-
-        /**
-         * @var DefinitionInterface $definition
-         */
-        $definition = app()->make($definition['class']);
-
-        return $definition;
-    }
-
-    public function hasDefinition(string $name): bool
-    {
-        return null !== $this->getDefinitionByName($name);
-    }
-
-    protected function registerDoctrineTypeMappings(DoctrineConnection $doctrineConnection): void
-    {
-    }
-
-    public function setDoctrineConnection(DoctrineConnection $doctrineConnection): void
-    {
-        $this->doctrineConnection = $doctrineConnection;
-    }
-
-    public function getDoctrineConnection(): DoctrineConnection
-    {
-        return $this->doctrineConnection;
-    }
 
     public function resolveTableSchema(string $schema, string $table): ResultEntity
     {

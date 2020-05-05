@@ -12,10 +12,10 @@ class TableDefinition extends AbstractDefinition
     protected $fieldTypeMap = [
         'tinyint' => 'tinyInteger',
         'smallint' => 'smallInteger',
-        'mediumint' => 'mediumInteger',
         'bigint' => 'bigInteger',
         'datetime' => 'dateTime',
         'blob' => 'binary',
+        'float' => 'double',
     ];
 
 
@@ -87,14 +87,13 @@ class TableDefinition extends AbstractDefinition
                             if (true === $autoIncrement) {
                                 $arguments['autoIncrement'] = $autoIncrement;
                             }
-                            
+
                             break;
 
                         case 'dateTime':
                             $type = 'timestamp';
                             break;
 
-                        case 'float':
                         case 'double':
                         case 'decimal':
                             $arguments['total'] = $column->getPrecision();
