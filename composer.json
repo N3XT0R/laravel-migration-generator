@@ -42,7 +42,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "N3XT0R\\MigrationGenerator\\MigrationGeneratorServiceProvider"
+        "N3XT0R\\MigrationGenerator\\Providers\\MigrationGeneratorServiceProvider"
       ]
     }
   }
