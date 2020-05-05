@@ -28,28 +28,27 @@ class ForeignKeyDefinition extends AbstractDefinition
         $result = [];
 
         foreach ($foreignKeys as $foreignKey) {
-            if ($foreignKey instanceof ForeignKeyConstraint === false) {
-                continue;
+            if ($foreignKey instanceof ForeignKeyConstraint) {
+                $localColumn = $foreignKey->getLocalColumns()[0];
+
+
+                $foreignKeyEntity = new ForeignKeyEntity();
+                $foreignKeyEntity->setName($foreignKey->getName());
+                $foreignKeyEntity->setLocalTable($table);
+                $foreignKeyEntity->setLocalColumn($localColumn);
+                $foreignKeyEntity->setReferencedTable($foreignKey->getForeignTableName());
+                $foreignKeyEntity->setReferencedColumn($foreignKey->getForeignColumns()[0]);
+
+                if ($foreignKey->hasOption('onUpdate')) {
+                    $foreignKeyEntity->setOnUpdate($foreignKey->getOption('onUpdate'));
+                }
+
+                if ($foreignKey->hasOption('onDelete')) {
+                    $foreignKeyEntity->setOnDelete($foreignKey->getOption('onDelete'));
+                }
+
+                $result[] = $foreignKeyEntity;
             }
-            $localColumn = $foreignKey->getLocalColumns()[0];
-
-
-            $foreignKeyEntity = new ForeignKeyEntity();
-            $foreignKeyEntity->setName($foreignKey->getName());
-            $foreignKeyEntity->setLocalTable($table);
-            $foreignKeyEntity->setLocalColumn($localColumn);
-            $foreignKeyEntity->setReferencedTable($foreignKey->getForeignTableName());
-            $foreignKeyEntity->setReferencedColumn($foreignKey->getForeignColumns()[0]);
-
-            if ($foreignKey->hasOption('onUpdate')) {
-                $foreignKeyEntity->setOnUpdate($foreignKey->getOption('onUpdate'));
-            }
-
-            if ($foreignKey->hasOption('onDelete')) {
-                $foreignKeyEntity->setOnDelete($foreignKey->getOption('onDelete'));
-            }
-
-            $result[] = $foreignKeyEntity;
         }
 
         return $result;
