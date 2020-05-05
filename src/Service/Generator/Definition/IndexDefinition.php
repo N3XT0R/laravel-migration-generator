@@ -13,11 +13,10 @@ class IndexDefinition extends AbstractDefinition
     protected function generateData(): array
     {
         $table = $this->getAttributeByName('tableName');
-        $tableResult = $this->getAttributeByName('table');
+        $tableResult = (array)$this->getAttributeByName('table');
         $schema = $this->getSchema();
 
         $result = [];
-
         if (count($tableResult) !== 0) {
             $result = $this->generateIndexes($schema->listTableIndexes($table));
         }

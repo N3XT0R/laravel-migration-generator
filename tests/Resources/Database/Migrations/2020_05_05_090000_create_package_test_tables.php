@@ -18,7 +18,7 @@ class CreatePackageTestTables extends Migration
                 $table->mediumInteger('medium_int')->unique();
                 $table->tinyInteger('tiny_int')->default(1)->comment('my tiny int');
                 $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-                $table->dateTime('any_date');
+                $table->dateTime('any_date')->index('testi');
                 $table->double('double_value', 4, 2);
                 $table->float('float_value', 6, 3);
                 $table->decimal('decimal_value', 2, 1)->unsigned();
