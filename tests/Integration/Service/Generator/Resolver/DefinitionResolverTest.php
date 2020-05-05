@@ -28,4 +28,11 @@ class DefinitionResolverTest extends TestCase
         $result = $this->resolver->resolveTableSchema('testing', 'fields_test');
         $this->assertTrue($result->hasResultForTable('fields_test'));
     }
+
+    public function testMakeDefinitionResolverWithoutParametersThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing key connection in params.');
+        $this->app->make(DefinitionResolverInterface::class);
+    }
 }
