@@ -78,11 +78,5 @@ class MigrationGeneratorTest extends TestCase
         $gotFiles = $this->generator->getMigrationFiles();
         $this->assertSame($files, $gotFiles);
     }
-
-    public function testAddMigrationFileWorks(): void
-    {
-        $this->assertCount(0, $this->generator->getMigrationFiles());
-        $this->generator->addMigrationFile('test');
-        $this->assertCount(1, $this->generator->getMigrationFiles());
-    }
+    
 }
