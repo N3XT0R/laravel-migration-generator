@@ -30,4 +30,18 @@ class SchemaParserTest extends DbTestCase
             $tables
         );
     }
+
+    public function testGetSortedTablesFromSchema(): void
+    {
+        $tables = $this->parser->getSortedTablesFromSchema('testing');
+        $this->assertCount(3, $tables);
+        $this->assertEquals(
+            [
+                'fields_test',
+                'foreign_table',
+                'abc',
+            ],
+            $tables
+        );
+    }
 }
