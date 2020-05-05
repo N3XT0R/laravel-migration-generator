@@ -55,4 +55,19 @@ class MigrationGeneratorTest extends TestCase
         $gotDir = $this->generator->getMigrationDir();
         $this->assertSame($migrationDir, $gotDir);
     }
+
+    public function testSetAndGetErrorMessagesAreSame(): void
+    {
+        $data = [time() => time()];
+        $this->generator->setErrorMessages($data);
+        $gotData = $this->generator->getErrorMessages();
+        $this->assertSame($data, $gotData);
+    }
+
+    public function testAddErrorMessageWorks(): void
+    {
+        $this->assertCount(0, $this->generator->getErrorMessages());
+        $this->generator->addErrorMessage('test');
+        $this->assertCount(1, $this->generator->getErrorMessages());
+    }
 }
