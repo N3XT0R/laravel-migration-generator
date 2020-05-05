@@ -9,4 +9,11 @@ This Migration-Generator generates Migrations in correct order, when referential
 So on remigrating them at example on a dev-system, local-system or others its possible
 to migrate the schema without constraint violations.
 
+## Installation
+
+You can install this package over composer via 
+
+``
+composer require n3xt0r/laravel-migration-generator
+``
 
