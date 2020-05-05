@@ -6,6 +6,7 @@ namespace Tests\Unit\Generator\Compiler;
 
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
+use Illuminate\Filesystem\Filesystem;
 use Tests\TestCase;
 
 class MigrationCompilerTest extends TestCase
@@ -44,5 +45,13 @@ class MigrationCompilerTest extends TestCase
         $this->compiler->setRenderedTemplate($rendered);
         $gotRendered = $this->compiler->getRenderedTemplate();
         $this->assertSame($rendered, $gotRendered);
+    }
+
+    public function testSetAndGetFileSystemAreSame(): void
+    {
+        $filesystem = new Filesystem();
+        $this->compiler->setFilesystem($filesystem);
+        $got = $this->compiler->getFilesystem();
+        $this->assertSame($filesystem, $got);
     }
 }
