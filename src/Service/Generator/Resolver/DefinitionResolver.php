@@ -3,12 +3,21 @@
 
 namespace N3XT0R\MigrationGenerator\Service\Generator\Resolver;
 
+use Doctrine\DBAL\Connection as DoctrineConnection;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
-class DefinitionResolver extends AbstractResolver
+class DefinitionResolver extends AbstractResolver implements DoctrineTypeMappingsInterface
 {
+    public function registerDoctrineTypeMappings(DoctrineConnection $doctrineConnection): void
+    {
+        /**
+         * @todo implement own enum type
+         */
+        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+    }
+
 
     public function resolveTableSchema(string $schema, string $table): ResultEntity
     {
