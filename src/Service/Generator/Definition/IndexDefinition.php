@@ -36,18 +36,10 @@ class IndexDefinition extends AbstractDefinition
             $fieldEntity = null;
             $columns = $index->getColumns();
 
-            switch (true) {
-                case true === $index->isUnique():
-                    $type = 'unique';
-                    break;
-
-                case true === $index->isPrimary():
-                    continue 2;
-                    break;
-
-                default:
-                    $type = 'index';
-                    break;
+            if ($index->isUnique()) {
+                $type = 'unique';
+            } else {
+                $type = 'index';
             }
 
             $indexEntity = new IndexEntity();
