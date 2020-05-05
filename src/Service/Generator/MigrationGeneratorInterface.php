@@ -20,4 +20,10 @@ interface MigrationGeneratorInterface
     public function getMigrationFiles(): array;
 
     public function setMigrationFiles(array $migrationFiles): void;
+
+    public function getErrorMessages(): array;
+
+    public function setErrorMessages(array $errorMessages): void;
+
+    public function addErrorMessage(string $errorMessage): void;
 }

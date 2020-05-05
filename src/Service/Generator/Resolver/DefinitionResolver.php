@@ -15,7 +15,11 @@ class DefinitionResolver extends AbstractResolver
         $definitions = $this->getDefinitions();
         $sortedDefinitions = TopSort::sort($definitions);
         $connection = $this->getDoctrineConnection();
+
         $schemaManager = $connection->getSchemaManager();
+        if (null !== $schemaManager && false === $schemaManager->tablesExist($table)) {
+            throw new \InvalidArgumentException('Table ' . $table . ' not exists!');
+        }
         $definitionResult = [];
 
         foreach ($sortedDefinitions as $name) {

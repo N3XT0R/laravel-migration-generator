@@ -29,6 +29,15 @@ class MigrationGeneratorTest extends DbTestCase
         }
     }
 
+    public function testGenerateMigrationForTableWithUnknownTableReturnsFalse(): void
+    {
+        $path = $this->resourceFolder . 'ExpectedMigrations/';
+        $this->generator->setMigrationDir($path);
+        $result = $this->generator->generateMigrationForTable('testing', uniqid('test', true));
+        $this->assertFalse($result);
+        $this->assertCount(1, $this->generator->getErrorMessages());
+    }
+
     public function tearDown(): void
     {
         $files = glob($this->resourceFolder . 'ExpectedMigrations/*');

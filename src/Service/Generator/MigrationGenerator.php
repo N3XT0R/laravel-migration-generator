@@ -101,9 +101,9 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $result = false;
         $resolver = $this->getResolver();
         $compiler = $this->getCompiler();
-        $schemaResult = $resolver->resolveTableSchema($database, $table);
 
         try {
+            $schemaResult = $resolver->resolveTableSchema($database, $table);
             $compiler->generateByResult($schemaResult);
             $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
             $this->setMigrationFiles($compiler->getMigrationFiles());
