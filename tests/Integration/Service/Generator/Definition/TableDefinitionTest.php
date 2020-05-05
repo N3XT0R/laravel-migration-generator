@@ -36,6 +36,7 @@ class TableDefinitionTest extends DbTestCase
         $result = $this->definition->getResult();
         $this->assertCount(12, $result);
         $this->assertContainsOnlyInstancesOf(FieldEntity::class, $result);
+        $this->assertContainsOnly('string', array_keys($result), true);
 
         return $result;
     }
