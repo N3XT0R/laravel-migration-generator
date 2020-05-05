@@ -40,8 +40,8 @@ class SchemaParser implements SchemaParserInterface
         $tables = [];
         $connection = $this->getConnection();
         $queryResult = $connection->select(
-            'SELECT * FROM information_schema.tables WHERE `table_schema` =  ? and `table_type` = ?;',
-            [$schema, 'BASE TABLE']
+            'SELECT * FROM information_schema.tables WHERE `table_schema` =  ? and `table_type` = ? AND `TABLE_NAME` != ?;',
+            [$schema, 'BASE TABLE', 'migrations']
         );
 
         foreach ($queryResult as $result) {

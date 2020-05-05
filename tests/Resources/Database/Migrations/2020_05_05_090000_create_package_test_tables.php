@@ -38,10 +38,22 @@ class CreatePackageTestTables extends Migration
                 );
             }
         );
+
+        Schema::create(
+            'abc',
+            static function (Blueprint $table) {
+                $table->bigInteger('id', true)->unsigned();
+                $table->bigInteger('fields_test_id')->unsigned()->nullable();
+                $table->foreign('fields_test_id')->references('id')->on('fields_test')->onDelete('SET NULL')->onUpdate(
+                    'CASCADE'
+                );
+            }
+        );
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('abc');
         Schema::dropIfExists('foreign_table');
         Schema::dropIfExists('fields_test');
     }
