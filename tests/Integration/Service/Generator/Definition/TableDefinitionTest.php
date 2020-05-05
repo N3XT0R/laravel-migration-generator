@@ -64,9 +64,9 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(3, $bigInteger->getOptions());
         $this->assertSame(
             [
+                'default' => null,
                 'nullable' => false,
                 'unsigned' => true,
-                'default' => null,
             ],
             $bigInteger->getOptions()
         );
@@ -89,8 +89,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => true,
                 'default' => null,
+                'nullable' => true,
             ],
             $field->getOptions()
         );
@@ -113,8 +113,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -137,9 +137,9 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(3, $field->getOptions());
         $this->assertSame(
             [
+                'default' => '1',
                 'nullable' => false,
                 'comment' => 'my tiny int',
-                'default' => '1',
             ],
             $field->getOptions()
         );
@@ -162,8 +162,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => 'CURRENT_TIMESTAMP',
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -186,8 +186,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -217,8 +217,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -248,8 +248,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -279,8 +279,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -303,8 +303,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -333,8 +333,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );
@@ -357,8 +357,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
-                'nullable' => false,
                 'default' => null,
+                'nullable' => false,
             ],
             $field->getOptions()
         );

@@ -72,9 +72,13 @@ class TableDefinition extends AbstractDefinition
         $fieldEntity = new FieldEntity();
         $fieldEntity->setTable($table);
         $fieldEntity->setColumnName($column->getName());
-        $fieldEntity->addOption('default', $column->getDefault());
         $fieldEntity->setType($this->convertTypeToBluePrintType($column->getType()->getName()));
-        $fieldEntity->addOption('nullable', !$column->getNotnull());
+        $fieldEntity->setOptions(
+            [
+                'default' => $column->getDefault(),
+                'nullable' => !$column->getNotnull(),
+            ]
+        );
 
         if (null !== $column->getComment()) {
             $fieldEntity->addOption('comment', $column->getComment());
