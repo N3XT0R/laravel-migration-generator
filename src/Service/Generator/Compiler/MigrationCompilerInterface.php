@@ -14,4 +14,7 @@ interface MigrationCompilerInterface
     public function generateByResult(ResultEntity $resultEntity, string $customMigrationClass = ''): void;
 
     public function writeToDisk(string $name, string $path): bool;
+
+    public function getMigrationFiles(): array;
+    
 }
