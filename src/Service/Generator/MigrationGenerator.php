@@ -12,6 +12,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     protected $resolver;
     protected $compiler;
     protected $migrationDir = '';
+    protected $errorMessages = [];
 
     public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
     {
@@ -56,9 +57,31 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $this->migrationDir = $migrationDir;
     }
 
+    /**
+     * @return array
+     */
+    public function getErrorMessages(): array
+    {
+        return $this->errorMessages;
+    }
+
+    /**
+     * @param array $errorMessages
+     */
+    public function setErrorMessages(array $errorMessages): void
+    {
+        $this->errorMessages = $errorMessages;
+    }
+
+    public function addErrorMessage(string $errorMessage): void
+    {
+        $this->errorMessages[] = $errorMessage;
+    }
+
 
     public function generateMigrationForTable(string $database, string $table): bool
     {
+        $this->setErrorMessages([]);
         $result = false;
         $resolver = $this->getResolver();
         $compiler = $this->getCompiler();
@@ -68,6 +91,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
             $compiler->generateByResult($schemaResult);
             $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
         } catch (\Exception $e) {
+            $this->addErrorMessage($e->getMessage());
         }
 
 
