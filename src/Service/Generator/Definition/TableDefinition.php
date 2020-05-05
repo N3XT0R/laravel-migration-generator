@@ -12,6 +12,7 @@ class TableDefinition extends AbstractDefinition
     protected $fieldTypeMap = [
         'tinyint' => 'tinyInteger',
         'smallint' => 'smallInteger',
+        'mediumint' => 'mediumInteger',
         'bigint' => 'bigInteger',
         'datetime' => 'dateTime',
         'blob' => 'binary',
