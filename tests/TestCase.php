@@ -8,6 +8,14 @@ use Illuminate\Foundation\Application;
 
 abstract class TestCase extends OrchestraTestCase
 {
+    protected $resourceFolder = '';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->resourceFolder = __DIR__ . '/Resources/';
+    }
+
     /**
      * @param Application $app
      * @return array|string[]
