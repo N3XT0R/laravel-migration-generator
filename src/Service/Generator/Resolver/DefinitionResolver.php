@@ -13,9 +13,12 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
     public function registerDoctrineTypeMappings(DoctrineConnection $doctrineConnection): void
     {
         /**
-         * @todo implement own enum type
+         * @todo implement own types for doctrineRegistry
          */
+        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('json', 'text');
+        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('jsonb', 'text');
         $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
+        $doctrineConnection->getDatabasePlatform()->registerDoctrineTypeMapping('bit', 'boolean');
     }
 
 
