@@ -14,14 +14,19 @@ class MigrationGeneratorTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->generator = $this->app->make(MigrationGeneratorInterface::class);
+        $this->generator = $this->app->make(MigrationGeneratorInterface::class, ['connectionName' => 'mysql']);
     }
 
     public function testGenerateMigrationForTable(): void
     {
-        $this->generator->setMigrationDir($this->resourceFolder . 'ExpectedMigrations/');
+        $path = $this->resourceFolder . 'ExpectedMigrations/';
+        $this->generator->setMigrationDir($path);
         $result = $this->generator->generateMigrationForTable('testing', 'fields_test');
         $this->assertTrue($result);
+        $files = $this->generator->getMigrationFiles();
+        foreach ($files as $file) {
+            $this->assertFileExists($path . DIRECTORY_SEPARATOR . $file);
+        }
     }
 
     public function tearDown(): void
