@@ -26,7 +26,7 @@
       "N3XT0R\\MigrationGenerator\\": "src/"
     },
     "files": [
-      "app/GeneralHelper.php"
+      "src/Helpers/GeneralHelper.php"
     ]
   },
   "autoload-dev": {
