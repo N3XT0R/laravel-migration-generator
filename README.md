@@ -30,8 +30,14 @@ You can install this package over composer via
 composer require n3xt0r/laravel-migration-generator
 ``
 
-You`ll not need to add any ServiceProviders to your Configuration,
+You`ll not need to add any ServiceProviders to your Configuration on Laravel,
 this package will register itself on your project.
+
+When you are using Lumen, make sure you have added following line to your app.php:
+
+``
+$app->register(\N3XT0R\MigrationGenerator\Providers\MigrationGeneratorServiceProvider::class);
+``
 
 ### Executing the Migrator from Artisan
 
