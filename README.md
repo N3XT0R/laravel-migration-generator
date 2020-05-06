@@ -15,7 +15,7 @@ to migrate the schema without constraint violations.
     - Pdo_mysql extension
 - MySQL 5.7 or above
 
-###Additional Info
+### Additional Info
 
 This Library was tested with following Laravel/Lumen-Versions:
 
