@@ -1,4 +1,4 @@
-# laravel-migration-generator [5.x / 6.0x]
+# laravel-migration-generator [5.x / 6.x]
 [![Build Status](https://travis-ci.com/N3XT0R/laravel-migration-generator.svg?branch=master)](https://travis-ci.com/N3XT0R/laravel-migration-generator)
 [![Latest Stable Version](https://poser.pugx.org/n3xt0r/laravel-migration-generator/v/stable)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/3be6f76e8df15784a025/test_coverage)](https://codeclimate.com/github/N3XT0R/laravel-migration-generator/test_coverage)
