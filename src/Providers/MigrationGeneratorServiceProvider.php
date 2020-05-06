@@ -31,7 +31,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
         $this->publishes(
             [
-                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
+                __DIR__ . '/../Config/migration-generator.php' => $this->config_path('migration-generator.php'),
             ],
             'migration-generator'
         );
@@ -46,6 +46,17 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 ]
             );
         }
+    }
+
+    /**
+     * function to make able use this library on lumen, too.
+     * @param string $path
+     * @return string
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    private function config_path(string $path = ''): string
+    {
+        return app()->make('path.config') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
@@ -74,12 +85,12 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getDefinitions(): array
     {
-        return (array)config('migration-generator.definitions');
+        return (array)app('config')->get('migration-generator.definitions');
     }
 
     protected function getMapper(): array
     {
-        return (array)config('migration-generator.mapper');
+        return (array)app('config')->get('migration-generator.mapper');
     }
 
     protected function registerDefinitionResolver(): void
