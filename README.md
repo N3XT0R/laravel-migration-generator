@@ -43,3 +43,10 @@ php artisan migrate:regenerate
 It will dump all your tables to the database/migrations folder in correct order.
 So when you are using referential integrity it will write all migrations so that they could be
 re-migrated without changing manually the order of the migration-files.
+
+
+### Custom Export
+
+Are you unhappy with the exported migrations? When you should need some customizations on it,
+it would be possible to customize the export by extending the export-classes over the DI-Container.
+
