@@ -24,7 +24,10 @@
   "autoload": {
     "psr-4": {
       "N3XT0R\\MigrationGenerator\\": "src/"
-    }
+    },
+    "files": [
+      "app/GeneralHelper.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
