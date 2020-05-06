@@ -2,7 +2,7 @@
 
 namespace N3XT0R\MigrationGenerator\Providers;
 
-use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Container\Container as Application;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Engines\EngineResolver;
@@ -56,7 +56,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     private function config_path(string $path = ''): string
     {
-        return app()->make('path.config') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return app()->basePath() . 'config' . DIRECTORY_SEPARATOR . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
