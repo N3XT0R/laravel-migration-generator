@@ -9,6 +9,18 @@ This Migration-Generator generates Migrations in correct order, when referential
 So on remigrating them at example on a dev-system, local-system or others its possible
 to migrate the schema without constraint violations.
 
+## Requirements
+
+- PHP 7.2 or above
+- MySQL 5.7 or above
+
+###Additional Info
+
+This Library was tested with following Laravel/Lumen-Versions:
+
+- from 5.6 to 5.x
+- 6.x
+
 ## Installation
 
 You can install this package over composer via 
@@ -17,3 +29,17 @@ You can install this package over composer via
 composer require n3xt0r/laravel-migration-generator
 ``
 
+You`ll not need to add any ServiceProviders to your Configuration,
+this package will register itself on your project.
+
+### Executing the Migrator from Artisan
+
+This Migrator can be executed over the command line by using following command:
+
+``
+php artisan migrate:regenerate
+``
+
+It will dump all your tables to the database/migrations folder in correct order.
+So when you are using referential integrity it will write all migrations so that they could be
+re-migrated without changing manually the order of the migration-files.
