@@ -50,3 +50,15 @@ re-migrated without changing manually the order of the migration-files.
 Are you unhappy with the exported migrations? When you should need some customizations on it,
 it would be possible to customize the export by extending the export-classes over the DI-Container.
 
+There is a Configuration file called "migration-generator", that you could publish and customize.
+Every Export-Function like "exporting fields" or "exporting indexes" or else has a Definition- and a Mapping-Class.
+
+#### Definition-Classes 
+
+Definition-Classes are classes that define the internal runtime export-format. 
+They are used to generate the Schema-Results to a universal format, so that you or anyone else could extend it.
+
+#### Mapping-Classes
+
+Mapping Classes are classes that converts internal universal format to executable php-code inside
+the migration-classes.
