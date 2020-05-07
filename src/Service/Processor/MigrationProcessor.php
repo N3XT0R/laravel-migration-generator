@@ -3,7 +3,6 @@
 
 namespace N3XT0R\MigrationGenerator\Service\Processor;
 
-
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 use Illuminate\Database\Migrations\Migrator;
 
@@ -83,5 +82,10 @@ class MigrationProcessor implements MigrationProcessorInterface
 
     public function run(array $options): void
     {
+        foreach (['table', 'force', 'database'] as $key) {
+            if (!array_key_exists($key, $options)) {
+                throw new \InvalidArgumentException($key . 'not provided inside of options!');
+            }
+        }
     }
 }
