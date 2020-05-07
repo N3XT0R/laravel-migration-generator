@@ -17,6 +17,8 @@ use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInter
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use N3XT0R\MigrationGenerator\Service\Processor\MigrationProcessor;
+use N3XT0R\MigrationGenerator\Service\Processor\MigrationProcessorInterface;
 
 class MigrationGeneratorServiceProvider extends ServiceProvider
 {
@@ -72,6 +74,19 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->registerCompiler();
         $this->registerDefinitionResolver();
         $this->registerGenerator();
+        $this->registerMigrationProcessor();
+    }
+
+    protected function registerMigrationProcessor(): void
+    {
+        $this->app->bind(
+            MigrationProcessorInterface::class,
+            static function (Application $app) {
+                $schemaParser = $app->make(SchemaParserInterface::class);
+                $migrator = $app->make('migrator');
+                return new MigrationProcessor($schemaParser, $migrator);
+            }
+        );
     }
 
 
