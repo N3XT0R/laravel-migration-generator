@@ -150,7 +150,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         if (!empty($tpl)) {
             $filesystem = $this->getFilesystem();
             $fileName = date('Y_m_d_His') . '_' . microtime(true) . '_' . Str::snake($name) . '.php';
-            $renderedTemplate = str_replace('DummyClass', $name, $tpl);
+            $renderedTemplate = str_replace('DummyClass', Str::studly($name), $tpl);
 
             if ($filesystem->exists($path)) {
                 $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
