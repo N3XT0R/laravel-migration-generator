@@ -86,6 +86,10 @@ class MigrationCompilerTest extends TestCase
 
         $path = $this->resourceFolder . '/ExpectedResults/';
         $this->assertTrue($this->compiler->writeToDisk('create_test_table', $path));
-        $this->assertFileExists($path . $this->compiler->getMigrationFiles()[0]);
+        $migrationPath = $this->compiler->getMigrationFiles()[0];
+        $this->assertFileExists($path . $migrationPath);
+        file_put_contents($this->resourceFolder . '/ExpectedResults/renderedClass.txt',
+            file_get_contents($path . $migrationPath));
+        $this->assertFileEquals($this->resourceFolder . '/ExpectedResults/renderedClass.txt', $path . $migrationPath);
     }
 }
