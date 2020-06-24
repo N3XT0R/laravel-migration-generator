@@ -35,7 +35,7 @@ class ForeignKeyMapperTest extends TestCase
         $result = $this->mapper->map([$foreignKey]);
         $this->assertCount(1, $result);
         $this->assertStringContainsString(
-            '$table->foreign(\'test\')->references(\'id\')->on(\'reference\');',
+            '$table->foreign(\'test\', null)->references(\'id\')->on(\'reference\');',
             $result[0]
         );
     }
@@ -53,7 +53,7 @@ class ForeignKeyMapperTest extends TestCase
         $result = $this->mapper->map([$foreignKey]);
         $this->assertCount(1, $result);
         $this->assertStringContainsString(
-            '$table->foreign(\'test\')->references(\'id\')->on(\'reference\')->onUpdate(\'CASCADE\')->onDelete(\'CASCADE\');',
+            '$table->foreign(\'test\', null)->references(\'id\')->on(\'reference\')->onUpdate(\'CASCADE\')->onDelete(\'CASCADE\');',
             $result[0]
         );
     }
