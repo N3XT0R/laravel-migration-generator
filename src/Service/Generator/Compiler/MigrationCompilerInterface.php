@@ -16,9 +16,9 @@ interface MigrationCompilerInterface
     public function writeToDisk(
         string $name,
         string $path,
-        int $currentAmount = 0,
-        int $maxAmount = 0,
-        int $timestamp = 0
+        int $currentAmount = -1,
+        int $maxAmount = -1,
+        int $timestamp = -1
     ): bool;
 
     public function getMigrationFiles(): array;

@@ -18,9 +18,9 @@ interface MigrationGeneratorInterface
     public function generateMigrationForTable(
         string $database,
         string $table,
-        int $currentAmount = 0,
-        int $maxAmount = 0,
-        int $timestamp = 0
+        int $currentAmount = -1,
+        int $maxAmount = -1,
+        int $timestamp = -1
     ): bool;
 
     public function getMigrationFiles(): array;

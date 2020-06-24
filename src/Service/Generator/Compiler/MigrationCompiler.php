@@ -145,9 +145,9 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function writeToDisk(
         string $name,
         string $path,
-        int $currentAmount = 0,
-        int $maxAmount = 0,
-        int $timestamp = 0
+        int $currentAmount = -1,
+        int $maxAmount = -1,
+        int $timestamp = -1
     ): bool {
         $this->setMigrationFiles([]);
         $result = false;
@@ -155,7 +155,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         if (!empty($tpl)) {
             $filesystem = $this->getFilesystem();
             $datePrefix = date('Y_m_d_His');
-            if (0 !== $currentAmount && 0 !== $maxAmount && 0 !== $timestamp) {
+            if (-1 !== $currentAmount && -1 !== $maxAmount && -1 !== $timestamp) {
                 $datePrefix = $this->getHourMinuteSecondPrefix($currentAmount, $maxAmount, $timestamp);
             }
 
