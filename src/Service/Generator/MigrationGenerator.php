@@ -95,8 +95,13 @@ class MigrationGenerator implements MigrationGeneratorInterface
         $this->migrationFiles = $migrationFiles;
     }
 
-    public function generateMigrationForTable(string $database, string $table): bool
-    {
+    public function generateMigrationForTable(
+        string $database,
+        string $table,
+        int $currentAmount = 0,
+        int $maxAmount = 0,
+        int $timestamp = 0
+    ): bool {
         $this->setErrorMessages([]);
         $result = false;
         $resolver = $this->getResolver();
@@ -105,7 +110,8 @@ class MigrationGenerator implements MigrationGeneratorInterface
         try {
             $schemaResult = $resolver->resolveTableSchema($database, $table);
             $compiler->generateByResult($schemaResult);
-            $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir());
+            $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir(),
+                $currentAmount, $maxAmount, $timestamp);
             $this->setMigrationFiles($compiler->getMigrationFiles());
         } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());

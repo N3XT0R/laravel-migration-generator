@@ -15,7 +15,13 @@ interface MigrationGeneratorInterface
 
     public function getMigrationDir(): string;
 
-    public function generateMigrationForTable(string $database, string $table): bool;
+    public function generateMigrationForTable(
+        string $database,
+        string $table,
+        int $currentAmount = 0,
+        int $maxAmount = 0,
+        int $timestamp = 0
+    ): bool;
 
     public function getMigrationFiles(): array;
 

@@ -141,12 +141,15 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         $tables = $schemaParser->getSortedTablesFromSchema(
             $database
         );
-        $bar = $this->output->createProgressBar(count($tables));
+        $tableAmount = count($tables);
+        $bar = $this->output->createProgressBar($tableAmount);
         $bar->setFormat('verbose');
         $bar->start();
+        $actualTimestamp = time();
 
-        foreach ($tables as $table) {
-            if (true === $generator->generateMigrationForTable($database, $table)) {
+        foreach ($tables as $num => $table) {
+            if (true === $generator->generateMigrationForTable($database, $table, $num, $tableAmount,
+                    $actualTimestamp)) {
                 $bar->advance();
             } else {
                 $this->error('there occurred an error by creating migration for ' . $table);

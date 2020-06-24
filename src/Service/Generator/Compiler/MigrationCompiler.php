@@ -142,14 +142,24 @@ class MigrationCompiler implements MigrationCompilerInterface
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
 
-    public function writeToDisk(string $name, string $path): bool
-    {
+    public function writeToDisk(
+        string $name,
+        string $path,
+        int $currentAmount = 0,
+        int $maxAmount = 0,
+        int $timestamp = 0
+    ): bool {
         $this->setMigrationFiles([]);
         $result = false;
         $tpl = $this->getRenderedTemplate();
         if (!empty($tpl)) {
             $filesystem = $this->getFilesystem();
-            $fileName = date('Y_m_d_His') . '_' . microtime(true) . '_' . Str::snake($name) . '.php';
+            $datePrefix = date('Y_m_d_His');
+            if (0 !== $currentAmount && 0 !== $maxAmount && 0 !== $timestamp) {
+                $datePrefix = $this->getHourMinuteSecondPrefix($currentAmount, $maxAmount, $timestamp);
+            }
+
+            $fileName = $datePrefix . '_' . Str::snake($name) . '.php';
             $renderedTemplate = str_replace('DummyClass', Str::studly($name), $tpl);
 
             if ($filesystem->exists($path)) {
@@ -165,5 +175,11 @@ class MigrationCompiler implements MigrationCompilerInterface
 
 
         return $result;
+    }
+
+    private function getHourMinuteSecondPrefix(int $actual, int $max, int $timestamp): string
+    {
+        $timestampStart = $timestamp - $max + $actual;
+        return date('Y_m_d_His', $timestampStart);
     }
 }
