@@ -11,9 +11,25 @@ RUN docker-php-ext-install pdo_mysql zip \
 #RUN pecl install imagick \
 #    && pecl install xdebug
 #Enabling exts/installing exts with configurations
-#RUN docker-php-ext-enable xdebug
+#imagick from source installation
+ARG IMAGICK_COMMIT="132a11fd26675db9eb9f0e9a3e2887c161875206"
+
+RUN echo "**** install imagick php extension from source ****" && \
+        cd /usr/local/src && \
+        git clone https://github.com/Imagick/imagick && \
+        cd imagick && \
+        git checkout ${IMAGICK_COMMIT} && \
+        phpize && \
+        ./configure && \
+        make && \
+        make install && \
+        cd .. && \
+        rm -rf imagick && \
+        docker-php-ext-enable imagick
+RUN docker-php-ext-install xdebug
+RUN docker-php-ext-enable xdebug
 #RUN docker-php-ext-enable imagick
-#RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure gd
 RUN docker-php-ext-install gd
 #Get composer
 RUN curl -sS https://getcomposer.org/installer \
