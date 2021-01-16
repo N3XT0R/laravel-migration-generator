@@ -11,6 +11,6 @@ class DbTestCase extends TestCase
     {
         parent::setUp();
         $this->loadMigrationsFrom($this->resourceFolder . '/Database/Migrations/');
-        $this->artisan('migrate', ['--database' => 'mysql']);
+        $this->loadLaravelMigrations(['--database' => 'mysql']);
     }
 }
