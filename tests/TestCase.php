@@ -8,7 +8,7 @@ use Illuminate\Foundation\Application;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    protected string $resourceFolder = '';
+    protected $resourceFolder = '';
 
     protected function setUp(): void
     {
