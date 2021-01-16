@@ -53,6 +53,11 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->registerCommands();
     }
 
+    private function isPhp8(): bool
+    {
+        return version_compare(PHP_VERSION, '8.0.0') >= 0;
+    }
+
     protected function registerCommands(): void
     {
         $this->app->singleton('command.migrate.regenerate', function ($app) {
