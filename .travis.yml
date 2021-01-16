@@ -21,7 +21,7 @@ before_install:
 
 before_script:
   - phpenv config-add tests/xdebug.ini
-  - composer update
+  - composer self-update
   - travis_retry composer install $COMPOSER_OPTION
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
