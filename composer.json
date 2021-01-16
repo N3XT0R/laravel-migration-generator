@@ -6,21 +6,22 @@
     "laravel",
     "migrations",
     "migration-generator",
-    "referential integrity"
+    "referential integrity",
+    "php 8"
   ],
   "require": {
-    "php": ">=7.2.0|>=8.0.0",
+    "php": "^7.2.5|^8.0",
     "ext-pdo_mysql": "*",
-    "doctrine/dbal": "^2.10",
-    "illuminate/database": "^5.6||^6.0",
-    "illuminate/view": "^5.6|^6.0",
-    "illuminate/support": "^5.6|^6.0",
-    "illuminate/container": "^5.6|^6.0",
+    "doctrine/dbal": "^2.12",
+    "illuminate/database": "^7.30",
+    "illuminate/view": "^7.30",
+    "illuminate/support": "^7.30",
+    "illuminate/container": "^7.30",
     "marcj/topsort": "^1.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0|^9.5.0",
-    "orchestra/testbench": "^3.6"
+    "phpunit/phpunit": "^9.5.0",
+    "orchestra/testbench": "^5.0"
   },
   "autoload": {
     "psr-4": {
@@ -39,7 +40,6 @@
       "email": "info@php-dev.info"
     }
   ],
-  "minimum-stability": "stable",
   "extra": {
     "laravel": {
       "providers": [
