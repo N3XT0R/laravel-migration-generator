@@ -1,4 +1,4 @@
-# laravel-migration-generator [7.x]
+# laravel-migration-generator [5.x / 6.x / 7.x]
 [![Build Status](https://travis-ci.com/N3XT0R/laravel-migration-generator.svg?branch=master)](https://travis-ci.com/N3XT0R/laravel-migration-generator)
 [![Latest Stable Version](https://poser.pugx.org/n3xt0r/laravel-migration-generator/v/stable)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/3be6f76e8df15784a025/test_coverage)](https://codeclimate.com/github/N3XT0R/laravel-migration-generator/test_coverage)
@@ -8,6 +8,14 @@
 This Migration-Generator generates Migrations in correct order, when referential integrity is used.
 So on remigrating them at example on a dev-system, local-system or others its possible
 to migrate the schema without constraint violations.
+
+## Version Compatibility
+
+| Laravel/Lumen | Migration-Generator | Life Support |
+| ------------- |:-------------------:| ------------:|
+| 5.x           | 1.0.10              | EOL          |
+| 6.x           | 1.0.10              | EOL          |
+| 7.x           | 2.0.0               | Yes          |
 
 ## Requirements
 
