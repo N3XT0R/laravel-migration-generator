@@ -11,16 +11,15 @@ to migrate the schema without constraint violations.
 
 ## Requirements
 
-- PHP 7.2 or above
+- PHP 7.2 or higher (php 8 is also supported)
     - Pdo_mysql extension
-- MySQL 5.7 or above
+- MySQL 5.7 or higher
 
 ### Additional Info
 
 This Library was tested with following Laravel/Lumen-Versions:
 
-- from 5.6 to 5.8
-- 6.x
+- 7
 
 ## Installation
 
