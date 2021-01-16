@@ -34,7 +34,7 @@ class ForeignKeyDefinitionTest extends DbTestCase
     {
         $this->definition->generate();
         $result = $this->definition->getResult();
-        $this->assertCount(0, $result);
+        self::assertCount(0, $result);
     }
 
     public function testGenerateResultShouldWork(): array
@@ -42,8 +42,8 @@ class ForeignKeyDefinitionTest extends DbTestCase
         $this->definition->addAttribute('table', ['dummy']);
         $this->definition->generate();
         $result = $this->definition->getResult();
-        $this->assertCount(1, $result);
-        $this->assertContainsOnlyInstancesOf(ForeignKeyEntity::class, $result);
+        self::assertCount(1, $result);
+        self::assertContainsOnlyInstancesOf(ForeignKeyEntity::class, $result);
 
         return $result;
     }
@@ -58,11 +58,11 @@ class ForeignKeyDefinitionTest extends DbTestCase
          * @var ForeignKeyEntity $foreignKey
          */
         $foreignKey = current($result);
-        $this->assertEquals('fields_test_id', $foreignKey->getLocalColumn());
-        $this->assertEquals('foreign_table', $foreignKey->getLocalTable());
-        $this->assertEquals('id', $foreignKey->getReferencedColumn());
-        $this->assertEquals('fields_test', $foreignKey->getReferencedTable());
-        $this->assertEquals('SET NULL', $foreignKey->getOnDelete());
-        $this->assertEquals('CASCADE', $foreignKey->getOnUpdate());
+        self::assertEquals('fields_test_id', $foreignKey->getLocalColumn());
+        self::assertEquals('foreign_table', $foreignKey->getLocalTable());
+        self::assertEquals('id', $foreignKey->getReferencedColumn());
+        self::assertEquals('fields_test', $foreignKey->getReferencedTable());
+        self::assertEquals('SET NULL', $foreignKey->getOnDelete());
+        self::assertEquals('CASCADE', $foreignKey->getOnUpdate());
     }
 }
