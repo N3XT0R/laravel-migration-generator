@@ -7,6 +7,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-01-16
 ### Added
 - Added support for laravel/lumen up from 7.
 
@@ -16,6 +17,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 - Dropped support for laravel/lumen 5/6 [EOL]
 
-## 1.0.10 - 2020-06-24
+## [1.0.10] - 2020-06-24
 ### Fixed
 - Bug inside of foreign keys fixed.
