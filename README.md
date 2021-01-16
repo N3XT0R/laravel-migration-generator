@@ -11,11 +11,11 @@ to migrate the schema without constraint violations.
 
 ## Version Compatibility
 
-| Laravel/Lumen | Migration-Generator | Life Support |
-| ------------- |:-------------------:| ------------:|
-| 5.x           | 1.0.10              | EOL          |
-| 6.x           | 1.0.10              | EOL          |
-| 7.x           | 2.0.0               | Yes          |
+| Laravel/Lumen | PHP-Version   | Migration-Generator | Life Support |
+| ------------- |:-------------:|:-------------------:| ------------:|
+| 5.x           | 7.2 up to 7.4 | 1.0.10              | EOL          |
+| 6.x           | 7.2 up to 7.4 | 1.0.10              | EOL          |
+| 7.x           | 7.2 up to 8.0 | 2.0.0               | Yes          |
 
 ## Requirements
 
