@@ -10,7 +10,7 @@ services:
       - "3321:3306"
     environment:
       - MYSQL_DATABASE=testing
-      - MYSQL_USER=migration
+      - MYSQL_USER=migrationc
       - MYSQL_PASSWORD=migration
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
   php:
