@@ -20,12 +20,15 @@ class SchemaParserTest extends DbTestCase
     public function testGetTablesFromSchemaWorks(): void
     {
         $tables = $this->parser->getTablesFromSchema('testing');
-        $this->assertCount(3, $tables);
-        $this->assertEquals(
+        self::assertCount(6, $tables);
+        self::assertEquals(
             [
                 'abc',
+                'failed_jobs',
                 'fields_test',
                 'foreign_table',
+                'password_resets',
+                'users',
             ],
             $tables
         );
@@ -34,11 +37,14 @@ class SchemaParserTest extends DbTestCase
     public function testGetSortedTablesFromSchema(): void
     {
         $tables = $this->parser->getSortedTablesFromSchema('testing');
-        $this->assertCount(3, $tables);
-        $this->assertEquals(
+        self::assertCount(6, $tables);
+        self::assertEquals(
             [
+                'failed_jobs',
                 'fields_test',
                 'foreign_table',
+                'password_resets',
+                'users',
                 'abc',
             ],
             $tables

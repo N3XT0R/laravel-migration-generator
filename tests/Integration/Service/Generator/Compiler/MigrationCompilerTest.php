@@ -39,7 +39,7 @@ class MigrationCompilerTest extends TestCase
         );
         $this->compiler->generateByResult($result);
         $result = $this->compiler->getRenderedTemplate();
-        $this->assertStringEqualsFile($this->resourceFolder . '/ExpectedResults/migrationCompilerResult.txt', $result);
+        self::assertStringEqualsFile($this->resourceFolder . '/ExpectedResults/migrationCompilerResult.txt', $result);
     }
 
     public function testGenerateByResultWorksWithCustomMigration(): void
@@ -60,7 +60,7 @@ class MigrationCompilerTest extends TestCase
         );
         $this->compiler->generateByResult($result, CustomMigration::class);
         $result = $this->compiler->getRenderedTemplate();
-        $this->assertStringEqualsFile(
+        self::assertStringEqualsFile(
             $this->resourceFolder . '/ExpectedResults/migrationCompilerResult_custom.txt',
             $result
         );
@@ -85,9 +85,9 @@ class MigrationCompilerTest extends TestCase
         $this->compiler->generateByResult($result);
 
         $path = $this->resourceFolder . '/ExpectedResults/';
-        $this->assertTrue($this->compiler->writeToDisk('create_test_table', $path));
+        self::assertTrue($this->compiler->writeToDisk('create_test_table', $path));
         $migrationPath = $this->compiler->getMigrationFiles()[0];
-        $this->assertFileExists($path . $migrationPath);
-        $this->assertFileEquals($this->resourceFolder . '/ExpectedResults/renderedClass.txt', $path . $migrationPath);
+        self::assertFileExists($path . $migrationPath);
+        self::assertFileEquals($this->resourceFolder . '/ExpectedResults/renderedClass.txt', $path . $migrationPath);
     }
 }

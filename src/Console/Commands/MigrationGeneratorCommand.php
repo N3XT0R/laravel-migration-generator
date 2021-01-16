@@ -42,8 +42,8 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      * MigrationGeneratorCommand constructor.
      * @param MigrationCreator $creator
      * @param Composer $composer
-     * @param Migrator $migrator
-     * @return void
+     * @param Migrator|null $migrator
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __construct(MigrationCreator $creator, Composer $composer, Migrator $migrator = null)
     {
