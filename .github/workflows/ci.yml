@@ -5,6 +5,7 @@ on:
 
 name: CI
 
+# todo fix pipelines for github CI
 jobs:
   tests:
     name: Tests
