@@ -26,6 +26,7 @@ jobs:
           - highest
         env:
           - DB_HOST: "127.0.0.1"
+          - DB_USER: ${{ secrets.RootPassword }
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,6 +40,7 @@ jobs:
           collation server: 'utf8_general_ci'
           mysql version: '5.7'
           mysql database: 'testing'
+          mysql root password: ${{ secrets.RootPassword }
 
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
