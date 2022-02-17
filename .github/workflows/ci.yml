@@ -40,7 +40,7 @@ jobs:
           collation server: 'utf8_general_ci'
           mysql version: '5.7'
           mysql database: 'testing'
-          mysql root password: ${{ secrets.RootPassword }
+          mysql root password: ${{ secrets.RootPassword }}
 
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
