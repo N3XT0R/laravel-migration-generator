@@ -26,7 +26,7 @@ jobs:
           - highest
         env:
           - DB_HOST: "127.0.0.1"
-          - DB_USER: ${{ secrets.RootPassword }
+          - DB_USER: ${{ secrets.RootPassword }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
