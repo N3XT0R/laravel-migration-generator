@@ -8,7 +8,7 @@
         displayDetailsOnTestsThatTriggerErrors="true"
         displayDetailsOnTestsThatTriggerNotices="true"
         displayDetailsOnTestsThatTriggerWarnings="true"
-        displayDetailsOnPhpunitDeprecations="true"
+        displayDetailsOnPhpunitDeprecations="false"
         processIsolation="false"
         failOnWarning="true"
         failOnRisky="true"
