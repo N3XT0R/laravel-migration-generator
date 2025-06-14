@@ -46,7 +46,7 @@ enabling seamless integration into both legacy and modern Laravel projects (Lara
 
 You can install this package over composer via
 
-``
+``bash
 composer require n3xt0r/laravel-migration-generator
 ``
 
