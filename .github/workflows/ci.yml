@@ -91,6 +91,9 @@ jobs:
         run: |
           composer install --no-interaction --prefer-dist --no-progress
 
+      - name: Ensure coverage directory exists
+        run: mkdir -p coverage
+        
       - name: Run Tests
         run: vendor/bin/phpunit --coverage-clover=coverage/clover.xml --path-coverage
 
