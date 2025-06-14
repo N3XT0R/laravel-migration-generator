@@ -110,5 +110,5 @@ jobs:
         if: env.CC_TEST_REPORTER_ID != ''
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        run: ./cc-test-reporter after-build -t clover -p clover.xml --exit-code 0
+        run: ./cc-test-reporter after-build --coverage-input-type clover --exit-code 0 --prefix "$(pwd)"
 
