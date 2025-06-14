@@ -17,13 +17,6 @@ jobs:
         laravel: [10, 11]
         php: [8.1, 8.2, 8.3, 8.4]
         include:
-          # Laravel 10: PHP 8.1–8.3
-          - laravel: 10
-            php: 8.1
-          - laravel: 10
-            php: 8.2
-          - laravel: 10
-            php: 8.3
           # Laravel 11: PHP 8.2–8.4
           - laravel: 11
             php: 8.2
