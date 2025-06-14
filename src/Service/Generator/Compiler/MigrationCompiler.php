@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\MapperInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
 class MigrationCompiler implements MigrationCompilerInterface
@@ -155,16 +156,18 @@ class MigrationCompiler implements MigrationCompilerInterface
     public function writeToDisk(
         string $name,
         string $path,
-        int $currentAmount = -1,
-        int $maxAmount = -1,
-        int $timestamp = -1
+        MigrationTimingDto $timingDto = new MigrationTimingDto()
     ): bool {
         $result = false;
         $this->setMigrationFiles([]);
         $tpl = $this->getRenderedTemplate();
 
         if (!empty($tpl)) {
-            $fileName = $this->generateFilename($name, $currentAmount, $maxAmount, $timestamp);
+            $fileName = $this->generateFilename($name,
+                $timingDto->getCurrentAmount(),
+                $timingDto->getMaxAmount(),
+                $timingDto->getTimestamp()
+            );
             $renderedTemplate = str_replace('DummyClass', Str::studly($name), $tpl);
             $result = $this->writeTemplateToFile($path, $fileName, $renderedTemplate);
         }

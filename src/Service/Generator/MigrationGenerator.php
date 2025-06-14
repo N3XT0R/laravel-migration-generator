@@ -112,9 +112,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
             $result = $compiler->writeToDisk(
                 'Create'.ucfirst($table).'Table',
                 $this->getMigrationDir(),
-                $timingDto->getCurrentAmount(),
-                $timingDto->getMaxAmount(),
-                $timingDto->getMaxAmount()
+                $timingDto,
             );
             $this->setMigrationFiles($compiler->getMigrationFiles());
         } catch (\Exception $e) {
