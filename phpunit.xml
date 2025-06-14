@@ -13,9 +13,14 @@
         failOnWarning="true"
         failOnRisky="true"
         stopOnFailure="false"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
 >
-  <coverage includeUncoveredFiles="true">
+  <coverage
+          includeUncoveredFiles="true"
+          pathCoverage="false"
+          ignoreDeprecatedCodeUnits="false"
+          disableCodeCoverageIgnore="false"
+  >
     <report>
       <clover outputFile="build/logs/clover.xml"/>
     </report>
