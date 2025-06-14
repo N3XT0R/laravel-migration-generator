@@ -38,3 +38,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Removed 
 - Dropped Support for PHP 7.x
+
+## [4.0.1] - 2025-06-14
+### Changed
+- changed readme
+
+## [4.0.2] - 2025-06-14
+### Changed
+- changed readme

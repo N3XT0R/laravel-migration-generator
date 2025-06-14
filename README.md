@@ -21,7 +21,7 @@ to migrate the schema without constraint violations.
 
 ## Requirements
 
-- PHP 7.3 or higher (php 8 is also supported)
+- PHP 8
     - Pdo_mysql extension
 - MySQL 5.7 or higher
 
