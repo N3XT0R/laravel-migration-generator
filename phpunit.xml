@@ -20,7 +20,7 @@
             pathCoverage="true"
     >
         <report>
-            <clover outputFile="clover.xml"/>
+            <clover outputFile="coverage/clover.xml"/>
         </report>
     </coverage>
     <source>
