@@ -16,9 +16,9 @@ services:
   php:
     build:
       context: .
-      # dockerfile: app.Dockerfile
       dockerfile: app.Dockerfile
     volumes:
       - .:/var/www/html/:consistent
+      - ./tests/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
     depends_on:
       - db_migration

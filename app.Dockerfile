@@ -8,10 +8,9 @@ RUN docker-php-ext-install pdo_mysql zip \
     && docker-php-ext-install exif \
     && docker-php-ext-install intl
 #PECL installs
-#RUN pecl install imagick \
-#    && pecl install xdebug
+RUN pecl install xdebug
 #Enabling exts/installing exts with configurations
-#RUN docker-php-ext-enable xdebug
+RUN docker-php-ext-enable xdebug
 #RUN docker-php-ext-enable imagick
 #RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install gd
