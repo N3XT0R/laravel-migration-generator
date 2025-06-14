@@ -12,6 +12,7 @@
   "require": {
     "php": "^8.2",
     "ext-pdo_mysql": "*",
+    "doctrine/dbal": "^3.0",
     "laravel/framework": "^11.6",
     "marcj/topsort": "^1.1"
   },
