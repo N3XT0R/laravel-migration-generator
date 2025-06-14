@@ -73,17 +73,28 @@ class TableDefinition extends AbstractDefinition
         $fieldEntity->setTable($table);
         $fieldEntity->setColumnName($column->getName());
         $fieldEntity->setType($this->convertTypeToBluePrintType($column->getType()->getName()));
-        $fieldEntity->setOptions(
-            [
-                'default' => $column->getDefault(),
-                'nullable' => !$column->getNotnull(),
-            ]
-        );
+        $fieldEntity->setOptions($this->buildOptions($column));
+        $this->dispatchTypePreparation($fieldEntity, $column);
+
+        return $fieldEntity;
+    }
+
+    protected function buildOptions(Column $column): array
+    {
+        $options = [
+            'default' => $column->getDefault(),
+            'nullable' => !$column->getNotnull(),
+        ];
 
         if (null !== $column->getComment()) {
-            $fieldEntity->addOption('comment', $column->getComment());
+            $options['comment'] = $column->getComment();
         }
 
+        return $options;
+    }
+
+    protected function dispatchTypePreparation(FieldEntity $fieldEntity, Column $column): void
+    {
         switch ($fieldEntity->getType()) {
             case 'tinyInteger':
             case 'integer':
@@ -91,22 +102,17 @@ class TableDefinition extends AbstractDefinition
             case 'bigInteger':
                 $this->prepareInteger($fieldEntity, $column);
                 break;
-
             case 'dateTime':
                 $this->prepareDateTime($fieldEntity);
                 break;
-
             case 'double':
             case 'decimal':
                 $this->prepareFloatingField($fieldEntity, $column);
                 break;
-
             default:
                 $this->prepareMixedTypes($fieldEntity, $column);
                 break;
         }
-
-        return $fieldEntity;
     }
 
     private function prepareInteger(FieldEntity $fieldEntity, Column $column): void
@@ -135,7 +141,7 @@ class TableDefinition extends AbstractDefinition
         $type = $fieldEntity->getType();
 
         if (true === $unsigned && 'float' !== $type) {
-            $fieldEntity->setType('unsigned' . ucfirst($type));
+            $fieldEntity->setType('unsigned'.ucfirst($type));
         } elseif (true === $unsigned) {
             $fieldEntity->addOption('unsigned', $unsigned);
         }
