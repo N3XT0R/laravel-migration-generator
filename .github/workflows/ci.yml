@@ -11,6 +11,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       matrix:
         php: [7.2, 7.3, 7.4, 8.0 ]
@@ -70,7 +71,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction --prefer-dist --no-progress ${{ matrix.composer_option || '' }}
+          composer install --no-interaction --prefer-dist --no-progress --verbose ${{ matrix.composer_option || '' }}
 
       - name: Prepare Code Climate Reporter
         run: |
