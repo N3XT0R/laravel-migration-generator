@@ -16,10 +16,7 @@ jobs:
       matrix:
         php: [7.4, 8.0 ]
         mysql: [5.7, 8.0]
-        include:
-          - composer_option: --ignore-platform-reqs
-        exclude:
-          - php: 8.0  # incompatible
+
     services:
       mysql:
         image: mysql:${{ matrix.mysql }}
@@ -34,7 +31,6 @@ jobs:
             --health-timeout=5s
             --health-retries=3
 
-    name: Laravel ${{ matrix.laravel }} (PHP ${{ matrix.php }})
     steps:
       - uses: actions/checkout@v4
 
@@ -59,6 +55,9 @@ jobs:
           php -v
           composer --version
           mysql --version || true
+
+      - name: Wait for MySQL
+        run: |
           echo "Waiting for MySQL..."
           for i in {30..0}; do
             if mysqladmin ping -h 127.0.0.1 --silent; then
@@ -71,7 +70,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction --prefer-dist --no-progress --verbose ${{ matrix.composer_option || '' }}
+          composer install --no-interaction --prefer-dist --no-progress
 
       - name: Prepare Code Climate Reporter
         run: |
