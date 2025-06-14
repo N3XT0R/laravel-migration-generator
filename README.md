@@ -11,17 +11,18 @@ to migrate the schema without constraint violations.
 
 ## Version Compatibility
 
-| Laravel/Lumen |  PHP-Version  | Migration-Generator | Life Support |
-|---------------|:-------------:|:-------------------:|-------------:|
-| 5.x           | 7.2 up to 7.4 |       1.0.10        |          EOL |
-| 6.x           | 7.2 up to 7.4 |       1.0.10        |          EOL |
-| 7.x           | 7.2 up to 8.0 |        2.0.0        |          EOL |
-| 8.x           | 7.3 up to 8.0 |        3.0.0        |          EOL |
-| 9.x           |      8.0      |        4.0.0        |          EOL |
+| Laravel/Lumen |  PHP-Version  | Migration-Generator | Is Supported? |
+|---------------|:-------------:|:-------------------:|--------------:|
+| 5.x           | 7.2 up to 7.4 |       1.0.10        |           EOL |
+| 6.x           | 7.2 up to 7.4 |       1.0.10        |           EOL |
+| 7.x           | 7.2 up to 8.0 |        2.0.0        |           EOL |
+| 8.x           | 7.3 up to 8.0 |        3.0.0        |           EOL |
+| 9.x           |      8.0      |        4.0.0        |           EOL |
+| 10.x          |      8.1      |        5.0.0        |           Yes |
 
 ## Requirements
 
-- PHP 8
+- PHP 8.1
     - Pdo_mysql extension
 - MySQL 5.7 or higher
 
