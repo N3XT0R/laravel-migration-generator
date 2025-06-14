@@ -1,58 +1,56 @@
-# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
-on:
-  - pull_request
-  - push
+
 
 name: CI
 
-# todo fix pipelines for github CI
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
 jobs:
-  tests:
-    name: Tests
-    runs-on: ${{ matrix.os }}
-
-
-    env:
-      PHP_EXTENSIONS: none, dom, json, libxml, mbstring, openssl, pdo_mysql, phar, soap, tokenizer, xml, xmlwriter
-      PHP_INI_VALUES: memory_limit=-1, assert.exception=1, zend.assertions=1, error_reporting=-1, log_errors_max_len=0, display_errors=On
-
+  test:
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-        php: [7.2, 7.3, 7.4, 8.0, 8.1]
-        compiler:
-          - default
-        dependencies:
-          - highest
-        env:
-          - DB_HOST: "127.0.0.1"
-          - DB_USER: ${{ secrets.RootPassword }}
+        include:
+          - laravel: 5.6.*
+            php: 7.1
+          - laravel: 5.7.*
+            php: 7.1
+          - laravel: 5.8.*
+            php: 7.2
+          - laravel: 6.*
+            php: 7.3
+          - laravel: 7.*
+            php: 7.4
+          - laravel: 8.*
+            php: 8.0
+          - laravel: 9.*
+            php: 8.1
+          - laravel: 10.*
+            php: 8.1
+          - laravel: 11.*
+            php: 8.2
+          - laravel: 12.*
+            php: 8.2
+
+    name: Laravel ${{ matrix.laravel }} (PHP ${{ matrix.php }})
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: configure mysql
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          character set server: 'utf8'
-          collation server: 'utf8_general_ci'
-          mysql version: '5.7'
-          mysql database: 'testing'
-          mysql root password: ${{ secrets.RootPassword }}
-
-      - name: Install PHP with extensions
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
-          extensions: ${{ env.PHP_EXTENSIONS }}
-          ini-values: ${{ env.PHP_INI_VALUES }}
-          tools: none
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo, sqlite, curl, dom
+          coverage: none
 
-      - name: Install highest dependencies with composer
-        if: matrix.dependencies == 'highest'
-        run: php ./tools/composer update --no-ansi --no-interaction --no-progress
+      - name: Install dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction
 
-      - name: Run tests with phpunit
-        run: php ./vendor/bin/phpunit
+      - name: Run tests
+        run: vendor/bin/phpunit
+
