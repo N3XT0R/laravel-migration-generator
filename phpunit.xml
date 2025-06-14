@@ -16,6 +16,9 @@
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
 >
   <coverage includeUncoveredFiles="true">
+    <source>
+      <directory suffix=".php">src</directory>
+    </source>
     <report>
       <clover outputFile="build/logs/clover.xml"/>
     </report>

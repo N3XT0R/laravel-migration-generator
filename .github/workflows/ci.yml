@@ -69,7 +69,8 @@ jobs:
             gd,
             bcmath,
             curl,
-            dom
+            dom,
+            xdebug
           coverage: xdebug
 
       - name: Debug info
