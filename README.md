@@ -20,6 +20,7 @@ to migrate the schema without constraint violations.
 | 9.x           |      8.0      |        4.0.0        |           EOL |
 | 10.x          |  8.1 to 8.3   |        5.0.0        |           Yes |
 | 11.x          |  8.2 to 8.4   |        6.0.0        |           Yes |
+| 12.x          |  8.2 to 8.4   |        7.0.0        |           Yes |
 
 ## Requirements
 
