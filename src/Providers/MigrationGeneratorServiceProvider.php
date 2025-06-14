@@ -2,6 +2,8 @@
 
 namespace N3XT0R\MigrationGenerator\Providers;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Illuminate\Contracts\Container\Container as Application;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
@@ -110,9 +112,16 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerGenerator(): void
     {
+        $dbMap = [
+            'mysql' => 'pdo_mysql',
+            'sqlite' => 'pdo_sqlite',
+            'pgsql' => 'pdo_pgsql',
+        ];
+
+
         $this->app->bind(
             MigrationGeneratorInterface::class,
-            static function (Application $app, array $params) {
+            static function (Application $app, array $params) use ($dbMap) {
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
                     throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
@@ -122,7 +131,19 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                  * @var DatabaseManager $dbManager
                  */
                 $dbManager = $app->get('db');
-                $connection = $dbManager->connection($params[$key])->getDoctrineConnection();
+                $dbConfig = $dbManager->connection($params[$key])->getConfig();
+                if(array_key_exists($dbConfig['name'], $dbMap)){
+                    $dbConfig['driver'] = $dbMap[$dbConfig['name']];
+                }
+
+                $connectionParams  = [
+                    'dbname' => $dbConfig['database'],
+                    'user' => $dbConfig['username'],
+                    'password' => $dbConfig['password'],
+                    'host' => $dbConfig['host'],
+                    'driver' => $dbConfig['driver'],
+                ];
+                $connection = DriverManager::getConnection($connectionParams);
 
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
