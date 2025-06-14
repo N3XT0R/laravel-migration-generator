@@ -90,6 +90,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Send coverage to Code Climate
+        if: ${{ secrets.CC_TEST_REPORTER_ID }}
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         run: ./cc-test-reporter after-build -t clover --exit-code $?
