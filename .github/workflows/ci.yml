@@ -12,15 +12,15 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        laravel: [ 10, 11 ]
+        laravel: [ 10, 11, 12 ]
         php: [ 8.2, 8.3, 8.4 ]
         include:
-          # Laravel 11: PHP 8.2–8.4
-          - laravel: 11
+          # Laravel 12: PHP 8.2–8.4
+          - laravel: 12
             php: 8.2
-          - laravel: 11
+          - laravel: 12
             php: 8.3
-          - laravel: 11
+          - laravel: 12
             php: 8.4
         exclude:
           - laravel: 10
