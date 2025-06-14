@@ -7,9 +7,9 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 
 abstract class AbstractDefinition implements DefinitionInterface
 {
-    protected $result = [];
-    protected $schema;
-    protected $attributes = [];
+    protected array $result = [];
+    protected AbstractSchemaManager $schema;
+    protected array $attributes = [];
 
     public function getAttributes(): array
     {

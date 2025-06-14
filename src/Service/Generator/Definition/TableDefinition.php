@@ -9,7 +9,7 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 class TableDefinition extends AbstractDefinition
 {
 
-    protected $fieldTypeMap = [
+    protected array $fieldTypeMap = [
         'tinyint' => 'tinyInteger',
         'smallint' => 'smallInteger',
         'bigint' => 'bigInteger',

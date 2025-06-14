@@ -4,12 +4,10 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 
-use phpDocumentor\Reflection\Types\Boolean;
-
 class ResultEntity
 {
-    protected $results = [];
-    protected $tableName = '';
+    protected array $results = [];
+    protected string $tableName = '';
 
     public function setResults(array $results): void
     {

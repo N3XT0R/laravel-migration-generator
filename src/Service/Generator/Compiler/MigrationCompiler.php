@@ -13,11 +13,11 @@ use Illuminate\Support\Str;
 
 class MigrationCompiler implements MigrationCompilerInterface
 {
-    protected $view;
-    protected $renderedTemplate;
-    protected $mapper = [];
-    protected $filesystem;
-    protected $migrationFiles = [];
+    protected ViewFactory $view;
+    protected string $renderedTemplate;
+    protected array $mapper = [];
+    protected Filesystem $filesystem;
+    protected array $migrationFiles = [];
 
     public function __construct(ViewFactory $view, Filesystem $filesystem)
     {

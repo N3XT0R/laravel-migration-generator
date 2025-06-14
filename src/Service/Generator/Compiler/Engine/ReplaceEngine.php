@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\Engine;
 
 class ReplaceEngine implements Engine
 {
-    public function get($path, array $data = [])
+    public function get($path, array $data = []): string
     {
         $content = file_get_contents($path);
         $content = $this->populateData($content, $data);

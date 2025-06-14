@@ -9,11 +9,11 @@ use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInter
 class MigrationGenerator implements MigrationGeneratorInterface
 {
 
-    protected $resolver;
-    protected $compiler;
-    protected $migrationDir = '';
-    protected $errorMessages = [];
-    protected $migrationFiles = [];
+    protected DefinitionResolverInterface $resolver;
+    protected MigrationCompilerInterface $compiler;
+    protected string $migrationDir = '';
+    protected array $errorMessages = [];
+    protected array $migrationFiles = [];
 
     public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
     {

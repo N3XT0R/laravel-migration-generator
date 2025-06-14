@@ -17,7 +17,7 @@ services:
     build:
       context: .
       # dockerfile: app.Dockerfile
-      dockerfile: app-temp.Dockerfile
+      dockerfile: app.Dockerfile
     volumes:
       - .:/var/www/html/:consistent
     depends_on:

@@ -5,11 +5,11 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 class FieldEntity
 {
-    protected $table = '';
-    protected $columnName = '';
-    protected $type = '';
-    protected $arguments = [];
-    protected $options = [];
+    protected string $table = '';
+    protected string $columnName = '';
+    protected string $type = '';
+    protected array $arguments = [];
+    protected array $options = [];
 
     /**
      * @return string

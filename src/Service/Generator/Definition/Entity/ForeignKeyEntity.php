@@ -6,13 +6,13 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 class ForeignKeyEntity
 {
-    protected $name = '';
-    protected $localTable = '';
-    protected $localColumn = '';
-    protected $referencedTable = '';
-    protected $referencedColumn = '';
-    protected $onDelete = '';
-    protected $onUpdate = '';
+    protected string $name = '';
+    protected string $localTable = '';
+    protected string $localColumn = '';
+    protected string $referencedTable = '';
+    protected string $referencedColumn = '';
+    protected string $onDelete = '';
+    protected string $onUpdate = '';
 
     /**
      * @return string

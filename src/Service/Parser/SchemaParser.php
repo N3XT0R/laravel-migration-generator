@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class SchemaParser implements SchemaParserInterface
 {
-    protected $connection;
+    protected ConnectionInterface $connection;
 
     public function __construct(string $connectionName = '')
     {

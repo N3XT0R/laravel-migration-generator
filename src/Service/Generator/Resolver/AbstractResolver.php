@@ -9,8 +9,8 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
 
 abstract class AbstractResolver implements DefinitionResolverInterface
 {
-    protected $doctrineConnection;
-    protected $definitions = [];
+    protected DoctrineConnection $doctrineConnection;
+    protected array $definitions = [];
 
     public function __construct(DoctrineConnection $connection, array $definitions)
     {

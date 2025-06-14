@@ -28,3 +28,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - migrated to Laravel 8 / PHPUnit 9.5
 - Changed Travis-CI to Github Actions
+
+## [4.0.0] - 2025-06-14
+### Added
+- Typed Properties added to every Class
+
+### Changed
+- migrated to Laravel 9
+
+### Removed 
+- Dropped Support for PHP 7.x

@@ -6,14 +6,12 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 class IndexEntity
 {
-    protected $type = '';
-    protected $name = '';
-    protected $columns = [];
+    protected string $type = '';
+    protected string $name = '';
+    protected array $columns = [];
 
-    /**
-     * @return mixed
-     */
-    public function getType()
+
+    public function getType(): string
     {
         return $this->type;
     }
