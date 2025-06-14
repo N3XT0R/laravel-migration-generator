@@ -8,6 +8,7 @@ use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ForeignKeyEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\ForeignKeyDefinition;
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\DbTestCase;
 
 class ForeignKeyDefinitionTest extends DbTestCase
@@ -59,8 +60,8 @@ class ForeignKeyDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testForeignKeyWorks(array $result): void
     {
         /**

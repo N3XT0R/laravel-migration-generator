@@ -8,6 +8,7 @@ use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\TableDefinition;
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\DbTestCase;
 
 class TableDefinitionTest extends DbTestCase
@@ -52,8 +53,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testBigIntegerIsCorrect(array $result): void
     {
         /**
@@ -83,8 +84,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testSmallIntegerIsCorrect(array $result): void
     {
         /**
@@ -107,8 +108,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testMediumIntegerIsCorrect(array $result): void
     {
         /**
@@ -131,8 +132,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testTinyIntegerIsCorrect(array $result): void
     {
         /**
@@ -156,8 +157,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testTimestampIsCorrect(array $result): void
     {
         /**
@@ -180,8 +181,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testDateTimeIsCorrect(array $result): void
     {
         /**
@@ -204,8 +205,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testDoubleIsCorrect(array $result): void
     {
         /**
@@ -235,8 +236,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testFloatIsCorrect(array $result): void
     {
         /**
@@ -266,8 +267,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testDecimalIsCorrect(array $result): void
     {
         /**
@@ -297,8 +298,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testStringIsCorrect(array $result): void
     {
         /**
@@ -321,8 +322,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testCharIsCorrect(array $result): void
     {
         /**
@@ -351,8 +352,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testBooleanIsCorrect(array $result): void
     {
         /**
@@ -375,8 +376,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testJsonIsCorrect(array $result): void
     {
         /**
@@ -399,8 +400,8 @@ class TableDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testJsonBIsCorrect(array $result): void
     {
         /**
