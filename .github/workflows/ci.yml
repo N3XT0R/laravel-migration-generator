@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         laravel: [10, 11]
-        php: [8.1, 8.2, 8.3, 8.4]
+        php: [8.2, 8.3, 8.4]
         include:
           # Laravel 11: PHP 8.2–8.4
           - laravel: 11
