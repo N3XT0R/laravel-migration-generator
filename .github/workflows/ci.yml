@@ -22,6 +22,8 @@ jobs:
     services:
       mysql:
         image: mysql:${{ matrix.mysql }}
+        ports:
+          - 3306:3306
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
           MYSQL_DATABASE: testing
