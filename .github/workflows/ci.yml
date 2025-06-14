@@ -102,10 +102,6 @@ jobs:
       - name: Run Tests
         run: vendor/bin/phpunit --coverage-clover=clover.xml --path-coverage
 
-      - name: Normalize coverage paths
-        run: |
-          sed -i "s|$(pwd)/||g" clover.xml
-
       - name: Send coverage to Code Climate
         if: env.CC_TEST_REPORTER_ID != ''
         env:
