@@ -49,7 +49,7 @@ jobs:
             bcmath,
             curl,
             dom
-          coverage: none
+          coverage: xdebug
 
       - name: Debug info
         run: |
