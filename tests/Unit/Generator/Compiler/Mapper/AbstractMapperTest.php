@@ -15,7 +15,7 @@ class AbstractMapperTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->abstractMapper = new class extends AbstractMapper{
+        $this->abstractMapper = new class extends AbstractMapper {
 
             public function map(array $data): array
             {
@@ -45,8 +45,8 @@ class AbstractMapperTest extends TestCase
     }
 
     /**
-     * @param array $methods
-     * @param string $expectedResult
+     * @param  array  $methods
+     * @param  string  $expectedResult
      */
     #[DataProvider('chainMethodProvider')]
     public function testChainMethodsToStringWorks(array $methods, string $expectedResult): void
