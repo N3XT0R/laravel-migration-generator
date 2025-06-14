@@ -6,9 +6,22 @@
 [![Maintainability](https://qlty.sh/badges/dafd3f82-6646-47ae-a73e-3007d27fd67d/maintainability.svg)](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
 [![License](https://poser.pugx.org/n3xt0r/laravel-migration-generator/license)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 
-This Migration-Generator generates Migrations in correct order, when referential integrity is used.
-So on remigrating them at example on a dev-system, local-system or others its possible
-to migrate the schema without constraint violations.
+# Laravel Migration Generator
+
+**Laravel Migration Generator**  
+_A powerful CLI tool to generate Laravel migration files from an existing MySQL database schema._
+
+This tool provides a structured and extensible approach to reverse-engineering database schemas into Laravel-compatible
+migration files. It supports foreign key constraints, correct dependency order, and customizable mapping logic –
+enabling seamless integration into both legacy and modern Laravel projects (Laravel 7–12 supported).
+
+## ✨ Features
+
+- ✅ Accurate detection of tables, columns, indexes, and foreign keys
+- 🔄 Automatic sorting of migrations to preserve referential integrity
+- 🧱 Modular architecture for custom export strategies
+- 🧩 Compatible with Laravel 7–12 (EOL versions supported but no longer actively maintained)
+- 🛠 Designed for maintainability, testability, and long-term project stability
 
 ## Version Compatibility
 
