@@ -4,9 +4,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ develop, dev-*, master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ develop, dev-*, master ]
 
 jobs:
   test:
