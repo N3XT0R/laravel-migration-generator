@@ -23,3 +23,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.0.10] - 2020-06-24
 ### Fixed
 - Bug inside of foreign keys fixed.
+
+## [3.0.0] - 2025-06-14
+### Changed
+- migrated to Laravel 8 / PHPUnit 9.5
+- Changed Travis-CI to Github Actions
