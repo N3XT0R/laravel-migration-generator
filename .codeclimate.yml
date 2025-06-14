@@ -12,8 +12,13 @@ exclude_patterns:
   - tests/
 
 plugins:
+  test-reporter:
+    enabled: true
+    prefix: src/
   php:
     enabled: true
     config:
       paths:
         - src/
+  duplication:
+    enabled: true
