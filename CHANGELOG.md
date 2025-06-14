@@ -56,6 +56,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - changed DBAL Version from 2.x to 3.x
 
 ## [6.0.0] - 2025-06-14
+### Added
+- added test environments for PHP 8.2, 8.3 and 8.4
+
 ### Changed
 - upgraded to Laravel 11.x
 - migrated all tests to PHPUnit 11.5
