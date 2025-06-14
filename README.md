@@ -18,11 +18,12 @@ to migrate the schema without constraint violations.
 | 7.x           | 7.2 up to 8.0 |        2.0.0        |           EOL |
 | 8.x           | 7.3 up to 8.0 |        3.0.0        |           EOL |
 | 9.x           |      8.0      |        4.0.0        |           EOL |
-| 10.x          |      8.1      |        5.0.0        |           Yes |
+| 10.x          |  8.1 to 8.3   |        5.0.0        |           Yes |
+| 11.x          |  8.2 to 8.4   |        6.0.0        |           Yes |
 
 ## Requirements
 
-- PHP 8.1
+- PHP 8.2
     - Pdo_mysql extension
 - MySQL 5.7 or higher
 

@@ -10,15 +10,14 @@
     "php 8"
   ],
   "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "ext-pdo_mysql": "*",
-    "doctrine/dbal": "^3.0",
-    "laravel/framework": "^10.3",
+    "laravel/framework": "^11.6",
     "marcj/topsort": "^1.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5.0",
-    "orchestra/testbench": "^8.0"
+    "phpunit/phpunit": "^11.0",
+    "orchestra/testbench": "^9.0"
   },
   "autoload": {
     "psr-4": {
