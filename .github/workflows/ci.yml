@@ -37,7 +37,16 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, pdo, sqlite, curl, dom, mysql
+          extensions: >
+            mbstring,
+            pdo_mysql,
+            zip,
+            exif,
+            intl,
+            gd,
+            bcmath,
+            curl,
+            dom
           coverage: none
 
       - name: Debug info
