@@ -27,6 +27,8 @@ jobs:
             php: 8.4
           - laravel: 11
             php: 8.1
+          - laravel: 12
+            php: 8.1
         mysql: [ 5.7 ]
 
     services:
