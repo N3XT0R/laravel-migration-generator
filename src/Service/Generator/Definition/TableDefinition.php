@@ -54,7 +54,6 @@ class TableDefinition extends AbstractDefinition
     protected function generateFields(string $table, array $columns): array
     {
         $result = [];
-
         if (0 !== count($columns)) {
             foreach ($columns as $column) {
                 if ($column instanceof Column) {
