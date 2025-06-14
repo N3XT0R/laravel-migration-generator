@@ -15,10 +15,13 @@
         stopOnFailure="false"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
 >
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./src</directory>
-    </include>
+  <coverage includeUncoveredFiles="true">
+    <groups>
+      <include>
+        <group>Unit</group>
+        <group>Integration</group>
+      </include>
+    </groups>
     <report>
       <clover outputFile="build/logs/clover.xml"/>
     </report>
