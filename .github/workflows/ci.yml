@@ -93,5 +93,5 @@ jobs:
         if: env.CC_TEST_REPORTER_ID != ''
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        run: ./cc-test-reporter after-build -t clover --exit-code $?
+        run: ./cc-test-reporter after-build -t clover --exit-code 0
 
