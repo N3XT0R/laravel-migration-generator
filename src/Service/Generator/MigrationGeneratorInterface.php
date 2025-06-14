@@ -5,6 +5,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 
 interface MigrationGeneratorInterface
@@ -18,9 +19,7 @@ interface MigrationGeneratorInterface
     public function generateMigrationForTable(
         string $database,
         string $table,
-        int $currentAmount = -1,
-        int $maxAmount = -1,
-        int $timestamp = -1
+        MigrationTimingDto $timingDto
     ): bool;
 
     public function getMigrationFiles(): array;

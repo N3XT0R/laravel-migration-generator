@@ -2,11 +2,12 @@
 
 namespace N3XT0R\MigrationGenerator\Console\Commands;
 
-use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 use Illuminate\Console\ConfirmableTrait;
+use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Support\Composer;
+use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
@@ -40,9 +41,9 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
 
     /**
      * MigrationGeneratorCommand constructor.
-     * @param MigrationCreator $creator
-     * @param Composer $composer
-     * @param Migrator|null $migrator
+     * @param  MigrationCreator  $creator
+     * @param  Composer  $composer
+     * @param  Migrator|null  $migrator
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function __construct(MigrationCreator $creator, Composer $composer, Migrator $migrator = null)
@@ -73,7 +74,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
             return;
         }
 
-        $table = (string)$this->option('table');
+        $table = (string) $this->option('table');
         $force = false;
         //$force = (bool)$this->option('force');
         $connectionName = $this->option('database') ?? config('database.default');
@@ -114,14 +115,14 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
             $database
         );
         if (!in_array($table, $tables, true)) {
-            $this->error('Table "' . $table . '" not exists in Schema "' . $database . '"');
+            $this->error('Table "'.$table.'" not exists in Schema "'.$database.'"');
         } else {
             if (true === $generator->generateMigrationForTable($database, $table)) {
                 /**
                  * @todo
                  */
             } else {
-                $this->error('there occurred an error by creating migration for ' . $table);
+                $this->error('there occurred an error by creating migration for '.$table);
                 $this->error(implode(', ', $generator->getErrorMessages()));
             }
         }
@@ -145,14 +146,16 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         $bar = $this->output->createProgressBar($tableAmount);
         $bar->setFormat('verbose');
         $bar->start();
-        $actualTimestamp = time();
+        $migrationTimingDto = new MigrationTimingDto();
+        $migrationTimingDto->setMaxAmount($tableAmount);
+        $migrationTimingDto->setTimestamp(time());
 
         foreach ($tables as $num => $table) {
-            if (true === $generator->generateMigrationForTable($database, $table, $num, $tableAmount,
-                    $actualTimestamp)) {
+            $migrationTimingDto->setCurrentAmount($num);
+            if (true === $generator->generateMigrationForTable($database, $table, $migrationTimingDto)) {
                 $bar->advance();
             } else {
-                $this->error('there occurred an error by creating migration for ' . $table);
+                $this->error('there occurred an error by creating migration for '.$table);
                 $this->error(implode(', ', $generator->getErrorMessages()));
                 break;
             }
@@ -166,7 +169,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
     /**
      * Prepare the migration database for running.
      *
-     * @param string|null $database
+     * @param  string|null  $database
      * @return void
      */
     protected function prepareDatabase(string $database = null): void

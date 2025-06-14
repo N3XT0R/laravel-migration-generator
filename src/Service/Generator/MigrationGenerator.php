@@ -4,6 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 
 class MigrationGenerator implements MigrationGeneratorInterface
@@ -17,7 +18,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
     public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
     {
-        $this->setMigrationDir(database_path() . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR);
+        $this->setMigrationDir(database_path().DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR);
         $this->setResolver($resolver);
         $this->setCompiler($compiler);
     }
@@ -51,7 +52,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
     /**
-     * @param string $migrationDir
+     * @param  string  $migrationDir
      */
     public function setMigrationDir(string $migrationDir): void
     {
@@ -67,7 +68,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
     /**
-     * @param array $errorMessages
+     * @param  array  $errorMessages
      */
     public function setErrorMessages(array $errorMessages): void
     {
@@ -88,7 +89,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
     /**
-     * @param array $migrationFiles
+     * @param  array  $migrationFiles
      */
     public function setMigrationFiles(array $migrationFiles): void
     {
@@ -98,9 +99,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     public function generateMigrationForTable(
         string $database,
         string $table,
-        int $currentAmount = -1,
-        int $maxAmount = -1,
-        int $timestamp = -1
+        MigrationTimingDto $timingDto = new MigrationTimingDto()
     ): bool {
         $this->setErrorMessages([]);
         $result = false;
@@ -110,13 +109,17 @@ class MigrationGenerator implements MigrationGeneratorInterface
         try {
             $schemaResult = $resolver->resolveTableSchema($database, $table);
             $compiler->generateByResult($schemaResult);
-            $result = $compiler->writeToDisk('Create' . ucfirst($table) . 'Table', $this->getMigrationDir(),
-                $currentAmount, $maxAmount, $timestamp);
+            $result = $compiler->writeToDisk(
+                'Create'.ucfirst($table).'Table',
+                $this->getMigrationDir(),
+                $timingDto->getCurrentAmount(),
+                $timingDto->getMaxAmount(),
+                $timingDto->getMaxAmount()
+            );
             $this->setMigrationFiles($compiler->getMigrationFiles());
         } catch (\Exception $e) {
             $this->addErrorMessage($e->getMessage());
         }
-
 
         return $result;
     }
