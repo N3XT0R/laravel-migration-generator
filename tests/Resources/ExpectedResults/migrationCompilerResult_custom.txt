@@ -4,7 +4,7 @@ use Tests\Resources\Classes\CustomMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{Schema, DB};
 
-class DummyClass extends CustomMigration
+return new class extends CustomMigration
 {
 
     /**

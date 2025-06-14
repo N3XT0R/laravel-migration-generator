@@ -117,7 +117,6 @@ class MigrationCompiler implements MigrationCompilerInterface
         $data = [
             'migrationNamespace' => 'use ' . Migration::class . ';',
             'tableName' => $tableName,
-            'className' => 'DummyClass',
             'columns' => [],
         ];
 
