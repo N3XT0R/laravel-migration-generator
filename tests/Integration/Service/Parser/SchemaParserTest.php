@@ -9,7 +9,7 @@ use Tests\DbTestCase;
 
 class SchemaParserTest extends DbTestCase
 {
-    protected $parser;
+    protected SchemaParserInterface $parser;
 
     public function setUp(): void
     {
@@ -45,7 +45,6 @@ class SchemaParserTest extends DbTestCase
         self::assertCount(11, $tables);
         self::assertSame(
             [
-                'abc',
                 'cache',
                 'cache_locks',
                 'failed_jobs',
@@ -56,7 +55,7 @@ class SchemaParserTest extends DbTestCase
                 'password_reset_tokens',
                 'sessions',
                 'users',
-
+                'abc',
             ],
             $tables
         );

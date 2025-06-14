@@ -4,6 +4,7 @@
 namespace Tests\Unit\Generator;
 
 
+use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
@@ -23,7 +24,16 @@ class MigrationGeneratorTest extends TestCase
          * @var DatabaseManager $dbManager
          */
         $dbManager = $this->app->get('db');
-        $doctrine = $dbManager->connection()->getDoctrineConnection();
+        $dbConfig = $dbManager->connection()->getConfig();
+
+        $connectionParams  = [
+            'dbname' => $dbConfig['database'],
+            'user' => $dbConfig['username'],
+            'password' => $dbConfig['password'],
+            'host' => $dbConfig['host'],
+            'driver' => 'pdo_mysql',
+        ];
+        $doctrine = DriverManager::getConnection($connectionParams);
         $resolver = new DefinitionResolver($doctrine, []);
         $compiler = $this->app->make(MigrationCompilerInterface::class);
         $generator = new MigrationGenerator($resolver, $compiler);

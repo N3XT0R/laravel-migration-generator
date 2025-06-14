@@ -29,7 +29,7 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
         $connection = $this->getDoctrineConnection();
 
         $schemaManager = $connection->createSchemaManager();
-        if (null !== $schemaManager && false === $schemaManager->tablesExist($table)) {
+        if (false === $schemaManager->tablesExist($table)) {
             throw new \InvalidArgumentException('Table ' . $table . ' not exists!');
         }
         $definitionResult = [];

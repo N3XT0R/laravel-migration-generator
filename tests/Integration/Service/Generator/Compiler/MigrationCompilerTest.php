@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 class MigrationCompilerTest extends TestCase
 {
-    protected $compiler;
+    protected MigrationCompilerInterface $compiler;
 
     public function setUp(): void
     {

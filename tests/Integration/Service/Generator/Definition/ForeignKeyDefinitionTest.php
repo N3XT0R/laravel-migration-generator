@@ -4,6 +4,7 @@
 namespace Tests\Integration\Service\Generator\Definition;
 
 
+use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ForeignKeyEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\ForeignKeyDefinition;
@@ -20,8 +21,16 @@ class ForeignKeyDefinitionTest extends DbTestCase
          * @var DatabaseManager $dbManager
          */
         $dbManager = $this->app->get('db');
-        $doctrine = $dbManager->connection()->getDoctrineConnection();
-        $schema = $doctrine->getSchemaManager();
+        $dbConfig = $dbManager->connection()->getConfig();
+        $connectionParams  = [
+            'dbname' => $dbConfig['database'],
+            'user' => $dbConfig['username'],
+            'password' => $dbConfig['password'],
+            'host' => $dbConfig['host'],
+            'driver' => 'pdo_mysql',
+        ];
+        $doctrine = DriverManager::getConnection($connectionParams);
+        $schema = $doctrine->createSchemaManager();
 
         $definition = new ForeignKeyDefinition();
         $definition->setSchema($schema);

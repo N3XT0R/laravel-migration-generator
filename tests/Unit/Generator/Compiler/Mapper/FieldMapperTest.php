@@ -6,6 +6,7 @@ namespace Tests\Unit\Generator\Compiler\Mapper;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\FieldMapper;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class FieldMapperTest extends TestCase
@@ -36,7 +37,7 @@ class FieldMapperTest extends TestCase
         $this->assertStringContainsString("\$table->bigInteger('id');", $result[0]);
     }
 
-    public function argumentProvider(): array
+    public static function argumentProvider(): array
     {
         return [
             [
@@ -79,8 +80,8 @@ class FieldMapperTest extends TestCase
     /**
      * @param array $arguments
      * @param string $expectedResult
-     * @dataProvider argumentProvider
      */
+    #[DataProvider('argumentProvider')]
     public function testMapWorksWithArgumentsAndWithoutOptions(array $arguments, string $expectedResult): void
     {
         $field = new FieldEntity();
@@ -95,7 +96,7 @@ class FieldMapperTest extends TestCase
         $this->assertStringContainsString(sprintf("\$table->bigInteger(%s);", "'id'" . $expectedResult), $result[0]);
     }
 
-    public function optionProvider(): array
+    public static function optionProvider(): array
     {
         return [
             [
@@ -140,8 +141,8 @@ class FieldMapperTest extends TestCase
     /**
      * @param array $options
      * @param string $expectedResult
-     * @dataProvider optionProvider
      */
+    #[DataProvider('optionProvider')]
     public function testMapWorksWithArgumentsAndWithOptions(array $options, string $expectedResult): void
     {
         $field = new FieldEntity();
