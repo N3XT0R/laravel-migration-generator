@@ -31,6 +31,14 @@ jobs:
             --health-timeout=5s
             --health-retries=3
 
+    name: PHP ${{ matrix.php }} / MySQL ${{ matrix.mysql }}
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: testing
+      DB_USERNAME: root
+      DB_PASSWORD: ''
+
     steps:
       - uses: actions/checkout@v4
 
