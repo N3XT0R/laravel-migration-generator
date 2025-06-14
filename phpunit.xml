@@ -21,6 +21,9 @@
           disableCodeCoverageIgnore="false"
           ignoreDeprecatedCodeUnits="false"
   >
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
     <report>
       <clover outputFile="build/logs/clover.xml"/>
     </report>
