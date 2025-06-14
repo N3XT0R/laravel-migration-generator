@@ -13,7 +13,7 @@ _A powerful CLI tool to generate Laravel migration files from an existing MySQL 
 
 This tool provides a structured and extensible approach to reverse-engineering database schemas into Laravel-compatible
 migration files. It supports foreign key constraints, correct dependency order, and customizable mapping logic –
-enabling seamless integration into both legacy and modern Laravel projects (Laravel 7–12 supported).
+enabling seamless integration into both legacy and modern Laravel projects (Laravel 5–12 supported).
 
 ---
 
@@ -22,7 +22,7 @@ enabling seamless integration into both legacy and modern Laravel projects (Lara
 - ✅ Detects tables, columns, indexes, and foreign keys with precision
 - 🔄 Automatically orders migrations to maintain referential integrity
 - 🧱 Extensible design via modular definition/mapping architecture
-- 🧩 Supports Laravel 7 to 12 (EOL versions maintained in read-only mode)
+- 🧩 Supports Laravel 5 to 12 (EOL versions maintained in read-only mode)
 - 🛠 Clean, testable, and maintainable codebase
 
 ---
