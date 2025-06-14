@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-class CreatePackageTestTables extends Migration
+return new class extends Migration
 {
 
     public function up(): void
@@ -19,11 +19,13 @@ class CreatePackageTestTables extends Migration
                 $table->tinyInteger('tiny_int')->default(1)->comment('my tiny int');
                 $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
                 $table->dateTime('any_date')->index('testi');
-                $table->double('double_value', 4, 2);
-                $table->float('float_value', 6, 3);
+                $table->double('double_value');
+                $table->float('float_value', 6);
                 $table->decimal('decimal_value', 2, 1)->unsigned();
                 $table->string('string');
                 $table->char('char', 5);
+                $table->json('json');
+                $table->jsonb('jsonb');
                 $table->boolean('boolean');
             }
         );
@@ -57,4 +59,4 @@ class CreatePackageTestTables extends Migration
         Schema::dropIfExists('foreign_table');
         Schema::dropIfExists('fields_test');
     }
-}
+};

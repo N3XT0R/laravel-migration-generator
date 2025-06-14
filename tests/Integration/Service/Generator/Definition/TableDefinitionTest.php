@@ -43,9 +43,9 @@ class TableDefinitionTest extends DbTestCase
     {
         $this->definition->generate();
         $result = $this->definition->getResult();
-        $this->assertCount(12, $result);
+        $this->assertCount(14, $result);
         $this->assertContainsOnlyInstancesOf(FieldEntity::class, $result);
-        $this->assertContainsOnly('string', array_keys($result), true);
+        $this->assertContainsOnlyString(array_keys($result), true);
 
         return $result;
     }
@@ -218,8 +218,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getArguments());
         $this->assertSame(
             [
-                'total' => 4,
-                'places' => 2,
+                'total' => 10,
+                'places' => 0,
             ],
             $field->getArguments()
         );
@@ -249,8 +249,8 @@ class TableDefinitionTest extends DbTestCase
         $this->assertCount(2, $field->getArguments());
         $this->assertSame(
             [
-                'total' => 6,
-                'places' => 3,
+                'total' => 10,
+                'places' => 0,
             ],
             $field->getArguments()
         );
@@ -362,6 +362,54 @@ class TableDefinitionTest extends DbTestCase
         $this->assertEquals('fields_test', $field->getTable());
         $this->assertEquals('boolean', $field->getColumnName());
         $this->assertEquals('boolean', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(2, $field->getOptions());
+        $this->assertSame(
+            [
+                'default' => null,
+                'nullable' => false,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testJsonIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['json'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('json', $field->getColumnName());
+        $this->assertEquals('json', $field->getType());
+        $this->assertCount(0, $field->getArguments());
+        $this->assertCount(2, $field->getOptions());
+        $this->assertSame(
+            [
+                'default' => null,
+                'nullable' => false,
+            ],
+            $field->getOptions()
+        );
+    }
+
+    /**
+     * @param array $result
+     * @depends testGenerateResultShouldWork
+     */
+    public function testJsonBIsCorrect(array $result): void
+    {
+        /**
+         * @var FieldEntity $field
+         */
+        $field = $result['jsonb'];
+        $this->assertEquals('fields_test', $field->getTable());
+        $this->assertEquals('jsonb', $field->getColumnName());
+        $this->assertEquals('json', $field->getType());
         $this->assertCount(0, $field->getArguments());
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(

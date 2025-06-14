@@ -33,4 +33,4 @@ return new class extends {{$migrationClass}}
         Schema::dropIfExists('{{$tableName}}');
     }
 
-}
+};
