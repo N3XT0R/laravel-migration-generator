@@ -1,0 +1,16 @@
+version: '2'
+checks:
+  argument-count:
+    enabled: true
+  method-complexity:
+    enabled: true
+  duplication:
+    enabled: true
+
+ratings:
+  paths:
+    - src/
+
+exclude_paths:
+  - tests/
+  - vendor/
