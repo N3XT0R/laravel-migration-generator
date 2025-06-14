@@ -58,3 +58,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [6.0.0] - 2025-06-14
 ### Changed
 - upgraded to Laravel 11.x
+- migrated all tests to PHPUnit 11.5
