@@ -13,7 +13,7 @@
         failOnWarning="true"
         failOnRisky="true"
         stopOnFailure="false"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
 >
   <coverage
           includeUncoveredFiles="true"
