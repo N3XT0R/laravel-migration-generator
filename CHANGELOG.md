@@ -93,7 +93,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - changed app.dockerfile/docker-compose.yml and added xdebug with xdebug.mode=coverage
 - changed xdebug.ini with memory_limit = -1 for unittests when xdebug.ini is loaded in docker-compose.yml
 
-## [7.0.1] - 2025-06-15
+## [7.1.0] - 2025-06-15
 
 ### Added
 
