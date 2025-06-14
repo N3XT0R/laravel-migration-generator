@@ -1,4 +1,4 @@
-# laravel-migration-generator
+# Laravel Migration Generator
 
 [![CI](https://github.com/N3XT0R/laravel-migration-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/N3XT0R/laravel-migration-generator/actions/workflows/ci.yml)
 [![Latest Stable Version](https://poser.pugx.org/n3xt0r/laravel-migration-generator/v/stable)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
@@ -6,7 +6,7 @@
 [![Maintainability](https://qlty.sh/badges/dafd3f82-6646-47ae-a73e-3007d27fd67d/maintainability.svg)](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
 [![License](https://poser.pugx.org/n3xt0r/laravel-migration-generator/license)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 
-# Laravel Migration Generator
+## 📦 Overview
 
 **Laravel Migration Generator**  
 _A powerful CLI tool to generate Laravel migration files from an existing MySQL database schema._
@@ -15,76 +15,134 @@ This tool provides a structured and extensible approach to reverse-engineering d
 migration files. It supports foreign key constraints, correct dependency order, and customizable mapping logic –
 enabling seamless integration into both legacy and modern Laravel projects (Laravel 7–12 supported).
 
+---
+
 ## ✨ Features
 
-- ✅ Accurate detection of tables, columns, indexes, and foreign keys
-- 🔄 Automatic sorting of migrations to preserve referential integrity
-- 🧱 Modular architecture for custom export strategies
-- 🧩 Compatible with Laravel 7–12 (EOL versions supported but no longer actively maintained)
-- 🛠 Designed for maintainability, testability, and long-term project stability
+- ✅ Detects tables, columns, indexes, and foreign keys with precision
+- 🔄 Automatically orders migrations to maintain referential integrity
+- 🧱 Extensible design via modular definition/mapping architecture
+- 🧩 Supports Laravel 7 to 12 (EOL versions maintained in read-only mode)
+- 🛠 Clean, testable, and maintainable codebase
 
-## Version Compatibility
+---
 
-| Laravel/Lumen |  PHP-Version  | Migration-Generator | Is Supported? |
-|---------------|:-------------:|:-------------------:|--------------:|
-| 5.x           | 7.2 up to 7.4 |       1.0.10        |           EOL |
-| 6.x           | 7.2 up to 7.4 |       1.0.10        |           EOL |
-| 7.x           | 7.2 up to 8.0 |        2.0.0        |           EOL |
-| 8.x           | 7.3 up to 8.0 |        3.0.0        |           EOL |
-| 9.x           |      8.0      |        4.0.0        |           EOL |
-| 10.x          |  8.1 to 8.3   |        5.0.0        |           Yes |
-| 11.x          |  8.2 to 8.4   |        6.0.0        |           Yes |
-| 12.x          |  8.2 to 8.4   |        7.0.0        |           Yes |
+## 📊 Version Compatibility
 
-## Requirements
+| Laravel/Lumen | PHP Version | Generator Version | Status      |
+|---------------|-------------|-------------------|-------------|
+| 5.x           | 7.2 – 7.4   | 1.0.10            | ❌ EOL       |
+| 6.x           | 7.2 – 7.4   | 1.0.10            | ❌ EOL       |
+| 7.x           | 7.2 – 8.0   | 2.0.0             | ❌ EOL       |
+| 8.x           | 7.3 – 8.0   | 3.0.0             | ❌ EOL       |
+| 9.x           | 8.0         | 4.0.0             | ❌ EOL       |
+| 10.x          | 8.1 – 8.3   | 5.0.0             | ✅ Supported |
+| 11.x          | 8.2 – 8.4   | 6.0.0             | ✅ Supported |
+| 12.x          | 8.2 – 8.4   | 7.0.0             | ✅ Supported |
 
-- PHP 8.2
-    - Pdo_mysql extension
-- MySQL 5.7 or higher
+> ⚠️ EOL versions are not actively developed but remain functional for legacy compatibility.
 
-## Installation
+---
 
-You can install this package over composer via
+## ⚙ Requirements
 
-``bash
-composer require n3xt0r/laravel-migration-generator
-``
+- PHP ≥ 8.2
+    - `pdo_mysql` extension
+- MySQL ≥ 5.7
 
-You`ll not need to add any ServiceProviders to your Configuration on Laravel,
-this package will register itself on your project.
+---
 
-When you are using Lumen, make sure you have added following line to your app.php:
+## 🧰 Installation
 
-``
+Install the package via Composer:
+
+```bash
+composer require n3xt0r/laravel-migration-generator --dev
+```
+
+Laravel will auto-discover the service provider. No manual registration is needed.
+
+For **Lumen**, register the service provider manually in `bootstrap/app.php`:
+
+```php
 $app->register(\N3XT0R\MigrationGenerator\Providers\MigrationGeneratorServiceProvider::class);
-``
+```
 
-### Executing the Migrator from Artisan
+---
 
-This Migrator can be executed over the command line by using following command:
+## 🚀 Usage
 
-``
+Run the migration generator via Artisan:
+
+```bash
 php artisan migrate:regenerate
-``
+```
 
-It will dump all your tables to the database/migrations folder in correct order.
-So when you are using referential integrity it will write all migrations so that they could be
-re-migrated without changing manually the order of the migration-files.
+This command will generate migration files from your existing MySQL schema into the `database/migrations/` folder. The
+files will be ordered automatically to maintain referential integrity – no manual reordering required.
 
-### Custom Export
+---
 
-Are you unhappy with the exported migrations? When you should need some customizations on it,
-it would be possible to customize the export by extending the export-classes over the DI-Container.
+## ⚙️ Custom Export Strategy
 
-There is a Configuration file called "migration-generator", that you could publish and customize.
-Every Export-Function like "exporting fields" or "exporting indexes" or else has a Definition- and a Mapping-Class.
+If the default export does not meet your needs, the generator is fully extensible. You can override the export logic
+through Laravel's Dependency Injection container.
 
-#### Definition-Classes
+### 🔧 Configuration
 
-Definition-Classes are classes that define the internal runtime export-format.
-They are used to generate the Schema-Results to a universal format, so that you or anyone else could extend it.
+First, publish the configuration file:
 
-#### Mapping-Classes
+```bash
+php artisan vendor:publish --tag=migration-generator-config
+```
 
-Mapping Classes are classes that converts internal universal format to executable php-code inside
-the migration-classes.
+Edit `config/migration-generator.php` to adjust or override definitions and mappings.
+
+---
+
+## 🧩 Export Architecture
+
+The export process is divided into two customizable layers:
+
+### Definition Classes
+
+These classes extract schema information into a **universal, internal representation**. This format is decoupled from
+Laravel and can be reused, extended, or mapped differently.
+
+### Mapping Classes
+
+These classes transform the internal representation into **valid Laravel migration code** (PHP). You can override them
+to adjust formatting, naming conventions, or structure.
+
+---
+
+## 🧪 Testing
+
+To run the tests:
+
+```bash
+./vendor/bin/phpunit
+```
+
+Docker and CI pipelines are already integrated for continuous validation and quality assurance.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙌 Contributions
+
+Contributions are welcome! Feel free to open issues or submit pull requests to improve the generator, add new database
+support (e.g., PostgreSQL), or enhance the customization layers.
+
+---
+
+## 🔗 Links
+
+- 📦 [Packagist Package](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
+- 🧪 [CI & Test Coverage](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
+- 📘 [Laravel Documentation](https://laravel.com/docs)
