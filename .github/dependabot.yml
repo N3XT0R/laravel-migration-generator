@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/" # Pfad zur composer.json
+    schedule:
+      interval: "weekly" # oder "daily", "monthly"
