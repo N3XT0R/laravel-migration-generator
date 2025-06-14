@@ -123,8 +123,6 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         if (!empty($customMigrationClass) && class_exists($customMigrationClass)) {
             $data['migrationNamespace'] = 'use ' . $customMigrationClass . ';';
-        } else {
-            $data['migrationNamespace'] = 'use ' . Migration::class . ';';
         }
 
         $namespaceParts = explode('\\', str_replace(';', '', $data['migrationNamespace']));
