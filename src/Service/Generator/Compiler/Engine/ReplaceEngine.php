@@ -20,21 +20,20 @@ class ReplaceEngine implements Engine
 
     protected function populateData(string $content, array $data): string
     {
+        $result = $content;
         foreach ($data as $key => $value) {
-            if (!is_object($value)) {
-                if (is_array($value)) {
-                    $string = '';
-                    foreach ($value as $val) {
-                        $string .= $val;
-                    }
-                    
-                    $value = $string;
-                }
-                $content = str_replace('{{$' . $key . '}}', (string)$value, $content);
+            if (is_object($value)) {
+                continue;
             }
+
+            if (is_array($value)) {
+                $value = implode('', $value);
+            }
+
+            $result = str_replace('{{$'.$key.'}}', (string) $value, $result);
         }
 
-        return $content;
+        return $result;
     }
 
 }

@@ -22,48 +22,59 @@ class FieldMapper extends AbstractMapper
 
     protected function generateField(FieldEntity $fieldEntity): string
     {
-        $argumentString = '';
-        $arguments = $fieldEntity->getArguments();
-        $options = $fieldEntity->getOptions();
-        foreach ($arguments as $argument) {
-            if (null !== $argument) {
-                $argumentString .= ', ';
-                if (is_bool($argument)) {
-                    $argumentString .= $argument ? 'true' : 'false';
-                } elseif (is_int($argument)) {
-                    $argumentString .= $argument;
-                } else {
-                    $argumentString .= "'" . $argument . "'";
-                }
-            }
-        }
+        $argumentString = $this->renderArguments($fieldEntity->getArguments());
 
         $methods = [
             $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . "'" . $argumentString . ")",
+            ...$this->getFluentOptions($fieldEntity->getOptions()),
         ];
 
-        if (array_key_exists('default', $options) && null !== $options['default']) {
-            if ('CURRENT_TIMESTAMP' === $options['default']) {
-                $default = "default(DB::raw('CURRENT_TIMESTAMP'))";
-            } else {
-                $default = "default('" . $options['default'] . "')";
+        return $this->chainMethodsToString($methods);
+    }
+
+    private function renderArguments(array $arguments): string
+    {
+        $args = [];
+
+        foreach ($arguments as $arg) {
+            if ($arg === null) {
+                continue;
             }
 
-            $methods[] = $default;
+            if (is_bool($arg)) {
+                $args[] = $arg ? 'true' : 'false';
+            } elseif (is_int($arg)) {
+                $args[] = $arg;
+            } else {
+                $args[] = "'" . $arg . "'";
+            }
         }
 
-        if (array_key_exists('unsigned', $options) && true === $options['unsigned']) {
-            $methods[] = "unsigned()";
+        return count($args) > 0 ? ', ' . implode(', ', $args) : '';
+    }
+
+    private function getFluentOptions(array $options): array
+    {
+        $methods = [];
+
+        if (!empty($options['default'])) {
+            $methods[] = $options['default'] === 'CURRENT_TIMESTAMP'
+                ? "default(DB::raw('CURRENT_TIMESTAMP'))"
+                : "default('" . $options['default'] . "')";
         }
 
-        if (array_key_exists('nullable', $options) && true === $options['nullable']) {
+        if (!empty($options['unsigned'])) {
+            $methods[] = 'unsigned()';
+        }
+
+        if (!empty($options['nullable'])) {
             $methods[] = 'nullable()';
         }
 
-        if (array_key_exists('comment', $options) && !empty($options['comment'])) {
+        if (!empty($options['comment'])) {
             $methods[] = "comment('" . addcslashes($options['comment'], "\\'") . "')";
         }
 
-        return $this->chainMethodsToString($methods);
+        return $methods;
     }
 }

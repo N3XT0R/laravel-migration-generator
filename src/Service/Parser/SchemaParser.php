@@ -56,42 +56,47 @@ class SchemaParser implements SchemaParserInterface
         return $this->sortTablesByConstraintsRecursive($schema, $this->getTablesFromSchema($schema));
     }
 
-    private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
+    private function getForeignKeyConstraints(string $schema, string $tableName): array
     {
-        $unsortedTables = [];
-        $connection = $this->getConnection();
-        foreach ($tables as $tableName) {
-            $result = $connection->select(
-                "
-                select `CONSTRAINT_NAME` as `name` 
-                from information_schema.TABLE_CONSTRAINTS
-                where `CONSTRAINT_TYPE` = 'foreign key' 
-                AND `CONSTRAINT_SCHEMA`  = ?
-                AND `TABLE_NAME` = ?
-            ",
-                [$schema, $tableName]
-            );
-            if (0 === count($result)) {
-                $sortedTables[] = $tableName;
-            } else {
-                $alreadyHaveAllForeignTables = true;
-                foreach ($result as $constraint) {
-                    $refName = $this->getRefNameByConstraintName($schema, $constraint->name);
-                    if (!in_array($refName, $sortedTables, true)) {
-                        $alreadyHaveAllForeignTables = false;
-                        break;
-                    }
-                }
+        return $this->getConnection()->select(
+            "
+        SELECT `CONSTRAINT_NAME` AS `name`
+        FROM information_schema.TABLE_CONSTRAINTS
+        WHERE `CONSTRAINT_TYPE` = 'FOREIGN KEY'
+        AND `CONSTRAINT_SCHEMA` = ?
+        AND `TABLE_NAME` = ?
+        ",
+            [$schema, $tableName]
+        );
+    }
 
-                if (true === $alreadyHaveAllForeignTables) {
-                    $sortedTables[] = $tableName;
-                } else {
-                    $unsortedTables[] = $tableName;
-                }
+    private function hasAllReferencedTables(string $schema, array $constraints, array $sortedTables): bool
+    {
+        foreach ($constraints as $constraint) {
+            $refName = $this->getRefNameByConstraintName($schema, $constraint->name);
+            if (!in_array($refName, $sortedTables, true)) {
+                return false;
             }
         }
 
-        if (0 !== count($unsortedTables)) {
+        return true;
+    }
+
+    private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
+    {
+        $unsortedTables = [];
+
+        foreach ($tables as $tableName) {
+            $constraints = $this->getForeignKeyConstraints($schema, $tableName);
+
+            if (empty($constraints) || $this->hasAllReferencedTables($schema, $constraints, $sortedTables)) {
+                $sortedTables[] = $tableName;
+            } else {
+                $unsortedTables[] = $tableName;
+            }
+        }
+
+        if (!empty($unsortedTables)) {
             $sorted = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
             $sortedTables = array_replace_recursive($sortedTables, $sorted);
         }

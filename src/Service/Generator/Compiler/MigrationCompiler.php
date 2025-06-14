@@ -4,12 +4,12 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Compiler;
 
 use Illuminate\Database\Migrations\Migration;
-use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\MapperInterface;
-use Illuminate\View\Factory as ViewFactory;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
+use Illuminate\View\Factory as ViewFactory;
+use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\MapperInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
-use Illuminate\Support\Str;
 
 class MigrationCompiler implements MigrationCompilerInterface
 {
@@ -44,7 +44,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     }
 
     /**
-     * @param array $mapper
+     * @param  array  $mapper
      */
     public function setMapper(array $mapper): void
     {
@@ -70,7 +70,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     }
 
     /**
-     * @param Filesystem $filesystem
+     * @param  Filesystem  $filesystem
      */
     public function setFilesystem(Filesystem $filesystem): void
     {
@@ -86,7 +86,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     }
 
     /**
-     * @param array $migrationFiles
+     * @param  array  $migrationFiles
      */
     public function setMigrationFiles(array $migrationFiles): void
     {
@@ -114,29 +114,42 @@ class MigrationCompiler implements MigrationCompilerInterface
         $mapper = $this->getMapper();
         $sortedMapper = TopSort::sort($mapper);
 
-        $data = [
-            'migrationNamespace' => 'use ' . Migration::class . ';',
-            'tableName' => $tableName,
-            'columns' => [],
-        ];
+        $migrationNamespace = $this->resolveMigrationNamespace($customMigrationClass);
+        $migrationClass = $this->extractClassFromNamespace($migrationNamespace);
 
-        if (!empty($customMigrationClass) && class_exists($customMigrationClass)) {
-            $data['migrationNamespace'] = 'use ' . $customMigrationClass . ';';
-        }
+        $columns = [];
 
-        $namespaceParts = explode('\\', str_replace(';', '', $data['migrationNamespace']));
-        $data['migrationClass'] = $namespaceParts[count($namespaceParts) - 1];
-
-        foreach ($sortedMapper as $key => $mappingName) {
+        foreach ($sortedMapper as $mappingName) {
             $mapping = app()->make($mapper[$mappingName]['class']);
             if ($mapping instanceof MapperInterface) {
                 $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
-                $extractedLines = $mapping->map($resultData);
-                $data['columns'] = array_merge($data['columns'], $extractedLines);
+                foreach ($mapping->map($resultData) as $line) {
+                    $columns[] = $line;
+                }
             }
         }
 
+        $data = [
+            'migrationNamespace' => $migrationNamespace,
+            'migrationClass' => $migrationClass,
+            'tableName' => $tableName,
+            'columns' => $columns,
+        ];
+
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
+    }
+
+    private function resolveMigrationNamespace(string $customClass): string
+    {
+        return (!empty($customClass) && class_exists($customClass))
+            ? 'use '.$customClass.';'
+            : 'use '.Migration::class.';';
+    }
+
+    private function extractClassFromNamespace(string $namespaceLine): string
+    {
+        $parts = explode('\\', str_replace(';', '', $namespaceLine));
+        return end($parts);
     }
 
     public function writeToDisk(
@@ -146,32 +159,43 @@ class MigrationCompiler implements MigrationCompilerInterface
         int $maxAmount = -1,
         int $timestamp = -1
     ): bool {
-        $this->setMigrationFiles([]);
         $result = false;
+        $this->setMigrationFiles([]);
         $tpl = $this->getRenderedTemplate();
+
         if (!empty($tpl)) {
-            $filesystem = $this->getFilesystem();
-            $datePrefix = date('Y_m_d_His');
-            if (-1 !== $currentAmount && -1 !== $maxAmount && -1 !== $timestamp) {
-                $datePrefix = $this->getHourMinuteSecondPrefix($currentAmount, $maxAmount, $timestamp);
-            }
-
-            $fileName = $datePrefix . '_' . Str::snake($name) . '.php';
+            $fileName = $this->generateFilename($name, $currentAmount, $maxAmount, $timestamp);
             $renderedTemplate = str_replace('DummyClass', Str::studly($name), $tpl);
+            $result = $this->writeTemplateToFile($path, $fileName, $renderedTemplate);
+        }
 
-            if ($filesystem->exists($path)) {
-                $fileLocation = $path . DIRECTORY_SEPARATOR . $fileName;
-                if (false === $filesystem->exists($fileLocation)) {
-                    $result = $filesystem->put($fileLocation, $renderedTemplate) > 0;
-                    if (true === $result) {
-                        $this->addMigrationFile($fileName);
-                    }
-                }
+        return $result;
+    }
+
+    private function generateFilename(string $name, int $currentAmount, int $maxAmount, int $timestamp): string
+    {
+        $prefix = ($currentAmount !== -1 && $maxAmount !== -1 && $timestamp !== -1)
+            ? $this->getHourMinuteSecondPrefix($currentAmount, $maxAmount, $timestamp)
+            : date('Y_m_d_His');
+
+        return $prefix.'_'.Str::snake($name).'.php';
+    }
+
+    private function writeTemplateToFile(string $path, string $fileName, string $content): bool
+    {
+        $filesystem = $this->getFilesystem();
+        $filePath = $path.DIRECTORY_SEPARATOR.$fileName;
+        $success = false;
+
+        if ($filesystem->exists($path) && !$filesystem->exists($filePath)) {
+            $success = $filesystem->put($filePath, $content) > 0;
+
+            if ($success) {
+                $this->addMigrationFile($fileName);
             }
         }
 
-
-        return $result;
+        return $success;
     }
 
     private function getHourMinuteSecondPrefix(int $actual, int $max, int $timestamp): string
