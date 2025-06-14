@@ -68,7 +68,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction ${{ matrix.composer_option || '' }}
+          composer install --no-interaction --prefer-dist --no-progress ${{ matrix.composer_option || '' }}
 
       - name: Prepare Code Climate Reporter
         run: |
