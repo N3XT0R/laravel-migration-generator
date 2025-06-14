@@ -160,7 +160,6 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
                 break;
             }
         }
-
         $bar->finish();
         $this->line('');
     }
