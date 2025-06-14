@@ -46,3 +46,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [4.0.2] - 2025-06-14
 ### Changed
 - changed readme
+
+## [5.0.0] - 2025-06-14
+### Changed
+- changed readme
+- migrated to Laravel 10
