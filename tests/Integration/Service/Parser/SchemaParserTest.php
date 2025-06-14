@@ -27,7 +27,7 @@ class SchemaParserTest extends DbTestCase
                 'failed_jobs',
                 'fields_test',
                 'foreign_table',
-                'password_resets',
+                'password_reset_tokens',
                 'users',
             ],
             $tables
@@ -43,7 +43,7 @@ class SchemaParserTest extends DbTestCase
                 'failed_jobs',
                 'fields_test',
                 'foreign_table',
-                'password_resets',
+                'password_reset_tokens',
                 'users',
                 'abc',
             ],

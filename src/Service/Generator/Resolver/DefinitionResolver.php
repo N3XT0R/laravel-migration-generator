@@ -18,10 +18,6 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
             /**
              * @todo implement own types for doctrineRegistry
              */
-            $databasePlatform->registerDoctrineTypeMapping('json', 'text');
-            $databasePlatform->registerDoctrineTypeMapping('jsonb', 'text');
-            $databasePlatform->registerDoctrineTypeMapping('enum', 'string');
-            $databasePlatform->registerDoctrineTypeMapping('bit', 'boolean');
         }
     }
 
@@ -32,7 +28,7 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
         $sortedDefinitions = TopSort::sort($definitions);
         $connection = $this->getDoctrineConnection();
 
-        $schemaManager = $connection->getSchemaManager();
+        $schemaManager = $connection->createSchemaManager();
         if (null !== $schemaManager && false === $schemaManager->tablesExist($table)) {
             throw new \InvalidArgumentException('Table ' . $table . ' not exists!');
         }

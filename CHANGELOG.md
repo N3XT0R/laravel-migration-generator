@@ -50,5 +50,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [5.0.0] - 2025-06-14
 ### Changed
 - changed readme
+- changed tests equivalent to support DBAL 3
 - migrated to Laravel 10
 - changed DBAL Version from 2.x to 3.x

@@ -4,6 +4,7 @@
 namespace Tests\Unit\Generator\Definition;
 
 
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\AbstractDefinition;
@@ -71,7 +72,7 @@ class AbstractDefinitionTest extends TestCase
          */
         $dbManager = $this->app->get('db');
         $doctrine = $dbManager->connection()->getDoctrineConnection();
-        $schema = new MySqlSchemaManager($doctrine);
+        $schema = new MySqlSchemaManager($doctrine, new MySQLPlatform());
 
         $this->definition->setSchema($schema);
         $gotSchema = $this->definition->getSchema();
@@ -91,7 +92,7 @@ class AbstractDefinitionTest extends TestCase
              */
             $dbManager = $this->app->get('db');
             $doctrine = $dbManager->connection()->getDoctrineConnection();
-            $schema = new MySqlSchemaManager($doctrine);
+            $schema = new MySqlSchemaManager($doctrine, new MySQLPlatform());
 
             $this->definition->setSchema($schema);
         }
