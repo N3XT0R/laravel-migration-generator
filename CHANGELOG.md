@@ -101,3 +101,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Changed from codeclimate to qlty.sh
 - changed ci.yml
+- code formatted correctly
