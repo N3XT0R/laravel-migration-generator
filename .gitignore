@@ -1,5 +1,6 @@
 /vendor/
 /.idea/
+/.qlty/
 build/
 composer.lock
 .phpunit.result.cache

@@ -97,6 +97,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## unstable - 2025-06-14
 
+### Added
+
+- Added qlty cli tool to docker container
+
 ### Changed
 
 - Changed from codeclimate to qlty.sh
