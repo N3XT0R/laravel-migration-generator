@@ -8,6 +8,7 @@ use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\IndexDefinition;
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\DbTestCase;
 
 class IndexDefinitionTest extends DbTestCase
@@ -60,8 +61,8 @@ class IndexDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testIndexWorks(array $result): void
     {
         /**
@@ -80,8 +81,8 @@ class IndexDefinitionTest extends DbTestCase
 
     /**
      * @param array $result
-     * @depends testGenerateResultShouldWork
      */
+    #[Depends('testGenerateResultShouldWork')]
     public function testUniqueIndexWorks(array $result): void
     {
         /**

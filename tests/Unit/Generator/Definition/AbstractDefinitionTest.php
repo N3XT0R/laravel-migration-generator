@@ -16,7 +16,13 @@ class AbstractDefinitionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->definition = $this->getMockForAbstractClass(AbstractDefinition::class);
+        $this->definition = new class extends AbstractDefinition{
+
+            protected function generateData(): array
+            {
+                return [];
+            }
+        };
     }
 
     public function testSetAndGetAttributesAreSame(): void

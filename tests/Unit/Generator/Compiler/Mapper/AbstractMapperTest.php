@@ -15,7 +15,13 @@ class AbstractMapperTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->abstractMapper = $this->getMockForAbstractClass(AbstractMapper::class);
+        $this->abstractMapper = new class extends AbstractMapper{
+
+            public function map(array $data): array
+            {
+                return [];
+            }
+        };
     }
 
     public static function chainMethodProvider(): array

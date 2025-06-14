@@ -6,6 +6,7 @@ namespace Tests\Unit\Generator\Resolver;
 
 use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\IndexDefinition;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\AbstractResolver;
 use Tests\TestCase;
@@ -30,13 +31,13 @@ class AbstractResolverTest extends TestCase
             'driver' => 'pdo_mysql',
         ];
         $doctrine = DriverManager::getConnection($connectionParams);
-        $this->resolver = $this->getMockForAbstractClass(
-            AbstractResolver::class,
-            [
-                $doctrine,
-                [],
-            ]
-        );
+        $this->resolver = new class($doctrine, []) extends AbstractResolver{
+
+            public function resolveTableSchema(string $schema, string $table): ResultEntity
+            {
+                return new ResultEntity();
+            }
+        };
     }
 
     public function testSetAndGetDefinitionsAreSame(): void
