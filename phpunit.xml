@@ -15,6 +15,16 @@
         stopOnFailure="false"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
 >
+  <coverage
+          includeUncoveredFiles="true"
+          pathCoverage="true"
+          disableCodeCoverageIgnore="false"
+          ignoreDeprecatedCodeUnits="false"
+  >
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
   <testsuites>
     <testsuite name="Unit">
       <directory suffix="Test.php">./tests/Unit</directory>
