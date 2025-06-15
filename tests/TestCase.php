@@ -88,10 +88,7 @@ abstract class TestCase extends OrchestraTestCase
         if (array_key_exists($dbConfig['name'], $dbMap)) {
             $dbConfig['driver'] = $dbMap[$dbConfig['name']];
         }
-
-        if ($dbConfig['name'] === 'pgsql') {
-            dd($dbConfig);
-        }
+        
 
         $connectionParams = [
             'dbname' => $dbConfig['database'],
