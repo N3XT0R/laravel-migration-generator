@@ -5,7 +5,6 @@ namespace Tests\Unit\Generator;
 
 
 use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
@@ -19,19 +18,6 @@ class MigrationGeneratorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-
-        $connectionParams = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
         $doctrine = $this->getDoctrineConnection($this->getDatabaseManager());
         $resolver = new DefinitionResolver($doctrine, []);
         $compiler = $this->app->make(MigrationCompilerInterface::class);
