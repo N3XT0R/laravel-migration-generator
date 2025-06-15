@@ -16,18 +16,27 @@ jobs:
       matrix:
         laravel: [ 10, 11, 12 ]
         php: [ 8.2, 8.3, 8.4 ]
-        include:
-          # Laravel 12: PHP 8.2–8.4
-          - laravel: 12
-            php: 8.2
-          - laravel: 12
-            php: 8.3
-          - laravel: 12
-            php: 8.4
+        db_engine: [ mysql, pgsql, sqlsrv ]
+        mysql: [ 5.7, 8.0 ]
+
+        # Excludes (verhindern ungültige Kombinationen)
         exclude:
+          # Kein PHP 8.4 mit Laravel 10 (bisher ausgeschlossen)
           - laravel: 10
             php: 8.4
-        mysql: [ 5.7, 8.0 ]
+            db_engine: mysql
+            mysql: 5.7
+          - laravel: 10
+            php: 8.4
+            db_engine: mysql
+            mysql: 8.0
+          # MSSQL nur mit Laravel 12 und PHP 8.2-8.4 (zum Beispiel)
+          - laravel: 10
+            db_engine: sqlsrv
+          - laravel: 11
+            db_engine: sqlsrv
+
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ matrix.db_engine }} ${{ matrix.mysql || '' }}
 
     services:
       mysql:
@@ -37,19 +46,39 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
           MYSQL_DATABASE: testing
-          options: >-
-            --health-cmd="mysqladmin ping --silent"
-            --health-interval=10s
-            --health-timeout=5s
-            --health-retries=3
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
-    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / MySQL ${{ matrix.mysql }}
-    env:
-      DB_HOST: 127.0.0.1
-      DB_PORT: 3306
-      DB_DATABASE: testing
-      DB_USERNAME: root
-      DB_PASSWORD: ''
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: testing
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+          - 1433:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: Passw0rd1234!
+          MSSQL_PID: Express
+        options: >-
+          --health-cmd="exit 0"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
@@ -58,17 +87,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: >
-            mbstring,
-            pdo_mysql,
-            zip,
-            exif,
-            intl,
-            gd,
-            bcmath,
-            curl,
-            dom,
-            xdebug
+          extensions: mbstring, pdo_mysql, pdo_pgsql, pdo_sqlsrv, zip, exif, intl, gd, bcmath, curl, dom, xdebug
           coverage: xdebug
 
       - name: Debug info
@@ -76,18 +95,56 @@ jobs:
           php -v
           composer --version
           mysql --version || true
+          psql --version || true
+          /opt/mssql-tools/bin/sqlcmd -? || true
 
-      - name: Wait for MySQL
+      - name: Set DB env variables
         run: |
-          echo "Waiting for MySQL..."
-          for i in {30..0}; do
-            if mysqladmin ping -h 127.0.0.1 --silent; then
-              echo "MySQL is ready"
-              break
-            fi
-            echo "Waiting for MySQL ($i)..."
-            sleep 1
-          done
+          if [[ "${{ matrix.db_engine }}" == "mysql" ]]; then
+            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "DB_PORT=3306" >> $GITHUB_ENV
+            echo "DB_USERNAME=root" >> $GITHUB_ENV
+            echo "DB_PASSWORD=" >> $GITHUB_ENV
+            echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          elif [[ "${{ matrix.db_engine }}" == "pgsql" ]]; then
+            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "DB_PORT=5432" >> $GITHUB_ENV
+            echo "DB_USERNAME=postgres" >> $GITHUB_ENV
+            echo "DB_PASSWORD=" >> $GITHUB_ENV
+            echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          elif [[ "${{ matrix.db_engine }}" == "sqlsrv" ]]; then
+            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "DB_PORT=1433" >> $GITHUB_ENV
+            echo "DB_USERNAME=SA" >> $GITHUB_ENV
+            echo "DB_PASSWORD=Passw0rd1234!" >> $GITHUB_ENV
+            echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          fi
+
+      - name: Wait for DB service
+        run: |
+          if [[ "${{ matrix.db_engine }}" == "mysql" ]]; then
+            for i in {30..0}; do
+              if mysqladmin ping -h 127.0.0.1 --silent; then
+                echo "MySQL is ready"
+                break
+              fi
+              echo "Waiting for MySQL ($i)..."
+              sleep 1
+            done
+          elif [[ "${{ matrix.db_engine }}" == "pgsql" ]]; then
+            for i in {30..0}; do
+              if pg_isready -h 127.0.0.1 -U postgres; then
+                echo "Postgres is ready"
+                break
+              fi
+              echo "Waiting for Postgres ($i)..."
+              sleep 1
+            done
+          elif [[ "${{ matrix.db_engine }}" == "sqlsrv" ]]; then
+            # MSSQL health check not straightforward, wait fixed time
+            echo "Waiting 30 seconds for MSSQL to start..."
+            sleep 30
+          fi
 
       - name: Adjust Laravel/Testbench version per matrix
         run: |
