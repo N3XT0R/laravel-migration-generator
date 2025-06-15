@@ -124,21 +124,23 @@ Docker and CI pipelines are already integrated for continuous validation and qua
 
 ## ✅ CI Test Matrix
 
-This package is continuously tested across multiple Laravel and PHP versions to ensure full compatibility and
-reliability.
+This package undergoes continuous integration with GitHub Actions, running tests on an extensive environment matrix
+covering Laravel, PHP, and MySQL versions to guarantee robust compatibility and stability.
 
-| Laravel Version | PHP Versions  | Database  |
-|-----------------|---------------|-----------|
-| 10              | 8.2, 8.3      | MySQL 5.7 |
-| 11              | 8.2, 8.3, 8.4 | MySQL 5.7 |
-| 12              | 8.2, 8.3, 8.4 | MySQL 5.7 |
+| Laravel Version | PHP Versions  | MySQL Versions | Number of Jobs |
+|-----------------|---------------|----------------|----------------|
+| 10              | 8.2, 8.3      | 5.7, 8.0       | 4              |
+| 11              | 8.2, 8.3, 8.4 | 5.7, 8.0       | 6              |
+| 12              | 8.2, 8.3, 8.4 | 5.7, 8.0       | 6              |
 
-CI is powered by GitHub Actions and includes:
+**Total: 16 unique test jobs** covering the supported environment combinations.
 
-- Multiple Laravel versions via dynamic `composer require`
-- PHPUnit 10/11 support (auto-detected per version)
-- Full code coverage with Clover reports (Xdebug enabled)
-- Version-aware tests (e.g., different table sets for Laravel 10 vs. 11+)
+### Key CI features include:
+
+- Dynamic installation of Laravel versions during test runs via Composer.
+- Support for PHPUnit 10 and 11, automatically selected per Laravel version.
+- Full code coverage reporting with Xdebug and Clover.
+- Version-aware assertions adapting test expectations based on Laravel version.
 
 ### ℹ️ Composer Compatibility Strategy
 
