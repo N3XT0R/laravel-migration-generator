@@ -2,6 +2,9 @@
 
 namespace Tests;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use N3XT0R\MigrationGenerator\Providers\MigrationGeneratorServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -61,5 +64,39 @@ abstract class TestCase extends OrchestraTestCase
             'password' => $credentials[$defaultConnection]['password'] ?? '',
             'prefix' => '',
         ]);
+    }
+
+    public function getDatabaseManager(): DatabaseManager
+    {
+        /**
+         * @var DatabaseManager $dbManager
+         */
+        $dbManager = $this->app->get('db');
+        return $dbManager;
+    }
+
+
+    public function getDoctrineConnection(DatabaseManager $dbManager): Connection
+    {
+        $dbMap = [
+            'mysql' => 'pdo_mysql',
+            'sqlite' => 'pdo_sqlite',
+            'pgsql' => 'pdo_pgsql',
+        ];
+        $dbConfig = $dbManager->connection()->getConfig();
+
+        if (array_key_exists($dbConfig['name'], $dbMap)) {
+            $dbConfig['driver'] = $dbMap[$dbConfig['name']];
+        }
+
+        $connectionParams = [
+            'dbname' => $dbConfig['database'],
+            'user' => $dbConfig['username'],
+            'password' => $dbConfig['password'],
+            'host' => $dbConfig['host'],
+            'driver' => $dbConfig['driver'],
+        ];
+
+        return DriverManager::getConnection($connectionParams);
     }
 }

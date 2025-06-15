@@ -4,8 +4,6 @@
 namespace Tests\Integration\Service\Generator\Definition;
 
 
-use Doctrine\DBAL\DriverManager;
-use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\TableDefinition;
@@ -19,20 +17,7 @@ class TableDefinitionTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-        $connectionParams = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        $doctrine = DriverManager::getConnection($connectionParams);
-        $schema = $doctrine->createSchemaManager();
+        $schema = $this->getDoctrineConnection($this->getDatabaseManager())->createSchemaManager();
 
         $definition = new TableDefinition();
         $definition->setSchema($schema);

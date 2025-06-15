@@ -4,8 +4,6 @@
 namespace Tests\Unit\Generator\Definition;
 
 
-use Doctrine\DBAL\DriverManager;
-use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\AbstractDefinition;
 use Tests\TestCase;
 
@@ -16,7 +14,7 @@ class AbstractDefinitionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->definition = new class extends AbstractDefinition{
+        $this->definition = new class extends AbstractDefinition {
 
             protected function generateData(): array
             {
@@ -42,8 +40,8 @@ class AbstractDefinitionTest extends TestCase
     }
 
     /**
-     * @param string $attributeName
-     * @param bool $expectedResult
+     * @param  string  $attributeName
+     * @param  bool  $expectedResult
      * @testWith ["test", true]
      *           ["test2", false]
      */
@@ -72,21 +70,7 @@ class AbstractDefinitionTest extends TestCase
 
     public function testSetAndGetSchemaAreSame(): void
     {
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-
-        $connectionParams  = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        $doctrine = DriverManager::getConnection($connectionParams);
-        $schema = $doctrine->createSchemaManager();
+        $schema = $this->getDoctrineSchemaManager($this->getDatabaseManager());
 
         $this->definition->setSchema($schema);
         $gotSchema = $this->definition->getSchema();
@@ -94,28 +78,14 @@ class AbstractDefinitionTest extends TestCase
     }
 
     /**
-     * @param bool $expectedResult
+     * @param  bool  $expectedResult
      * @testWith    [true]
      *              [false]
      */
     public function testHasSchema(bool $expectedResult): void
     {
         if (true === $expectedResult) {
-            /**
-             * @var DatabaseManager $dbManager
-             */
-            $dbManager = $this->app->get('db');
-            $dbConfig = $dbManager->connection()->getConfig();
-            $connectionParams  = [
-                'dbname' => $dbConfig['database'],
-                'user' => $dbConfig['username'],
-                'password' => $dbConfig['password'],
-                'host' => $dbConfig['host'],
-                'driver' => 'pdo_mysql',
-            ];
-            $doctrine = DriverManager::getConnection($connectionParams);
-            $schema = $doctrine->createSchemaManager();
-
+            $schema = $this->getDoctrineConnection($this->getDatabaseManager())->createSchemaManager();
             $this->definition->setSchema($schema);
         }
 

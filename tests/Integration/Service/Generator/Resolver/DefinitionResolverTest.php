@@ -4,8 +4,6 @@
 namespace Tests\Integration\Service\Generator\Resolver;
 
 
-use Doctrine\DBAL\DriverManager;
-use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use Tests\DbTestCase;
 
@@ -16,20 +14,7 @@ class DefinitionResolverTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-
-        $connectionParams  = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        $doctrine = DriverManager::getConnection($connectionParams);
+        $doctrine = $this->getDoctrineConnection($this->getDatabaseManager());
         $this->resolver = $this->app->make(DefinitionResolverInterface::class, ['connection' => $doctrine]);
     }
 

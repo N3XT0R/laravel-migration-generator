@@ -4,8 +4,6 @@
 namespace Tests\Integration\Service\Generator\Definition;
 
 
-use Doctrine\DBAL\DriverManager;
-use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\IndexDefinition;
 use PHPUnit\Framework\Attributes\Depends;
@@ -18,20 +16,7 @@ class IndexDefinitionTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-        $connectionParams  = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        $doctrine = DriverManager::getConnection($connectionParams);
-        $schema = $doctrine->createSchemaManager();
+        $schema = $this->getDoctrineSchemaManager($this->getDatabaseManager());
 
         $definition = new IndexDefinition();
         $definition->setSchema($schema);
@@ -60,7 +45,7 @@ class IndexDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param array $result
+     * @param  array  $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testIndexWorks(array $result): void
@@ -80,7 +65,7 @@ class IndexDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param array $result
+     * @param  array  $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testUniqueIndexWorks(array $result): void

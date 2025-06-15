@@ -4,8 +4,6 @@
 namespace Tests\Unit\Generator\Resolver;
 
 
-use Doctrine\DBAL\DriverManager;
-use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\IndexDefinition;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\AbstractResolver;
@@ -18,20 +16,8 @@ class AbstractResolverTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-        $connectionParams  = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        $doctrine = DriverManager::getConnection($connectionParams);
-        $this->resolver = new class($doctrine, []) extends AbstractResolver{
+        $doctrine = $this->getDoctrineConnection($this->getDatabaseManager());
+        $this->resolver = new class($doctrine, []) extends AbstractResolver {
 
             public function resolveTableSchema(string $schema, string $table): ResultEntity
             {
@@ -63,7 +49,7 @@ class AbstractResolverTest extends TestCase
     }
 
     /**
-     * @param bool $expectedResult
+     * @param  bool  $expectedResult
      * @testWith    [true]
      *              [false]
      */

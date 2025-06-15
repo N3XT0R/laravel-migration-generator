@@ -4,8 +4,6 @@
 namespace Tests\Integration\Service\Generator\Definition;
 
 
-use Doctrine\DBAL\DriverManager;
-use Illuminate\Database\DatabaseManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ForeignKeyEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\ForeignKeyDefinition;
 use PHPUnit\Framework\Attributes\Depends;
@@ -18,20 +16,7 @@ class ForeignKeyDefinitionTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        /**
-         * @var DatabaseManager $dbManager
-         */
-        $dbManager = $this->app->get('db');
-        $dbConfig = $dbManager->connection()->getConfig();
-        $connectionParams  = [
-            'dbname' => $dbConfig['database'],
-            'user' => $dbConfig['username'],
-            'password' => $dbConfig['password'],
-            'host' => $dbConfig['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        $doctrine = DriverManager::getConnection($connectionParams);
-        $schema = $doctrine->createSchemaManager();
+        $schema = $this->getDoctrineConnection($this->getDatabaseManager())->createSchemaManager();
 
         $definition = new ForeignKeyDefinition();
         $definition->setSchema($schema);
@@ -59,7 +44,7 @@ class ForeignKeyDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param array $result
+     * @param  array  $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testForeignKeyWorks(array $result): void
