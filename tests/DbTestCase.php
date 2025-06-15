@@ -11,7 +11,7 @@ class DbTestCase extends TestCase
     {
         parent::setUp();
         $this->loadMigrationsFrom($this->resourceFolder.'/Database/Migrations/');
-        $this->loadLaravelMigrations(['--database' => 'mysql']);
+        $this->loadLaravelMigrations(['--database' => env('DB_CONNECTION', 'mysql')]);
     }
 
     protected function skipUnlessDatabase(string $engine): void
