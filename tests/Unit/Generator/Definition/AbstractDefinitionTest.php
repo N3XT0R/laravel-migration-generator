@@ -70,7 +70,7 @@ class AbstractDefinitionTest extends TestCase
 
     public function testSetAndGetSchemaAreSame(): void
     {
-        $schema = $this->getDoctrineSchemaManager($this->getDatabaseManager());
+        $schema = $this->getDoctrineConnection($this->getDatabaseManager())->createSchemaManager();
 
         $this->definition->setSchema($schema);
         $gotSchema = $this->definition->getSchema();

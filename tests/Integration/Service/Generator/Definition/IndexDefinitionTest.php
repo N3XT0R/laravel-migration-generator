@@ -16,8 +16,7 @@ class IndexDefinitionTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $schema = $this->getDoctrineSchemaManager($this->getDatabaseManager());
-
+        $schema = $this->getDoctrineConnection($this->getDatabaseManager())->createSchemaManager();
         $definition = new IndexDefinition();
         $definition->setSchema($schema);
 
