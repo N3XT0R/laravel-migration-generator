@@ -129,10 +129,29 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - CI infrastructure cleaned up and matrix stabilized for upcoming PHP 8.4 final.
 
-## [8.0.0] - <unknown>
+## [8.0.0]
 
-### Changed
+### Breaking Changes
 
-- Introduced version-aware and driver-specific schema parser instantiation.
-- SchemaParserInterface implementations now vary depending on database driver.
-- This is a breaking change affecting all clients depending on SchemaParser behavior.
+- Introduced major API changes affecting Laravel 10, 11, and 12.
+- Legacy compatibility paths removed — all supported versions now share the same updated core functionality.
+- Requires users to update dependent code to comply with new interfaces and behaviors.
+
+### Added
+
+- Unified support for MySQL, PostgreSQL, and MS SQL Server with improved database abstraction.
+- Enhanced migration generation logic with improved sorting and constraint handling.
+- New factory pattern implementation for schema parsers per database driver.
+- Expanded CI test matrix covering Laravel 10–12, PHP 8.2–8.4, and multiple database versions (MySQL, PostgreSQL,
+  MSSQL).
+
+### Fixed
+
+- Corrected table sorting logic for complex foreign key constraints.
+- Updated PHPUnit compatibility to support versions 10 and 11.
+
+### Notes
+
+- Users upgrading from versions <8.0.0 must review code for interface changes, especially related to schema parser
+  usage.
+- Version 8.0.0 replaces all prior versions for Laravel 10–12; backward compatibility with old APIs is not maintained.
