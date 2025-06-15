@@ -106,13 +106,33 @@ class SchemaParser implements SchemaParserInterface
 
     private function getRefNameByConstraintName(string $schema, string $constraintName): string
     {
-        $connection = $this->getConnection();
-        $id = $schema . '/' . $constraintName;
-        $result = $connection->selectOne(
-            "SELECT replace(REF_NAME, ?, '') refName FROM information_schema.INNODB_SYS_FOREIGN where id = ? ",
-            [$schema . '/', $id]
-        );
+        $conn = $this->getConnection();
+        $version = $this->getMysqlVersion($conn);
 
-        return $result->refName;
+        if (version_compare($version, '8.0.0', '>=')) {
+            $r = $conn->selectOne("
+            SELECT kcu.referenced_table_name AS refName
+            FROM information_schema.referential_constraints rc
+            JOIN information_schema.key_column_usage kcu
+              ON rc.constraint_name = kcu.constraint_name
+             AND rc.constraint_schema = kcu.constraint_schema
+            WHERE rc.constraint_schema = ? AND rc.constraint_name = ? LIMIT 1
+        ", [$schema, $constraintName]);
+            return $r?->refName ?? '';
+        }
+
+        $id = "$schema/$constraintName";
+        $r = $conn->selectOne("
+        SELECT REPLACE(REF_NAME, ?, '') AS refName
+        FROM information_schema.INNODB_SYS_FOREIGN
+        WHERE id = ?
+    ", ["$schema/", $id]);
+
+        return $r?->refName ?? '';
+    }
+
+    private function getMysqlVersion(ConnectionInterface $connection): string
+    {
+        return $connection->selectOne('SELECT VERSION() as version')->version;
     }
 }
