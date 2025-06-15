@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [ feature-*, develop, dev-*, master ]
+    tags:
+      - '*'
   pull_request:
     branches: [ feature-*, develop, dev-*, master ]
 
