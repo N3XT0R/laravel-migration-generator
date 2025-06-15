@@ -4,6 +4,7 @@
 namespace Tests\Integration\Service\Parser;
 
 
+use Illuminate\Foundation\Application;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 use Tests\DbTestCase;
 
@@ -22,7 +23,7 @@ class SchemaParserTest extends DbTestCase
         $tables = $this->parser->getTablesFromSchema('testing');
         sort($tables); // optional: um Reihenfolgevergleich robust zu machen
 
-        $laravelVersion = \Illuminate\Foundation\Application::VERSION;
+        $laravelVersion = Application::VERSION;
 
         $expectedTables = match (true) {
             str_starts_with($laravelVersion, '10.') => [
@@ -38,7 +39,7 @@ class SchemaParserTest extends DbTestCase
                 'sessions',
                 'users',
             ],
-            str_starts_with($laravelVersion, '11.') => [
+            default => [ // Laravel 11+ (Standard)
                 'abc',
                 'cache',
                 'cache_locks',
@@ -52,7 +53,6 @@ class SchemaParserTest extends DbTestCase
                 'sessions',
                 'users',
             ],
-            default => throw new \RuntimeException("Laravel version $laravelVersion not supported in test"),
         };
 
         sort($expectedTables); // für sicheren Vergleich
@@ -63,7 +63,7 @@ class SchemaParserTest extends DbTestCase
     public function testGetSortedTablesFromSchema(): void
     {
         $tables = $this->parser->getSortedTablesFromSchema('testing');
-        $laravelVersion = \Illuminate\Foundation\Application::VERSION;
+        $laravelVersion = Application::VERSION;
 
         $expectedTables = match (true) {
             str_starts_with($laravelVersion, '10.') => [
@@ -79,7 +79,7 @@ class SchemaParserTest extends DbTestCase
                 'users',
                 'abc',
             ],
-            str_starts_with($laravelVersion, '11.') => [
+            default => [ // Laravel 11+ (Standard)
                 'cache',
                 'cache_locks',
                 'failed_jobs',
@@ -93,7 +93,6 @@ class SchemaParserTest extends DbTestCase
                 'users',
                 'abc',
             ],
-            default => throw new \RuntimeException("Laravel version $laravelVersion not supported"),
         };
 
         self::assertCount(count($expectedTables), $tables);

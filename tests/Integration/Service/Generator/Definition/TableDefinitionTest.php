@@ -6,6 +6,7 @@ namespace Tests\Integration\Service\Generator\Definition;
 
 use Doctrine\DBAL\DriverManager;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Foundation\Application;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\TableDefinition;
 use PHPUnit\Framework\Attributes\Depends;
@@ -242,21 +243,31 @@ class TableDefinitionTest extends DbTestCase
     #[Depends('testGenerateResultShouldWork')]
     public function testFloatIsCorrect(array $result): void
     {
-        /**
-         * @var FieldEntity $field
-         */
+        /** @var FieldEntity $field */
         $field = $result['float_value'];
+
         $this->assertEquals('fields_test', $field->getTable());
         $this->assertEquals('float_value', $field->getColumnName());
         $this->assertEquals('double', $field->getType());
-        $this->assertCount(2, $field->getArguments());
-        $this->assertSame(
-            [
-                'total' => 10,
-                'places' => 0,
-            ],
-            $field->getArguments()
-        );
+
+        if (str_starts_with(Application::VERSION, '10.')) {
+            $this->assertSame(
+                [
+                    'total' => 10,
+                    'places' => 0,
+                ],
+                $field->getArguments()
+            );
+        } else {
+            $this->assertSame(
+                [
+                    'total' => 6,
+                    'places' => 2,
+                ],
+                $field->getArguments()
+            );
+        }
+
         $this->assertCount(2, $field->getOptions());
         $this->assertSame(
             [
