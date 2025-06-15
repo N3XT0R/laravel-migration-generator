@@ -42,41 +42,24 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app): void
     {
-        $host = env('DB_HOST', 'db_migration');
-        $app['config']->set('database.connections.mysql.host', $host);
-        $app['config']->set('database.default', env('DB_CONNECTION', 'mysql'));
-        $app['config']->set(
-            'database.connections.mysql',
-            [
-                'host' => env('DB_HOST', 'db_migration'),
-                'driver' => 'mysql',
-                'database' => 'testing',
-                'username' => 'root',
-                'password' => '',
-                'prefix' => '',
-            ]
-        );
-        $app['config']->set(
-            'database.connections.pgsql',
-            [
-                'host' => env('DB_HOST', 'db_migration'),
-                'driver' => 'pgsql',
-                'database' => 'testing',
-                'username' => env('DB_USERNAME', 'postgres'),
-                'password' => env('DB_PASSWORD', '!'),
-                'prefix' => '',
-            ]
-        );
-        $app['config']->set(
-            'database.connections.sqlsrv',
-            [
-                'host' => env('DB_HOST', 'db_migration'),
-                'driver' => 'sqlsrv',
-                'database' => 'testing',
-                'username' => env('DB_USERNAME', 'SA'),
-                'password' => env('DB_PASSWORD', 'Passw0rd1234!'),
-                'prefix' => '',
-            ]
-        );
+        $defaultConnection = env('DB_CONNECTION', 'mysql');
+        $host = env('DB_HOST', '127.0.0.1');
+
+        $credentials = [
+            'mysql' => ['username' => 'root', 'password' => ''],
+            'pgsql' => ['username' => env('DB_USERNAME', 'postgres'), 'password' => env('DB_PASSWORD', '')],
+            'sqlsrv' => ['username' => env('DB_USERNAME', 'SA'), 'password' => env('DB_PASSWORD', 'Passw0rd1234!')],
+        ];
+
+        $app['config']->set('database.default', $defaultConnection);
+
+        $app['config']->set("database.connections.$defaultConnection", [
+            'host' => $host,
+            'driver' => $defaultConnection,
+            'database' => 'testing',
+            'username' => $credentials[$defaultConnection]['username'] ?? 'root',
+            'password' => $credentials[$defaultConnection]['password'] ?? '',
+            'prefix' => '',
+        ]);
     }
 }
