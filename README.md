@@ -34,13 +34,14 @@ enabling seamless integration into both legacy and modern Laravel projects (Lara
 | 7.x           | 7.2 – 8.0   | 2.0.0             | ❌ EOL       |
 | 8.x           | 7.3 – 8.0   | 3.0.0             | ❌ EOL       |
 | 9.x           | 8.0         | 4.0.0             | ❌ EOL       |
-| 10.x          | 8.1 – 8.3   | 5.0.0             | ✅ Supported |
-| 11.x          | 8.2 – 8.4   | 6.0.0             | ✅ Supported |
+| 10.x          | 8.1 – 8.3   | 5.0.0 / 8.0.0     | ✅ Supported |
+| 11.x          | 8.2 – 8.4   | 6.0.0  / 8.0.0    | ✅ Supported |
 | 12.x          | 8.2 – 8.4   | 7.0.0 / 8.0.0     | ✅ Supported |
 
-> ⚠️ **Important:** Version 8.0.0 introduces breaking API changes **only** for Laravel 12.  
-> For Laravel 10 and 11, version 8.0.0 remains backward compatible by using legacy code paths.  
-> Version 7.x.x continues to be the stable release for Laravel 10 and 11 without breaking changes.
+> ⚠️ **Important:** Version 8.0.0 introduces breaking API changes for **Laravel 10, 11, and 12**.  
+> All supported Laravel versions receive the new features and updated APIs, requiring updates to dependent code.
+
+
 
 
 ---
