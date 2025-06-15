@@ -43,7 +43,7 @@ jobs:
           --health-retries=3
 
     env:
-      DB_HOST: mysql
+      DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_USERNAME: root
       DB_PASSWORD: ''
@@ -134,7 +134,7 @@ jobs:
           --health-retries=3
 
     env:
-      DB_HOST: postgres
+      DB_HOST: 127.0.0.1
       DB_USERNAME: postgres
       DB_PASSWORD: ''
       DB_DATABASE: testing
