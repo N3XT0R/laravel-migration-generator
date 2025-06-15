@@ -91,6 +91,7 @@ jobs:
     name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ matrix.db.engine }} ${{ matrix.db.version }}
 
     steps:
+      - uses: actions/checkout@v4
       - name: Set DB_DISPLAY_NAME
         run: |
           if [ "${{ matrix.db_engine }}" = "mysql" ] && [ "${{ matrix.mysql }}" != "" ]; then
@@ -120,7 +121,6 @@ jobs:
             echo "DB_PASSWORD=Passw0rd1234!" >> $GITHUB_ENV
             echo "DB_DATABASE=testing" >> $GITHUB_ENV
           fi
-      - uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
