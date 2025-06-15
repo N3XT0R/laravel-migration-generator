@@ -53,10 +53,6 @@ abstract class TestCase extends OrchestraTestCase
 
         $app['config']->set('database.default', $defaultConnection);
 
-        if ($defaultConnection === 'pgsql') {
-            dd([$credentials['pgsql'], $defaultConnection]);
-        }
-
         $app['config']->set("database.connections.$defaultConnection", [
             'host' => $host,
             'driver' => $defaultConnection,
