@@ -93,20 +93,21 @@ jobs:
     env:
       DB_HOST: 127.0.0.1
       DB_DATABASE: testing
-      DB_PORT: ${{
-        matrix.db.engine == 'mysql' ? '3306' :
-        matrix.db.engine == 'pgsql' ? '5432' :
-        matrix.db.engine == 'sqlsrv' ? '1433' : ''
-      }}
+      DB_PORT: ${{ 
+              matrix.db.engine == 'mysql' && '3306' || 
+              matrix.db.engine == 'pgsql' && '5432' || 
+              matrix.db.engine == 'sqlsrv' && '1433' || 
+              '' 
+            }}
       DB_USERNAME: ${{
-        matrix.db.engine == 'mysql' ? 'root' :
-        matrix.db.engine == 'pgsql' ? 'postgres' :
-        matrix.db.engine == 'sqlsrv' ? 'SA' : ''
+        matrix.db.engine == 'mysql' && 'root' ||
+        matrix.db.engine == 'pgsql' && 'postgres' ||
+        matrix.db.engine == 'sqlsrv' && 'SA' || ''
       }}
       DB_PASSWORD: ${{
-        matrix.db.engine == 'mysql' ? '' :
-        matrix.db.engine == 'pgsql' ? '' :
-        matrix.db.engine == 'sqlsrv' ? 'Passw0rd1234!' : ''
+        matrix.db.engine == 'mysql' && '' ||
+        matrix.db.engine == 'pgsql' && '' ||
+        matrix.db.engine == 'sqlsrv' && 'Passw0rd1234!' || ''
       }}
 
     steps:
