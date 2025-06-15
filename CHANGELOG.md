@@ -134,5 +134,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Introduced version-aware and driver-specific schema parser instantiation.
-- SchemaParserInterface implementations now vary depending on Laravel version and database driver.
+- SchemaParserInterface implementations now vary depending on database driver.
 - This is a breaking change affecting all clients depending on SchemaParser behavior.
