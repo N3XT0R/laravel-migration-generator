@@ -90,27 +90,36 @@ jobs:
 
     name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ matrix.db.engine }} ${{ matrix.db.version }}
 
-    env:
-      DB_HOST: 127.0.0.1
-      DB_DATABASE: testing
-      DB_PORT: ${{ 
-              matrix.db.engine == 'mysql' && '3306' || 
-              matrix.db.engine == 'pgsql' && '5432' || 
-              matrix.db.engine == 'sqlsrv' && '1433' || 
-              '' 
-            }}
-      DB_USERNAME: ${{
-        matrix.db.engine == 'mysql' && 'root' ||
-        matrix.db.engine == 'pgsql' && 'postgres' ||
-        matrix.db.engine == 'sqlsrv' && 'SA' || ''
-      }}
-      DB_PASSWORD: ${{
-        matrix.db.engine == 'mysql' && '' ||
-        matrix.db.engine == 'pgsql' && '' ||
-        matrix.db.engine == 'sqlsrv' && 'Passw0rd1234!' || ''
-      }}
-
     steps:
+      - name: Set DB_DISPLAY_NAME
+        run: |
+          if [ "${{ matrix.db_engine }}" = "mysql" ] && [ "${{ matrix.mysql }}" != "" ]; then
+            echo "DB_DISPLAY_NAME=mysql ${{ matrix.mysql }}" >> $GITHUB_ENV
+          else
+            echo "DB_DISPLAY_NAME=${{ matrix.db_engine }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set DB env variables
+        run: |
+          if [ "${{ matrix.db_engine }}" = "mysql" ]; then
+            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "DB_PORT=3306" >> $GITHUB_ENV
+            echo "DB_USERNAME=root" >> $GITHUB_ENV
+            echo "DB_PASSWORD=" >> $GITHUB_ENV
+            echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          elif [ "${{ matrix.db_engine }}" = "pgsql" ]; then
+            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "DB_PORT=5432" >> $GITHUB_ENV
+            echo "DB_USERNAME=postgres" >> $GITHUB_ENV
+            echo "DB_PASSWORD=" >> $GITHUB_ENV
+            echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          elif [ "${{ matrix.db_engine }}" = "sqlsrv" ]; then
+            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+            echo "DB_PORT=1433" >> $GITHUB_ENV
+            echo "DB_USERNAME=SA" >> $GITHUB_ENV
+            echo "DB_PASSWORD=Passw0rd1234!" >> $GITHUB_ENV
+            echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          fi
       - uses: actions/checkout@v4
 
       - name: Set up PHP
