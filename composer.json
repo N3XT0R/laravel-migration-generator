@@ -41,7 +41,10 @@
     "laravel": {
       "providers": [
         "N3XT0R\\MigrationGenerator\\Providers\\MigrationGeneratorServiceProvider"
-      ]
+      ],
+      "aliases": {
+        "SchemaParserFactory": "N3XT0R\\MigrationGenerator\\Facades\\SchemaParserFactoryFacade"
+      }
     }
   }
 }
