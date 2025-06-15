@@ -83,8 +83,12 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         /**
          * @var SchemaParserInterface $schemaParser
          */
-        $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
-        $schemaParser->setConnectionByName($connectionName);
+        $schemaParser = $this->getLaravel()->make(
+            SchemaParserInterface::class,
+            [
+                'connectionName' => $connectionName
+            ]
+        );
 
         if (!empty($table)) {
             $this->createMigrationForSingleTable($schemaParser, $connectionName, $table);

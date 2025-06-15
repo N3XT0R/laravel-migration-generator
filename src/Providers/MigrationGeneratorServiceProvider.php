@@ -87,7 +87,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 /** @var \Illuminate\Database\DatabaseManager $dbManager */
                 $dbManager = $app['db'];
 
-                $connectionName = $params['connection'] ?? null;
+                $connectionName = $params['connectionName'] ?? null;
                 $connection = $connectionName ? $dbManager->connection($connectionName) : $dbManager->connection();
 
                 return $factory->create($connection);
