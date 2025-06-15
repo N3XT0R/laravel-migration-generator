@@ -53,8 +53,8 @@ abstract class TestCase extends OrchestraTestCase
 
         $app['config']->set('database.default', $defaultConnection);
 
-        if ($defaultConnection === 'pqsql') {
-            dd([$credentials['pqsql'], $defaultConnection]);
+        if ($defaultConnection === 'pgsql') {
+            dd([$credentials['pgsql'], $defaultConnection]);
         }
 
         $app['config']->set("database.connections.$defaultConnection", [
