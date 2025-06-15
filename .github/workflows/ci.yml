@@ -2,11 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ feature-*, develop, dev-*, master ]
+    branches: [feature-*, develop, dev-*, master]
     tags:
       - '*'
   pull_request:
-    branches: [ feature-*, develop, dev-*, master ]
+    branches: [feature-*, develop, dev-*, master]
 
 jobs:
   test:
@@ -61,7 +61,7 @@ jobs:
           --health-retries=3
 
       postgres:
-        image: postgres:15
+        image: postgres:${{ matrix.db.version }}
         ports:
           - 5432:5432
         env:
@@ -75,7 +75,7 @@ jobs:
           --health-retries=3
 
       mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
+        image: mcr.microsoft.com/mssql/server:${{ matrix.db.version }}
         ports:
           - 1433:1433
         env:
@@ -92,34 +92,55 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set DB_DISPLAY_NAME
-        run: |
-          if [ "${{ matrix.db_engine }}" = "mysql" ] && [ "${{ matrix.mysql }}" != "" ]; then
-            echo "DB_DISPLAY_NAME=mysql ${{ matrix.mysql }}" >> $GITHUB_ENV
-          else
-            echo "DB_DISPLAY_NAME=${{ matrix.db_engine }}" >> $GITHUB_ENV
-          fi
 
       - name: Set DB env variables
         run: |
-          if [ "${{ matrix.db_engine }}" = "mysql" ]; then
+          echo "DB_ENGINE=${{ matrix.db.engine }}" >> $GITHUB_ENV
+          echo "DB_VERSION=${{ matrix.db.version }}" >> $GITHUB_ENV
+
+          if [[ "${{ matrix.db.engine }}" == "mysql" ]]; then
             echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
             echo "DB_PORT=3306" >> $GITHUB_ENV
             echo "DB_USERNAME=root" >> $GITHUB_ENV
             echo "DB_PASSWORD=" >> $GITHUB_ENV
             echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          elif [ "${{ matrix.db_engine }}" = "pgsql" ]; then
+          elif [[ "${{ matrix.db.engine }}" == "pgsql" ]]; then
             echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
             echo "DB_PORT=5432" >> $GITHUB_ENV
             echo "DB_USERNAME=postgres" >> $GITHUB_ENV
             echo "DB_PASSWORD=" >> $GITHUB_ENV
             echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          elif [ "${{ matrix.db_engine }}" = "sqlsrv" ]; then
+          elif [[ "${{ matrix.db.engine }}" == "sqlsrv" ]]; then
             echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
             echo "DB_PORT=1433" >> $GITHUB_ENV
             echo "DB_USERNAME=SA" >> $GITHUB_ENV
             echo "DB_PASSWORD=Passw0rd1234!" >> $GITHUB_ENV
             echo "DB_DATABASE=testing" >> $GITHUB_ENV
+          fi
+
+      - name: Wait for DB service
+        run: |
+          if [[ "${{ matrix.db.engine }}" == "mysql" ]]; then
+            for i in {30..0}; do
+              if mysqladmin ping -h 127.0.0.1 --silent; then
+                echo "MySQL is ready"
+                break
+              fi
+              echo "Waiting for MySQL ($i)..."
+              sleep 1
+            done
+          elif [[ "${{ matrix.db.engine }}" == "pgsql" ]]; then
+            for i in {30..0}; do
+              if pg_isready -h 127.0.0.1 -U postgres; then
+                echo "Postgres is ready"
+                break
+              fi
+              echo "Waiting for Postgres ($i)..."
+              sleep 1
+            done
+          elif [[ "${{ matrix.db.engine }}" == "sqlsrv" ]]; then
+            echo "Waiting 30 seconds for MSSQL to start..."
+            sleep 30
           fi
 
       - name: Set up PHP
@@ -136,54 +157,6 @@ jobs:
           mysql --version || true
           psql --version || true
           /opt/mssql-tools/bin/sqlcmd -? || true
-
-      - name: Set DB env variables
-        run: |
-          if [[ "${{ matrix.db_engine }}" == "mysql" ]]; then
-            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
-            echo "DB_PORT=3306" >> $GITHUB_ENV
-            echo "DB_USERNAME=root" >> $GITHUB_ENV
-            echo "DB_PASSWORD=" >> $GITHUB_ENV
-            echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          elif [[ "${{ matrix.db_engine }}" == "pgsql" ]]; then
-            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
-            echo "DB_PORT=5432" >> $GITHUB_ENV
-            echo "DB_USERNAME=postgres" >> $GITHUB_ENV
-            echo "DB_PASSWORD=" >> $GITHUB_ENV
-            echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          elif [[ "${{ matrix.db_engine }}" == "sqlsrv" ]]; then
-            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
-            echo "DB_PORT=1433" >> $GITHUB_ENV
-            echo "DB_USERNAME=SA" >> $GITHUB_ENV
-            echo "DB_PASSWORD=Passw0rd1234!" >> $GITHUB_ENV
-            echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          fi
-
-      - name: Wait for DB service
-        run: |
-          if [[ "${{ matrix.db_engine }}" == "mysql" ]]; then
-            for i in {30..0}; do
-              if mysqladmin ping -h 127.0.0.1 --silent; then
-                echo "MySQL is ready"
-                break
-              fi
-              echo "Waiting for MySQL ($i)..."
-              sleep 1
-            done
-          elif [[ "${{ matrix.db_engine }}" == "pgsql" ]]; then
-            for i in {30..0}; do
-              if pg_isready -h 127.0.0.1 -U postgres; then
-                echo "Postgres is ready"
-                break
-              fi
-              echo "Waiting for Postgres ($i)..."
-              sleep 1
-            done
-          elif [[ "${{ matrix.db_engine }}" == "sqlsrv" ]]; then
-            # MSSQL health check not straightforward, wait fixed time
-            echo "Waiting 30 seconds for MSSQL to start..."
-            sleep 30
-          fi
 
       - name: Adjust Laravel/Testbench version per matrix
         run: |
@@ -210,5 +183,3 @@ jobs:
         with:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
           files: coverage/clover.xml
-
-
