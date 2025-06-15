@@ -20,9 +20,12 @@ class SchemaParserTest extends DbTestCase
     public function testGetTablesFromSchemaWorks(): void
     {
         $tables = $this->parser->getTablesFromSchema('testing');
-        self::assertCount(11, $tables);
-        self::assertSame(
-            [
+        sort($tables); // optional: um Reihenfolgevergleich robust zu machen
+
+        $laravelVersion = \Illuminate\Foundation\Application::VERSION;
+
+        $expectedTables = match (true) {
+            str_starts_with($laravelVersion, '10.') => [
                 'abc',
                 'cache',
                 'cache_locks',
@@ -35,16 +38,35 @@ class SchemaParserTest extends DbTestCase
                 'sessions',
                 'users',
             ],
-            $tables
-        );
+            str_starts_with($laravelVersion, '11.') => [
+                'abc',
+                'cache',
+                'cache_locks',
+                'failed_jobs',
+                'fields_test',
+                'foreign_table',
+                'job_batches',
+                'jobs',
+                'password_reset_tokens',
+                'personal_access_tokens', // neu in Laravel 11 Setup
+                'sessions',
+                'users',
+            ],
+            default => throw new \RuntimeException("Laravel version $laravelVersion not supported in test"),
+        };
+
+        sort($expectedTables); // für sicheren Vergleich
+
+        self::assertSame($expectedTables, $tables);
     }
 
     public function testGetSortedTablesFromSchema(): void
     {
         $tables = $this->parser->getSortedTablesFromSchema('testing');
-        self::assertCount(11, $tables);
-        self::assertSame(
-            [
+        $laravelVersion = \Illuminate\Foundation\Application::VERSION;
+
+        $expectedTables = match (true) {
+            str_starts_with($laravelVersion, '10.') => [
                 'cache',
                 'cache_locks',
                 'failed_jobs',
@@ -57,7 +79,24 @@ class SchemaParserTest extends DbTestCase
                 'users',
                 'abc',
             ],
-            $tables
-        );
+            str_starts_with($laravelVersion, '11.') => [
+                'cache',
+                'cache_locks',
+                'failed_jobs',
+                'fields_test',
+                'foreign_table',
+                'job_batches',
+                'jobs',
+                'password_reset_tokens',
+                'personal_access_tokens',
+                'sessions',
+                'users',
+                'abc',
+            ],
+            default => throw new \RuntimeException("Laravel version $laravelVersion not supported"),
+        };
+
+        self::assertCount(count($expectedTables), $tables);
+        self::assertSame($expectedTables, $tables);
     }
 }
