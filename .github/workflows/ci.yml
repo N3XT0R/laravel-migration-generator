@@ -18,10 +18,12 @@ jobs:
         php: [ 8.2, 8.3, 8.4 ]
         db_engine: [ mysql, pgsql, sqlsrv ]
         mysql: [ 5.7, 8.0 ]
+        pgsql: [ 15 ]
+        sqlsrv: [ 2022-latest ]
 
         # Excludes (verhindern ungültige Kombinationen)
         exclude:
-          # Kein PHP 8.4 mit Laravel 10 (bisher ausgeschlossen)
+          # Beispiel-Excludes
           - laravel: 10
             php: 8.4
             db_engine: mysql
@@ -30,13 +32,10 @@ jobs:
             php: 8.4
             db_engine: mysql
             mysql: 8.0
-          # MSSQL nur mit Laravel 12 und PHP 8.2-8.4 (zum Beispiel)
           - laravel: 10
             db_engine: sqlsrv
           - laravel: 11
             db_engine: sqlsrv
-
-    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ matrix.db_engine }} ${{ matrix.mysql || '' }}
 
     services:
       mysql:
@@ -79,6 +78,15 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
+    env:
+      DB_DISPLAY_NAME: >-
+        ${{ format(
+          '{0}{1}',
+          matrix.db_engine,
+          matrix.db_engine == 'mysql' && matrix.mysql != '' ? ' ' + matrix.mysql : ''
+        ) }}
+
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ env.DB_DISPLAY_NAME }}
 
     steps:
       - uses: actions/checkout@v4
