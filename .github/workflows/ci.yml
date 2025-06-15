@@ -78,18 +78,22 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
-    env:
-      DB_DISPLAY_NAME: >-
-        ${{ format(
-          '{0}{1}',
-          matrix.db_engine,
-          matrix.db_engine == 'mysql' && matrix.mysql != '' ? ' ' + matrix.mysql : ''
-        ) }}
 
     name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ env.DB_DISPLAY_NAME }}
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set DB_DISPLAY_NAME
+        run: |
+          if [[ "${{ matrix.db_engine }}" == "mysql" && "${{ matrix.mysql }}" != "" ]]; then
+            echo "DB_DISPLAY_NAME=${{ matrix.db_engine }} ${{ matrix.mysql }}" >> $GITHUB_ENV
+          else
+            echo "DB_DISPLAY_NAME=${{ matrix.db_engine }}" >> $GITHUB_ENV
+          fi
+
+      - name: Show job name
+        run: echo "Running on Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB $DB_DISPLAY_NAME"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
