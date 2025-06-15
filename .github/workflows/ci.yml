@@ -124,6 +124,7 @@ jobs:
           POSTGRES_DB: testing
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: ''
+          POSTGRES_HOST_AUTH_METHOD: trust
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
@@ -134,7 +135,7 @@ jobs:
       POSTGRES_DB: testing
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ''
-      POSTGRES_HOST_AUTH_METHOD: trust
+
 
     steps:
       - uses: actions/checkout@v4
