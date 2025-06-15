@@ -14,32 +14,41 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        laravel: [ 10, 11, 12 ]
-        php: [ 8.2, 8.3, 8.4 ]
-        db_engine: [ mysql, pgsql, sqlsrv ]
-        mysql: [ 5.7, 8.0 ]
-        pgsql: [ 15 ]
-        sqlsrv: [ 2022-latest ]
+        laravel: [10, 11, 12]
+        php: [8.2, 8.3, 8.4]
+        db:
+          - engine: mysql
+            version: 5.7
+          - engine: mysql
+            version: 8.0
+          - engine: pgsql
+            version: 15
+          - engine: sqlsrv
+            version: 2022-latest
 
-        # Excludes (verhindern ungültige Kombinationen)
         exclude:
-          # Beispiel-Excludes
           - laravel: 10
             php: 8.4
-            db_engine: mysql
-            mysql: 5.7
+            db:
+              engine: mysql
+              version: 5.7
           - laravel: 10
             php: 8.4
-            db_engine: mysql
-            mysql: 8.0
+            db:
+              engine: mysql
+              version: 8.0
           - laravel: 10
-            db_engine: sqlsrv
+            db:
+              engine: sqlsrv
+              version: 2022-latest
           - laravel: 11
-            db_engine: sqlsrv
+            db:
+              engine: sqlsrv
+              version: 2022-latest
 
     services:
       mysql:
-        image: mysql:${{ matrix.mysql }}
+        image: mysql:${{ matrix.db.version }}
         ports:
           - 3306:3306
         env:
@@ -79,21 +88,29 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
-    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ env.DB_DISPLAY_NAME }}
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ matrix.db.engine }} ${{ matrix.db.version }}
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_DATABASE: testing
+      DB_PORT: ${{
+        matrix.db.engine == 'mysql' ? '3306' :
+        matrix.db.engine == 'pgsql' ? '5432' :
+        matrix.db.engine == 'sqlsrv' ? '1433' : ''
+      }}
+      DB_USERNAME: ${{
+        matrix.db.engine == 'mysql' ? 'root' :
+        matrix.db.engine == 'pgsql' ? 'postgres' :
+        matrix.db.engine == 'sqlsrv' ? 'SA' : ''
+      }}
+      DB_PASSWORD: ${{
+        matrix.db.engine == 'mysql' ? '' :
+        matrix.db.engine == 'pgsql' ? '' :
+        matrix.db.engine == 'sqlsrv' ? 'Passw0rd1234!' : ''
+      }}
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set DB_DISPLAY_NAME
-        run: |
-          if [[ "${{ matrix.db_engine }}" == "mysql" && "${{ matrix.mysql }}" != "" ]]; then
-            echo "DB_DISPLAY_NAME=${{ matrix.db_engine }} ${{ matrix.mysql }}" >> $GITHUB_ENV
-          else
-            echo "DB_DISPLAY_NAME=${{ matrix.db_engine }}" >> $GITHUB_ENV
-          fi
-
-      - name: Show job name
-        run: echo "Running on Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB $DB_DISPLAY_NAME"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
