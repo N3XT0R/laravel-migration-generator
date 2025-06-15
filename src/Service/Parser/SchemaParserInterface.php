@@ -10,4 +10,6 @@ interface SchemaParserInterface
 
     public function getSortedTablesFromSchema(string $schema): array;
 
+    public function setConnectionByName(string $connectionName = ''): void;
+
 }

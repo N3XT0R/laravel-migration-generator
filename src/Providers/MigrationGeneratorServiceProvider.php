@@ -2,9 +2,9 @@
 
 namespace N3XT0R\MigrationGenerator\Providers;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Illuminate\Contracts\Container\Container as Application;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Engines\EngineResolver;
@@ -17,8 +17,9 @@ use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
+use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactory;
+use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactoryInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
-use Illuminate\Contracts\View\Factory as ViewFactory;
 
 class MigrationGeneratorServiceProvider extends ServiceProvider
 {
@@ -30,10 +31,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
+        $this->loadViewsFrom(__DIR__.'/../Stubs/', 'migration-generator');
         $this->publishes(
             [
-                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
+                __DIR__.'/../Config/migration-generator.php' => config_path('migration-generator.php'),
             ],
             'migration-generator'
         );
@@ -46,7 +47,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
+        $this->mergeConfigFrom(__DIR__.'/../Config/migration-generator.php', 'migration-generator');
+        $this->registerDBDrivers();
         $this->registerParser();
         $this->registerCompilerEngine();
         $this->registerCompiler();
@@ -70,6 +72,13 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         });
     }
 
+    protected function registerDBDrivers(): void
+    {
+        $this->app->singleton(
+            SchemaParserFactoryInterface::class,
+            SchemaParserFactory::class
+        );
+    }
 
     protected function registerParser(): void
     {
@@ -81,12 +90,12 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getDefinitions(): array
     {
-        return (array)app('config')->get('migration-generator.definitions');
+        return (array) app('config')->get('migration-generator.definitions');
     }
 
     protected function getMapper(): array
     {
-        return (array)app('config')->get('migration-generator.mapper');
+        return (array) app('config')->get('migration-generator.mapper');
     }
 
     protected function registerDefinitionResolver(): void
@@ -102,7 +111,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
             static function (Application $app, array $params) use ($definitions) {
                 $key = 'connection';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
+                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
                 }
 
                 return new DefinitionResolver($params[$key], $definitions);
@@ -124,7 +133,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
             static function (Application $app, array $params) use ($dbMap) {
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
+                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
                 }
 
                 /**
@@ -132,11 +141,11 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                  */
                 $dbManager = $app->get('db');
                 $dbConfig = $dbManager->connection($params[$key])->getConfig();
-                if(array_key_exists($dbConfig['name'], $dbMap)){
+                if (array_key_exists($dbConfig['name'], $dbMap)) {
                     $dbConfig['driver'] = $dbMap[$dbConfig['name']];
                 }
 
-                $connectionParams  = [
+                $connectionParams = [
                     'dbname' => $dbConfig['database'],
                     'user' => $dbConfig['username'],
                     'password' => $dbConfig['password'],

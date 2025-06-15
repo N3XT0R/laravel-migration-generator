@@ -4,37 +4,9 @@
 namespace N3XT0R\MigrationGenerator\Service\Parser;
 
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Facades\DB;
 
-class SchemaParser implements SchemaParserInterface
+class SchemaParser extends AbstractSchemaParser
 {
-    protected ConnectionInterface $connection;
-
-    public function __construct(string $connectionName = '')
-    {
-        $this->setConnectionByName($connectionName);
-    }
-
-    public function setConnectionByName(string $connectionName = ''): void
-    {
-        if (empty($connectionName)) {
-            $connectionName = DB::getDefaultConnection();
-        }
-
-        $this->setConnection(DB::connection($connectionName));
-    }
-
-    public function setConnection(ConnectionInterface $connection): void
-    {
-        $this->connection = $connection;
-    }
-
-    public function getConnection(): ConnectionInterface
-    {
-        return $this->connection;
-    }
-
-
     public function getTablesFromSchema(string $schema): array
     {
         $tables = [];

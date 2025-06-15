@@ -3,17 +3,27 @@
 namespace N3XT0R\MigrationGenerator\Service\Parser;
 
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Support\Facades\DB;
 
 abstract class AbstractSchemaParser implements SchemaParserInterface
 {
-    protected ConnectionInterface $connection;
+    protected ?ConnectionInterface $connection;
 
-    public function __construct(ConnectionInterface $connection)
+    public function __construct(ConnectionInterface $connection = null)
     {
         $this->setConnection($connection);
     }
 
-    public function setConnection(ConnectionInterface $connection): void
+    public function setConnectionByName(string $connectionName = ''): void
+    {
+        if (empty($connectionName)) {
+            $connectionName = DB::getDefaultConnection();
+        }
+
+        $this->setConnection(DB::connection($connectionName));
+    }
+
+    public function setConnection(?ConnectionInterface $connection): void
     {
         $this->connection = $connection;
     }

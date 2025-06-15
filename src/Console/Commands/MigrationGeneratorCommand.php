@@ -80,6 +80,9 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         $connectionName = $this->option('database') ?? config('database.default');
         $this->prepareDatabase($connectionName);
 
+        /**
+         * @var SchemaParserInterface $schemaParser
+         */
         $schemaParser = $this->getLaravel()->make(SchemaParserInterface::class);
         $schemaParser->setConnectionByName($connectionName);
 
@@ -160,7 +163,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
                 break;
             }
         }
-        
+
         $bar->finish();
         $this->line('');
     }
