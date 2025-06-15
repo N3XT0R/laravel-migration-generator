@@ -36,6 +36,16 @@ enabling seamless integration into both legacy and modern Laravel projects (Lara
 | 11.x          | 8.2 – 8.4   | 6.0.0             | ✅ Supported |
 | 12.x          | 8.2 – 8.4   | 7.0.0             | ✅ Supported |
 
+## ✅ Database Compatibility
+
+| MySQL Version | Status      |
+|---------------|-------------|
+| 5.7           | ✅ Supported |
+| 8.0           | ✅ Supported |
+
+> The migration generator is fully compatible with MySQL 5.7 and MySQL 8.0.
+> Features like `CHECK` constraints or new data types in MySQL 8 are supported.
+
 > ⚠️ EOL versions are not actively developed but remain functional for legacy compatibility.
 
 ## ⚙ Requirements
