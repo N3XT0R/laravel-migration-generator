@@ -11,7 +11,7 @@
 ## 📦 Overview
 
 **Laravel Migration Generator**  
-_A powerful CLI tool to generate Laravel migration files from an existing MySQL database schema._
+_A powerful CLI tool to generate Laravel migration files from an existing MySQL/Postgres/MSSQL database schema._
 
 This tool provides a structured and extensible approach to reverse-engineering database schemas into Laravel-compatible
 migration files. It supports foreign key constraints, correct dependency order, and customizable mapping logic –
