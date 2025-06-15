@@ -6,6 +6,8 @@
 [![Maintainability](https://qlty.sh/badges/dafd3f82-6646-47ae-a73e-3007d27fd67d/maintainability.svg)](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
 [![License](https://poser.pugx.org/n3xt0r/laravel-migration-generator/license)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 
+> ✅ CI: Successfully tested against 16 environments (Laravel 10–12 / PHP 8.2–8.4 / MySQL 5.7 & 8.0)
+
 ## 📦 Overview
 
 **Laravel Migration Generator**  
