@@ -4,6 +4,6 @@
 build/
 composer.lock
 .phpunit.result.cache
-.clover.xml
+/coverage/clover.xml
 .hadolint.yaml
 .yamllint.yaml

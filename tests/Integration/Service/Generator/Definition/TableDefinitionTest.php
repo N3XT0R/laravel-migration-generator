@@ -253,16 +253,16 @@ class TableDefinitionTest extends DbTestCase
         if (str_starts_with(Application::VERSION, '10.')) {
             $this->assertSame(
                 [
-                    'total' => 10,
-                    'places' => 0,
+                    'total' => 6,
+                    'places' => 2,
                 ],
                 $field->getArguments()
             );
         } else {
             $this->assertSame(
                 [
-                    'total' => 6,
-                    'places' => 2,
+                    'total' => 10,
+                    'places' => 0,
                 ],
                 $field->getArguments()
             );

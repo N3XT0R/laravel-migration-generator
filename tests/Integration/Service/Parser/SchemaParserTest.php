@@ -28,15 +28,10 @@ class SchemaParserTest extends DbTestCase
         $expectedTables = match (true) {
             str_starts_with($laravelVersion, '10.') => [
                 'abc',
-                'cache',
-                'cache_locks',
                 'failed_jobs',
                 'fields_test',
                 'foreign_table',
-                'job_batches',
-                'jobs',
                 'password_reset_tokens',
-                'sessions',
                 'users',
             ],
             default => [ // Laravel 11+ (Standard)
@@ -67,15 +62,10 @@ class SchemaParserTest extends DbTestCase
 
         $expectedTables = match (true) {
             str_starts_with($laravelVersion, '10.') => [
-                'cache',
-                'cache_locks',
                 'failed_jobs',
                 'fields_test',
                 'foreign_table',
-                'job_batches',
-                'jobs',
                 'password_reset_tokens',
-                'sessions',
                 'users',
                 'abc',
             ],
@@ -88,7 +78,6 @@ class SchemaParserTest extends DbTestCase
                 'job_batches',
                 'jobs',
                 'password_reset_tokens',
-                'personal_access_tokens',
                 'sessions',
                 'users',
                 'abc',
