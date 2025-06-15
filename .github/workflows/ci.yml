@@ -2,53 +2,34 @@ name: CI
 
 on:
   push:
-    branches: [feature-*, develop, dev-*, master]
+    branches: [ feature-*, develop, dev-*, master ]
     tags:
       - '*'
   pull_request:
-    branches: [feature-*, develop, dev-*, master]
+    branches: [ feature-*, develop, dev-*, master ]
 
 jobs:
-  test:
+  test-mysql:
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / MySQL ${{ matrix.mysql }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       matrix:
         laravel: [10, 11, 12]
         php: [8.2, 8.3, 8.4]
-        db:
-          - engine: mysql
-            version: 5.7
-          - engine: mysql
-            version: 8.0
-          - engine: pgsql
-            version: 15
-          - engine: sqlsrv
-            version: 2022-latest
+        mysql: [5.7, 8.0]
 
         exclude:
           - laravel: 10
             php: 8.4
-            db:
-              engine: mysql
-              version: 5.7
+            mysql: 5.7
           - laravel: 10
             php: 8.4
-            db:
-              engine: mysql
-              version: 8.0
-          - laravel: 10
-            db:
-              engine: sqlsrv
-              version: 2022-latest
-          - laravel: 11
-            db:
-              engine: sqlsrv
-              version: 2022-latest
+            mysql: 8.0
 
     services:
       mysql:
-        image: mysql:${{ matrix.db.version }}
+        image: mysql:${{ matrix.mysql }}
         ports:
           - 3306:3306
         env:
@@ -60,8 +41,83 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: ''
+      DB_DATABASE: testing
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo_mysql, zip, exif, intl, gd, bcmath, curl, dom, xdebug
+          coverage: xdebug
+
+      - name: Debug info
+        run: |
+          php -v
+          composer --version
+          mysql --version || true
+
+      - name: Wait for MySQL
+        run: |
+          for i in {30..0}; do
+            if mysqladmin ping -h 127.0.0.1 --silent; then
+              echo "MySQL is ready"
+              break
+            fi
+            echo "Waiting for MySQL ($i)..."
+            sleep 1
+          done
+
+      - name: Adjust Laravel/Testbench version per matrix
+        run: |
+          composer remove laravel/framework orchestra/testbench --no-update || true
+          composer require laravel/framework:^${{ matrix.laravel }} --no-update
+
+          if [[ "${{ matrix.laravel }}" == "10" ]]; then
+            composer require orchestra/testbench:^8.0 --dev --no-update
+          elif [[ "${{ matrix.laravel }}" == "11" ]]; then
+            composer require orchestra/testbench:^9.0 --dev --no-update
+          elif [[ "${{ matrix.laravel }}" == "12" ]]; then
+            composer require orchestra/testbench:^10.0 --dev --no-update
+          fi
+
+          composer update --no-interaction --prefer-dist --no-progress
+
+      - name: Ensure coverage directory exists
+        run: mkdir -p coverage
+
+      - name: Run Tests
+        run: vendor/bin/phpunit --coverage-clover=coverage/clover.xml --path-coverage
+
+      - uses: qltysh/qlty-action/coverage@v1
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: coverage/clover.xml
+
+
+  test-pgsql:
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / PostgreSQL 15
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        laravel: [10, 11, 12]
+        php: [8.2, 8.3, 8.4]
+
+        exclude:
+          - laravel: 10
+            php: 8.4
+
+    services:
       postgres:
-        image: postgres:${{ matrix.db.version }}
+        image: postgres:15
         ports:
           - 5432:5432
         env:
@@ -74,8 +130,83 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_DATABASE: testing
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo_pgsql, zip, exif, intl, gd, bcmath, curl, dom, xdebug
+          coverage: xdebug
+
+      - name: Debug info
+        run: |
+          php -v
+          composer --version
+          psql --version || true
+
+      - name: Wait for Postgres
+        run: |
+          for i in {30..0}; do
+            if pg_isready -h 127.0.0.1 -U postgres; then
+              echo "Postgres is ready"
+              break
+            fi
+            echo "Waiting for Postgres ($i)..."
+            sleep 1
+          done
+
+      - name: Adjust Laravel/Testbench version per matrix
+        run: |
+          composer remove laravel/framework orchestra/testbench --no-update || true
+          composer require laravel/framework:^${{ matrix.laravel }} --no-update
+
+          if [[ "${{ matrix.laravel }}" == "10" ]]; then
+            composer require orchestra/testbench:^8.0 --dev --no-update
+          elif [[ "${{ matrix.laravel }}" == "11" ]]; then
+            composer require orchestra/testbench:^9.0 --dev --no-update
+          elif [[ "${{ matrix.laravel }}" == "12" ]]; then
+            composer require orchestra/testbench:^10.0 --dev --no-update
+          fi
+
+          composer update --no-interaction --prefer-dist --no-progress
+
+      - name: Ensure coverage directory exists
+        run: mkdir -p coverage
+
+      - name: Run Tests
+        run: vendor/bin/phpunit --coverage-clover=coverage/clover.xml --path-coverage
+
+      - uses: qltysh/qlty-action/coverage@v1
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: coverage/clover.xml
+
+
+  test-sqlsrv:
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / MSSQL 2022-latest
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        laravel: [10, 11, 12]
+        php: [8.2, 8.3, 8.4]
+
+        exclude:
+          - laravel: 10
+          - laravel: 11
+
+    services:
       mssql:
-        image: mcr.microsoft.com/mssql/server:${{ matrix.db.version }}
+        image: mcr.microsoft.com/mssql/server:2022-latest
         ports:
           - 1433:1433
         env:
@@ -88,75 +219,33 @@ jobs:
           --health-timeout=5s
           --health-retries=3
 
-    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / DB ${{ matrix.db.engine }} ${{ matrix.db.version }}
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 1433
+      DB_USERNAME: SA
+      DB_PASSWORD: Passw0rd1234!
+      DB_DATABASE: testing
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set DB env variables
-        run: |
-          echo "DB_ENGINE=${{ matrix.db.engine }}" >> $GITHUB_ENV
-          echo "DB_VERSION=${{ matrix.db.version }}" >> $GITHUB_ENV
-
-          if [[ "${{ matrix.db.engine }}" == "mysql" ]]; then
-            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
-            echo "DB_PORT=3306" >> $GITHUB_ENV
-            echo "DB_USERNAME=root" >> $GITHUB_ENV
-            echo "DB_PASSWORD=" >> $GITHUB_ENV
-            echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          elif [[ "${{ matrix.db.engine }}" == "pgsql" ]]; then
-            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
-            echo "DB_PORT=5432" >> $GITHUB_ENV
-            echo "DB_USERNAME=postgres" >> $GITHUB_ENV
-            echo "DB_PASSWORD=" >> $GITHUB_ENV
-            echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          elif [[ "${{ matrix.db.engine }}" == "sqlsrv" ]]; then
-            echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
-            echo "DB_PORT=1433" >> $GITHUB_ENV
-            echo "DB_USERNAME=SA" >> $GITHUB_ENV
-            echo "DB_PASSWORD=Passw0rd1234!" >> $GITHUB_ENV
-            echo "DB_DATABASE=testing" >> $GITHUB_ENV
-          fi
-
-      - name: Wait for DB service
-        run: |
-          if [[ "${{ matrix.db.engine }}" == "mysql" ]]; then
-            for i in {30..0}; do
-              if mysqladmin ping -h 127.0.0.1 --silent; then
-                echo "MySQL is ready"
-                break
-              fi
-              echo "Waiting for MySQL ($i)..."
-              sleep 1
-            done
-          elif [[ "${{ matrix.db.engine }}" == "pgsql" ]]; then
-            for i in {30..0}; do
-              if pg_isready -h 127.0.0.1 -U postgres; then
-                echo "Postgres is ready"
-                break
-              fi
-              echo "Waiting for Postgres ($i)..."
-              sleep 1
-            done
-          elif [[ "${{ matrix.db.engine }}" == "sqlsrv" ]]; then
-            echo "Waiting 30 seconds for MSSQL to start..."
-            sleep 30
-          fi
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, pdo_mysql, pdo_pgsql, pdo_sqlsrv, zip, exif, intl, gd, bcmath, curl, dom, xdebug
+          extensions: mbstring, pdo_sqlsrv, zip, exif, intl, gd, bcmath, curl, dom, xdebug
           coverage: xdebug
 
       - name: Debug info
         run: |
           php -v
           composer --version
-          mysql --version || true
-          psql --version || true
           /opt/mssql-tools/bin/sqlcmd -? || true
+
+      - name: Wait for MSSQL
+        run: |
+          echo "Waiting 30 seconds for MSSQL to start..."
+          sleep 30
 
       - name: Adjust Laravel/Testbench version per matrix
         run: |
