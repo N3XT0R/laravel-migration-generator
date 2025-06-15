@@ -9,7 +9,7 @@ use N3XT0R\MigrationGenerator\Service\Parser\Drivers\PostgresSchemaParser;
 
 class SchemaParserFactory implements SchemaParserFactoryInterface
 {
-    public static function create(ConnectionInterface $connection): SchemaParserInterface
+    public function create(ConnectionInterface $connection): SchemaParserInterface
     {
         $driver = $connection->getDriverName();
 

@@ -7,5 +7,5 @@ use Illuminate\Database\ConnectionInterface;
 
 interface SchemaParserFactoryInterface
 {
-    public static function create(ConnectionInterface $connection): SchemaParserInterface;
+    public function create(ConnectionInterface $connection): SchemaParserInterface;
 }

@@ -16,7 +16,6 @@ use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
-use N3XT0R\MigrationGenerator\Service\Parser\SchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactory;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactoryInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
@@ -79,7 +78,20 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             SchemaParserInterface::class,
-            SchemaParser::class
+            function (Application $app, array $params = []) {
+                /**
+                 * @var SchemaParserFactoryInterface $factory
+                 */
+                $factory = $app->make(SchemaParserFactoryInterface::class);
+
+                /** @var \Illuminate\Database\DatabaseManager $dbManager */
+                $dbManager = $app['db'];
+
+                $connectionName = $params['connection'] ?? null;
+                $connection = $connectionName ? $dbManager->connection($connectionName) : $dbManager->connection();
+
+                return $factory->create($connection);
+            }
         );
     }
 
