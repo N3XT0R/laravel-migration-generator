@@ -2,9 +2,9 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Application;
 use N3XT0R\MigrationGenerator\Providers\MigrationGeneratorServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Illuminate\Foundation\Application;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -13,11 +13,11 @@ abstract class TestCase extends OrchestraTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resourceFolder = __DIR__ . '/Resources/';
+        $this->resourceFolder = __DIR__.'/Resources/';
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      * @return array|string[]
      */
     protected function getPackageProviders($app): array
@@ -28,7 +28,7 @@ abstract class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageAliases($app): array
@@ -38,11 +38,13 @@ abstract class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      */
     protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('database.default', 'mysql');
+        $host = env('DB_HOST', 'db_migration');
+        $app['config']->set('database.connections.mysql.host', $host);
+        $app['config']->set('database.default', env('DB_CONNECTION', 'mysql'));
         $app['config']->set(
             'database.connections.mysql',
             [
@@ -51,6 +53,28 @@ abstract class TestCase extends OrchestraTestCase
                 'database' => 'testing',
                 'username' => 'root',
                 'password' => '',
+                'prefix' => '',
+            ]
+        );
+        $app['config']->set(
+            'database.connections.pgsql',
+            [
+                'host' => env('DB_HOST', 'db_migration'),
+                'driver' => 'pgsql',
+                'database' => 'testing',
+                'username' => env('DB_USERNAME', 'postgres'),
+                'password' => env('DB_PASSWORD', '!'),
+                'prefix' => '',
+            ]
+        );
+        $app['config']->set(
+            'database.connections.sqlsrv',
+            [
+                'host' => env('DB_HOST', 'db_migration'),
+                'driver' => 'sqlsrv',
+                'database' => 'testing',
+                'username' => env('DB_USERNAME', 'SA'),
+                'password' => env('DB_PASSWORD', 'Passw0rd1234!'),
                 'prefix' => '',
             ]
         );

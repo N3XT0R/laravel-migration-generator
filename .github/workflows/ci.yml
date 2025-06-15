@@ -48,6 +48,7 @@ jobs:
       DB_USERNAME: root
       DB_PASSWORD: ''
       DB_DATABASE: testing
+      DB_CONNECTION: 'mysql'
 
     steps:
       - uses: actions/checkout@v4
@@ -133,9 +134,11 @@ jobs:
           --health-retries=3
 
     env:
-      POSTGRES_DB: testing
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ''
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: postgres
+      DB_PASSWORD: ''
+      DB_DATABASE: testing
+      DB_CONNECTION: 'pgsql'
 
 
     steps:
@@ -226,6 +229,7 @@ jobs:
       DB_USERNAME: SA
       DB_PASSWORD: Passw0rd1234!
       DB_DATABASE: testing
+      DB_CONNECTION: 'sqlsrv'
 
     steps:
       - uses: actions/checkout@v4
