@@ -48,18 +48,13 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../Config/migration-generator.php', 'migration-generator');
-        $this->registerDBDrivers();
+        $this->registerParserFactory();
         $this->registerParser();
         $this->registerCompilerEngine();
         $this->registerCompiler();
         $this->registerDefinitionResolver();
         $this->registerGenerator();
         $this->registerCommands();
-    }
-
-    private function isPhp8(): bool
-    {
-        return version_compare(PHP_VERSION, '8.0.0') >= 0;
     }
 
     protected function registerCommands(): void
@@ -72,7 +67,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerDBDrivers(): void
+    protected function registerParserFactory(): void
     {
         $this->app->singleton(
             SchemaParserFactoryInterface::class,
