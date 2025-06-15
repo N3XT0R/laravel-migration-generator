@@ -160,6 +160,9 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'driver' => $dbConfig['driver'],
                 ];
                 $connection = DriverManager::getConnection($connectionParams);
+                if ($connectionParams['driver'] === 'pgsql') {
+                    dd($connectionParams);
+                }
 
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
