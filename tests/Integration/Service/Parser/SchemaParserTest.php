@@ -44,7 +44,6 @@ class SchemaParserTest extends DbTestCase
                 'job_batches',
                 'jobs',
                 'password_reset_tokens',
-                'personal_access_tokens', // neu in Laravel 11 Setup
                 'sessions',
                 'users',
             ],
