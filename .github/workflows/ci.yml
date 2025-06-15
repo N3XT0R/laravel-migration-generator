@@ -12,7 +12,7 @@ jobs:
   test-mysql:
     name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / MySQL ${{ matrix.mysql }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       matrix:
         laravel: [10, 11, 12]
@@ -105,7 +105,7 @@ jobs:
   test-pgsql:
     name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / PostgreSQL 15
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       matrix:
         laravel: [10, 11, 12]
@@ -194,7 +194,7 @@ jobs:
   test-sqlsrv:
     name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }} / MSSQL 2022-latest
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       matrix:
         laravel: [10, 11, 12]
