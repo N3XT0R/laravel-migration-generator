@@ -14,7 +14,8 @@ class MigrationGeneratorTest extends DbTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->generator = $this->app->make(MigrationGeneratorInterface::class, ['connectionName' => 'mysql']);
+        $this->generator = $this->app->make(MigrationGeneratorInterface::class,
+            ['connectionName' => env('DB_CONNECTION', 'mysql')]);
     }
 
     public function testGenerateMigrationForTable(): void

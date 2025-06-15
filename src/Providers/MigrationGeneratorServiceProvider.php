@@ -128,16 +128,15 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerGenerator(): void
     {
-        $dbMap = [
-            'mysql' => 'pdo_mysql',
-            'sqlite' => 'pdo_sqlite',
-            'pgsql' => 'pdo_pgsql',
-        ];
-
-
         $this->app->bind(
             MigrationGeneratorInterface::class,
-            static function (Application $app, array $params) use ($dbMap) {
+            static function (Application $app, array $params) {
+                $dbMap = [
+                    'mysql' => 'pdo_mysql',
+                    'sqlite' => 'pdo_sqlite',
+                    'pgsql' => 'pdo_pgsql',
+                ];
+                
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
                     throw new \InvalidArgumentException('missing key '.$key.' in params.');
