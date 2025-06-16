@@ -9,9 +9,21 @@ class PostgresSchemaParser extends AbstractSchemaParser
     public function getTablesFromSchema(string $schema): array
     {
         $tables = [];
+        /**
+         * TODO:
+         * Implement an additional parameter to allow selection of the `table_catalog` (database name).
+         * Currently, the query only filters by `table_schema`.
+         * For multi-database scenarios, passing the catalog dynamically is necessary
+         * to enable querying tables across different databases accurately.
+         */
         $queryResult = $this->getConnection()->select(
-            'SELECT table_name FROM information_schema.tables WHERE table_schema = ? AND table_type = ? AND table_name != ?',
-            [$schema, 'BASE TABLE', 'migrations']
+            'SELECT table_name 
+         FROM information_schema.tables 
+         WHERE table_catalog = ?
+           AND table_type = ? 
+           AND table_name != ? 
+           AND table_schema = ?',
+            [$schema, 'BASE TABLE', 'migrations', 'public']
         );
 
         foreach ($queryResult as $result) {
