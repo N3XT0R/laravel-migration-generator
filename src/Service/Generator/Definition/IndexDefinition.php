@@ -29,7 +29,7 @@ class IndexDefinition extends AbstractDefinition
         $combinedIndexes = [];
 
         foreach ($indexes as $index) {
-            if (!($index instanceof Index) || $index->getName() === 'PRIMARY') {
+            if (!($index instanceof Index) || $index->isPrimary()) {
                 continue;
             }
 
