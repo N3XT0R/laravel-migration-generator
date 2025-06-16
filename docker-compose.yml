@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   db_migration:
@@ -13,6 +13,43 @@ services:
       - MYSQL_USER=migrationc
       - MYSQL_PASSWORD=migration
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  mysql8:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3322:3306"
+    environment:
+      - MYSQL_DATABASE=testing
+      - MYSQL_USER=migrationc
+      - MYSQL_PASSWORD=migration
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      SA_PASSWORD: "Passw0rd1234!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Passw0rd1234! -Q 'SELECT 1'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testing
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   php:
     build:
       context: .
@@ -22,3 +59,6 @@ services:
       - ./tests/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
     depends_on:
       - db_migration
+      - mysql8
+      - mssql
+      - postgres
