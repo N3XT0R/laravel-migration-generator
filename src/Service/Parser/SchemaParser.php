@@ -93,6 +93,7 @@ class SchemaParser extends AbstractSchemaParser
             $sortedTables = array_unique($sortedTables);
         }
 
+        // Return the fully sorted list respecting foreign key dependencies
         return $sortedTables;
     }
 
