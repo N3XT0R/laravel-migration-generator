@@ -54,22 +54,41 @@ class SchemaParser extends AbstractSchemaParser
         return true;
     }
 
+    /**
+     * Recursively sorts tables based on their foreign key constraints.
+     *
+     * Tables are added to the sorted list only after all their referenced tables
+     * have been added, ensuring dependencies come first.
+     *
+     * @param  string  $schema  The database schema name
+     * @param  array  $tables  List of table names to sort
+     * @param  array  $sortedTables  Accumulator for sorted tables during recursion
+     * @return array Sorted list of tables respecting foreign key dependencies
+     */
     private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
     {
+        // Holds tables that cannot be sorted in this iteration due to unresolved dependencies
         $unsortedTables = [];
 
         foreach ($tables as $tableName) {
+            // Get foreign key constraints for the current table
             $constraints = $this->getForeignKeyConstraints($schema, $tableName);
 
+            // If no foreign keys or all referenced tables are already sorted,
+            // the table can be added to the sorted list
             if (empty($constraints) || $this->hasAllReferencedTables($schema, $constraints, $sortedTables)) {
                 $sortedTables[] = $tableName;
             } else {
+                // Otherwise, defer sorting this table until dependencies are resolved
                 $unsortedTables[] = $tableName;
             }
         }
 
+        // If there are still tables left unsorted, recurse to process them
         if (!empty($unsortedTables)) {
             $sorted = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
+            // Merge newly sorted tables with the accumulated list
+            // Use array_unique to avoid duplicates due to recursion
             $sortedTables = array_merge($sortedTables, $sorted);
             $sortedTables = array_unique($sortedTables);
         }
