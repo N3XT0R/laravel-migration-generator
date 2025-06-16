@@ -61,26 +61,18 @@ class SchemaParser extends AbstractSchemaParser
         foreach ($tables as $tableName) {
             $constraints = $this->getForeignKeyConstraints($schema, $tableName);
 
-            // If the table has no foreign key constraints
-            // or all referenced tables are already sorted, add it to the sorted list
             if (empty($constraints) || $this->hasAllReferencedTables($schema, $constraints, $sortedTables)) {
                 $sortedTables[] = $tableName;
             } else {
-                // Otherwise, keep it for the next sorting iteration
                 $unsortedTables[] = $tableName;
             }
         }
 
         if (!empty($unsortedTables)) {
-            // Recursively sort the remaining unsorted tables
             $sorted = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
-            // Merge the newly sorted tables while preserving order
             $sortedTables = array_merge($sortedTables, $sorted);
+            $sortedTables = array_unique($sortedTables);
         }
-
-        // Remove duplicates and sort alphabetically to ensure deterministic order for tests
-        $sortedTables = array_unique($sortedTables);
-        sort($sortedTables);
 
         return $sortedTables;
     }
