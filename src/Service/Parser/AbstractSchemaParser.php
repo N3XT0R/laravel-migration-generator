@@ -55,7 +55,7 @@ abstract class AbstractSchemaParser implements SchemaParserInterface
             }
         }
 
-        sort($tablesToAdd);
+        sort($tablesToAdd);  // Alphabetisch sortieren, bevor hinzufügen
 
         foreach ($tablesToAdd as $tableName) {
             if (!in_array($tableName, $sortedTables, true)) {
