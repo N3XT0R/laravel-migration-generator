@@ -35,7 +35,9 @@ abstract class AbstractSchemaParser implements SchemaParserInterface
 
     public function getSortedTablesFromSchema(string $schema): array
     {
-        return $this->sortTablesByConstraintsRecursive($schema, $this->getTablesFromSchema($schema));
+        $tables = $this->getTablesFromSchema($schema);
+        sort($tables);
+        return $this->sortTablesByConstraintsRecursive($schema, $tables);
     }
 
     private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
