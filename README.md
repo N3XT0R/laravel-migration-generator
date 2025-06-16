@@ -64,6 +64,8 @@ enabling seamless integration into both legacy and modern Laravel projects (Lara
 
 - PHP ≥ 8.2
     - `pdo_mysql` extension
+    - `pdo_postgres` extension (optional)
+    - `pdo_sqlsrv` extension (optional)
 - MySQL ≥ 5.7
 
 ## 🧰 Installation
@@ -127,7 +129,18 @@ to adjust formatting, naming conventions, or structure.
 To run the tests:
 
 ```bash
-./vendor/bin/phpunit
+# mysql 5.7
+DB_CONNECTION=mysql DB_HOST=db_migration DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+
+# mysql 8
+DB_CONNECTION=mysql DB_HOST=mysql8 DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+
+#postgres
+DB_CONNECTION=pgsql DB_HOST=postgres DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+
+# mssql
+DB_CONNECTION=mssql DB_HOST=mssql DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+
 ```
 
 Docker and CI pipelines are already integrated for continuous validation and quality assurance.
