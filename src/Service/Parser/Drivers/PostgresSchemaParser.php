@@ -85,15 +85,22 @@ class PostgresSchemaParser extends AbstractSchemaParser
                 tc.constraint_type = \'FOREIGN KEY\'
                 AND tc.table_schema = ?
                 AND tc.table_name = ?
+                AND tc.table_catalog = ?
             ',
-            [$schema, $tableName]
+            [$schema, $tableName, 'public']
         );
     }
 
     private function getRefNameByConstraintName(string $schema, string $constraintName): string
     {
         $conn = $this->getConnection();
-
+        /**
+         * TODO:
+         * Implement an additional parameter to allow selection of the `table_catalog` (database name).
+         * Currently, the query only filters by `table_schema`.
+         * For multi-database scenarios, passing the catalog dynamically is necessary
+         * to enable querying tables across different databases accurately.
+         */
         $r = $conn->selectOne("
             SELECT
                 kcu.referenced_table_name AS refName
