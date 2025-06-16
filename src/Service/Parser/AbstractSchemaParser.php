@@ -58,6 +58,7 @@ abstract class AbstractSchemaParser implements SchemaParserInterface
             $sorted = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
             $sortedTables = array_merge($sortedTables, $sorted);
             $sortedTables = array_unique($sortedTables);
+            $sortedTables = array_values($sortedTables);
         }
 
         return $sortedTables;
