@@ -25,7 +25,9 @@ class SchemaParser extends AbstractSchemaParser
 
     public function getSortedTablesFromSchema(string $schema): array
     {
-        return $this->sortTablesByConstraintsRecursive($schema, $this->getTablesFromSchema($schema));
+        $tables = $this->getTablesFromSchema($schema);
+        sort($tables);
+        return $this->sortTablesByConstraintsRecursive($schema, $tables);
     }
 
     private function getForeignKeyConstraints(string $schema, string $tableName): array
