@@ -139,7 +139,7 @@ DB_CONNECTION=mysql DB_HOST=mysql8 DB_PASSWORD=dein_db_passwort ./vendor/bin/php
 DB_CONNECTION=pgsql DB_HOST=postgres DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
 
 # mssql
-DB_CONNECTION=mssql DB_HOST=mssql DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+DB_CONNECTION=sqlsrv DB_HOST=mssql DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
 
 ```
 

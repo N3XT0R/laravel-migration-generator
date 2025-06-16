@@ -24,18 +24,20 @@ services:
       - MYSQL_PASSWORD=migration
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
   mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    build:
+      context: .
+      dockerfile: mssql.Dockerfile
+    volumes:
+      - ./docker/mssql/init.sh:/init.sh:ro
     container_name: mssql
+    command: [ "/bin/bash", "/init.sh" ]
     environment:
       SA_PASSWORD: "Passw0rd1234!"
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
     healthcheck:
-      test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Passw0rd1234! -Q 'SELECT 1'" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: [ "CMD-SHELL", "curl -f http://localhost:1433 || exit 1" ]
   postgres:
     image: postgres:15
     container_name: postgres
