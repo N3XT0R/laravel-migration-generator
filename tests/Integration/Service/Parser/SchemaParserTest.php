@@ -48,8 +48,7 @@ class SchemaParserTest extends DbTestCase
                 'users',
             ],
         };
-
-        sort($expectedTables); // für sicheren Vergleich
+        
 
         self::assertSame($expectedTables, $tables);
     }
