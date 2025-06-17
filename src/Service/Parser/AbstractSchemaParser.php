@@ -40,35 +40,25 @@ abstract class AbstractSchemaParser implements SchemaParserInterface
         return $this->sortTablesByConstraintsRecursive($schema, $tables);
     }
 
-    private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
+    protected function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
     {
         $unsortedTables = [];
-        $tablesToAdd = [];
-
-        // Sortiere Input immer
-        sort($tables);
 
         foreach ($tables as $tableName) {
             $constraints = $this->getForeignKeyConstraints($schema, $tableName);
 
             if (empty($constraints) || $this->hasAllReferencedTables($schema, $constraints, $sortedTables)) {
-                $tablesToAdd[] = $tableName;
+                $sortedTables[] = $tableName;
             } else {
                 $unsortedTables[] = $tableName;
             }
         }
 
-        // Sortiere auch die Tabellen, die jetzt hinzugefügt werden, alphabetisch
-        sort($tablesToAdd);
-
-        foreach ($tablesToAdd as $tableName) {
-            if (!in_array($tableName, $sortedTables, true)) {
-                $sortedTables[] = $tableName;
-            }
-        }
-
         if (!empty($unsortedTables)) {
-            $sortedTables = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
+            $sorted = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
+            $sortedTables = array_merge($sortedTables, $sorted);
+            $sortedTables = array_unique($sortedTables);
+            $sortedTables = array_values($sortedTables);
         }
 
         return $sortedTables;
