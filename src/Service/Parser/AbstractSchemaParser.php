@@ -43,34 +43,22 @@ abstract class AbstractSchemaParser implements SchemaParserInterface
     private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
     {
         $unsortedTables = [];
-        $tablesToAdd = [];
 
         foreach ($tables as $tableName) {
             $constraints = $this->getForeignKeyConstraints($schema, $tableName);
 
             if (empty($constraints) || $this->hasAllReferencedTables($schema, $constraints, $sortedTables)) {
-                $tablesToAdd[] = $tableName;
+                $sortedTables[] = $tableName;
             } else {
                 $unsortedTables[] = $tableName;
             }
         }
 
-        // Sort tables without dependencies alphabetically before adding
-        sort($tablesToAdd);
-
-        foreach ($tablesToAdd as $tableName) {
-            if (!in_array($tableName, $sortedTables, true)) {
-                $sortedTables[] = $tableName;
-            }
-        }
-
         if (!empty($unsortedTables)) {
             $sorted = $this->sortTablesByConstraintsRecursive($schema, $unsortedTables, $sortedTables);
-            foreach ($sorted as $tableName) {
-                if (!in_array($tableName, $sortedTables, true)) {
-                    $sortedTables[] = $tableName;
-                }
-            }
+            $sortedTables = array_merge($sortedTables, $sorted);
+            $sortedTables = array_unique($sortedTables);
+            $sortedTables = array_values($sortedTables);
         }
 
         return $sortedTables;
