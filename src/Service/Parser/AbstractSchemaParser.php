@@ -40,7 +40,7 @@ abstract class AbstractSchemaParser implements SchemaParserInterface
         return $this->sortTablesByConstraintsRecursive($schema, $tables);
     }
 
-    private function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
+    protected function sortTablesByConstraintsRecursive(string $schema, array $tables, array $sortedTables = []): array
     {
         $unsortedTables = [];
 
