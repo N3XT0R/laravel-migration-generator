@@ -25,6 +25,22 @@ seamless integration into both legacy and modern Laravel projects (Laravel 5–1
 - 🧩 Supports Laravel 5 to 12 (EOL versions maintained in read‑only mode)
 - 🛠 Clean, testable and maintainable codebase
 
+## 🔍 Feature Comparison
+
+| Feature / Tool                     | This Package (N3XT0R)               | kitloong                           | bennett‑treptow      | Xethron             |
+|------------------------------------|-------------------------------------|------------------------------------|----------------------|---------------------|
+| 🛠️ Supported Databases            | ✅ MySQL, PostgreSQL, MSSQL          | ✅ MySQL, PostgreSQL, MSSQL, SQLite | ✅ MySQL only         | ✅ MySQL only        |
+| ⚙ Laravel Compatibility            | ✅ 5–12 (version-aware testing)      | ✅ 5–10+                            | ⚠️ up to Laravel 11  | ❌ Legacy only       |
+| 🧪 CI/CD with Matrix Testing       | ✅ Full GitHub Actions matrix        | ❌ Partial                          | ❌ Partial            | ❌ None              |
+| 🧩 Extensible Mapping Architecture | ✅ Yes (definition + mapping layers) | ❌ Monolithic                       | ❌ No                 | ❌ No                |
+| 🔒 Actively Maintained             | ✅ Yes (since 2023)                  | ✅ Yes                              | ✅ Partially          | ❌ No                |
+| 🐘 PostgreSQL Support              | ✅ Yes                               | ✅ Yes                              | ❌ No                 | ❌ No                |
+| 🪟 MSSQL Support                   | ✅ Yes                               | ✅ Yes                              | ❌ No                 | ❌ No                |
+| 💡 Primary Use Case                | ✅ Modern & legacy DB export         | ⚙️ Feature-rich                    | 🧱 MySQL legacy only | 🕰️ Historical tool |
+
+> TL;DR: If you need clean, testable, and modern Laravel migration exports across multiple DB engines – this tool is a
+> solid and extensible choice.
+
 ## 📊 Version Compatibility
 
 | Laravel/Lumen | PHP Version | Generator Version | Status      |
