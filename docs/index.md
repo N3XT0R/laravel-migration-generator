@@ -1,3 +1,8 @@
+```{include} ../README.md
+:relative-docs: docs/
+:relative-images:
+```
+
 # Laravel Migration Generator
 
 Welcome to the documentation for Laravel Migration Generator.
