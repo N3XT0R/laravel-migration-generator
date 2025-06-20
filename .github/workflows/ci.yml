@@ -88,7 +88,6 @@ jobs:
         run: |
          composer remove laravel/framework orchestra/testbench --no-update || true
          composer require laravel/framework:^${{ matrix.laravel }} --no-update
-         …
          composer update --no-interaction --prefer-dist --no-progress
 
       - name: Ensure coverage directory exists
@@ -177,7 +176,6 @@ jobs:
         run: |
          composer remove laravel/framework orchestra/testbench --no-update || true
          composer require laravel/framework:^${{ matrix.laravel }} --no-update
-         …
          composer update --no-interaction --prefer-dist --no-progress
 
       - name: Ensure coverage directory exists
@@ -267,7 +265,6 @@ jobs:
         run: |
           composer remove laravel/framework orchestra/testbench --no-update || true
           composer require laravel/framework:^${{ matrix.laravel }} --no-update
-          …
           composer update --no-interaction --prefer-dist --no-progress
 
       - name: Ensure coverage directory exists
