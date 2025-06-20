@@ -136,7 +136,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'sqlite' => 'pdo_sqlite',
                     'pgsql' => 'pdo_pgsql',
                 ];
-                
+
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
                     throw new \InvalidArgumentException('missing key '.$key.' in params.');
@@ -159,9 +159,6 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'driver' => $dbConfig['driver'],
                 ];
                 $connection = DriverManager::getConnection($connectionParams);
-                if ($connectionParams['driver'] === 'pgsql') {
-                    dd($connectionParams);
-                }
 
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
