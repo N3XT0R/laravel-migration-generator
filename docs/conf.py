@@ -5,6 +5,7 @@ author = 'N3XT0R'
 release = '8.0.0'
 version = release
 
+
 extensions = [
     'myst_parser',
 ]
