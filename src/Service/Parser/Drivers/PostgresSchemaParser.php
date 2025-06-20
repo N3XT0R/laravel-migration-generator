@@ -59,7 +59,7 @@ class PostgresSchemaParser extends AbstractSchemaParser
 
         $result = $conn->selectOne("
         SELECT
-            c_rel.relname AS refName
+            c_rel.relname AS refname
         FROM
             pg_constraint con
             JOIN pg_class tbl ON con.conrelid = tbl.oid
@@ -72,6 +72,6 @@ class PostgresSchemaParser extends AbstractSchemaParser
         LIMIT 1
     ", ['public', $constraintName]);
 
-        return $result?->refName ?? '';
+        return $result?->refname ?? '';
     }
 }
