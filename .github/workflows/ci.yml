@@ -254,6 +254,15 @@ jobs:
         run: |
           echo "Waiting 30 seconds for MSSQL to start..."
           sleep 30
+
+      - name: Initialize Database
+        run: |
+          docker exec $(docker ps --filter "name=mssql" --format "{{.Names}}") \
+            /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Passw0rd1234!' -Q "
+              CREATE DATABASE testing;
+              CREATE LOGIN testuser WITH PASSWORD = 'TestPassw0rd!';
+              CREATE USER testuser FOR LOGIN testuser;
+              ALTER ROLE db_owner ADD MEMBER testuser;"
       - uses: actions/cache@v3
         with:
           path: |
