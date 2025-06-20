@@ -4,6 +4,9 @@ namespace N3XT0R\MigrationGenerator\Service\Parser\Drivers;
 
 use N3XT0R\MigrationGenerator\Service\Parser\AbstractSchemaParser;
 
+/**
+ * @todo change fixed public to variable
+ */
 class PostgresSchemaParser extends AbstractSchemaParser
 {
     public function getTablesFromSchema(string $schema): array
