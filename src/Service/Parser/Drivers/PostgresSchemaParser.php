@@ -70,7 +70,7 @@ class PostgresSchemaParser extends AbstractSchemaParser
             AND ns.nspname = ?
             AND con.conname = ?
         LIMIT 1
-    ", [$schema, $constraintName]);
+    ", ['public', $constraintName]);
 
         return $result?->refName ?? '';
     }
