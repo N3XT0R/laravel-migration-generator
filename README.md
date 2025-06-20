@@ -221,7 +221,7 @@ This project is licensed under the [MIT License](LICENSE).
 ## 🙌 Contributions
 
 Contributions are welcome! Feel free to open issues or submit pull requests to improve the generator, add new database
-support (e.g., PostgreSQL), or enhance the customization layers.
+support or enhance the customization layers.
 
 ## 🔗 Links
 
