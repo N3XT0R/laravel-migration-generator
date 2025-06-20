@@ -257,8 +257,7 @@ jobs:
 
       - name: Initialize Database
         run: |
-          docker exec $(docker ps --filter "name=mssql" --format "{{.Names}}") \
-            /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Passw0rd1234!' -Q "
+          /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U SA -P 'Passw0rd1234!' -Q "
               CREATE DATABASE testing;
               CREATE LOGIN testuser WITH PASSWORD = 'TestPassw0rd!';
               CREATE USER testuser FOR LOGIN testuser;
