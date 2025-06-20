@@ -27,4 +27,5 @@ html_context = {
     'github_repo': 'laravel-migration-generator',
     'github_version': 'master',
     'conf_py_path': '/docs/',
+    "sidebar_hide_name": True,
 }

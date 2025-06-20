@@ -1,15 +1,23 @@
-```{include} ../README.md
-:relative-docs: docs/
-:relative-images:
-```
-
 # Laravel Migration Generator
 
-Welcome to the documentation for Laravel Migration Generator.
+Generate Laravel migrations automatically from your existing database – with structure, clarity, and optional model
+generation.
 
-## Contents
+```{toctree}
+:maxdepth: 2
+:caption: Documentation
 
-- [Installation](installation.md)
-- [Usage](usage.md)
-- [Migrations](migrations.md)
-- [Architecture](architecture.md)
+installation
+usage
+migrations
+architecture
+```
+
+## Features
+
+- 🧠 Analyze existing DB structure
+- 🏗 Generate Laravel migrations
+
+---
+
+Made with ❤️ for developers who value structure.
