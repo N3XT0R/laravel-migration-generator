@@ -219,7 +219,7 @@ jobs:
           --health-retries=3
 
     env:
-      DB_HOST: mssql
+      DB_HOST: 127.0.0.1
       DB_PORT: 1433
       DB_USERNAME: SA
       DB_PASSWORD: Passw0rd1234!
