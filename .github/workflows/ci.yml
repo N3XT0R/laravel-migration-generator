@@ -76,6 +76,13 @@ jobs:
             echo "Waiting for MySQL ($i)..."
             sleep 1
           done
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-
 
       - name: Adjust Laravel/Testbench version per matrix
         run: |
@@ -167,7 +174,13 @@ jobs:
             echo "Waiting for Postgres ($i)..."
             sleep 1
           done
-
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-
       - name: Adjust Laravel/Testbench version per matrix
         run: |
           composer remove laravel/framework orchestra/testbench --no-update || true
@@ -259,7 +272,13 @@ jobs:
         run: |
           echo "Waiting 30 seconds for MSSQL to start..."
           sleep 30
-
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-
       - name: Adjust Laravel/Testbench version per matrix
         run: |
           composer remove laravel/framework orchestra/testbench --no-update || true
