@@ -86,18 +86,10 @@ jobs:
 
       - name: Adjust Laravel/Testbench version per matrix
         run: |
-          composer remove laravel/framework orchestra/testbench --no-update || true
-          composer require laravel/framework:^${{ matrix.laravel }} --no-update
-
-          if [[ "${{ matrix.laravel }}" == "10" ]]; then
-            composer require orchestra/testbench:^8.0 --dev --no-update
-          elif [[ "${{ matrix.laravel }}" == "11" ]]; then
-            composer require orchestra/testbench:^9.0 --dev --no-update
-          elif [[ "${{ matrix.laravel }}" == "12" ]]; then
-            composer require orchestra/testbench:^10.0 --dev --no-update
-          fi
-
-          composer update --no-interaction --prefer-dist --no-progress
+         composer remove laravel/framework orchestra/testbench --no-update || true
+         composer require laravel/framework:^${{ matrix.laravel }} --no-update
+         …
+         composer update --no-interaction --prefer-dist --no-progress
 
       - name: Ensure coverage directory exists
         run: mkdir -p coverage
@@ -183,18 +175,10 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php }}-
       - name: Adjust Laravel/Testbench version per matrix
         run: |
-          composer remove laravel/framework orchestra/testbench --no-update || true
-          composer require laravel/framework:^${{ matrix.laravel }} --no-update
-
-          if [[ "${{ matrix.laravel }}" == "10" ]]; then
-            composer require orchestra/testbench:^8.0 --dev --no-update
-          elif [[ "${{ matrix.laravel }}" == "11" ]]; then
-            composer require orchestra/testbench:^9.0 --dev --no-update
-          elif [[ "${{ matrix.laravel }}" == "12" ]]; then
-            composer require orchestra/testbench:^10.0 --dev --no-update
-          fi
-
-          composer update --no-interaction --prefer-dist --no-progress
+         composer remove laravel/framework orchestra/testbench --no-update || true
+         composer require laravel/framework:^${{ matrix.laravel }} --no-update
+         …
+         composer update --no-interaction --prefer-dist --no-progress
 
       - name: Ensure coverage directory exists
         run: mkdir -p coverage
@@ -276,22 +260,14 @@ jobs:
         with:
           path: |
             ~/.composer/cache/files
-          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ hashFiles('composer.json') }}
           restore-keys: |
             ${{ runner.os }}-php-${{ matrix.php }}-
       - name: Adjust Laravel/Testbench version per matrix
         run: |
           composer remove laravel/framework orchestra/testbench --no-update || true
           composer require laravel/framework:^${{ matrix.laravel }} --no-update
-
-          if [[ "${{ matrix.laravel }}" == "10" ]]; then
-            composer require orchestra/testbench:^8.0 --dev --no-update
-          elif [[ "${{ matrix.laravel }}" == "11" ]]; then
-            composer require orchestra/testbench:^9.0 --dev --no-update
-          elif [[ "${{ matrix.laravel }}" == "12" ]]; then
-            composer require orchestra/testbench:^10.0 --dev --no-update
-          fi
-
+          …
           composer update --no-interaction --prefer-dist --no-progress
 
       - name: Ensure coverage directory exists
