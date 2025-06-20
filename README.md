@@ -101,8 +101,8 @@ Run the migration generator via Artisan:
 php artisan migrate:regenerate
 ```
 
-This command will generate migration files from your existing MySQL schema into the `database/migrations/` folder. The
-files will be ordered automatically to maintain referential integrity – no manual reordering required.
+This command will generate migration files from your existing database schema into the `database/migrations/` folder.
+The files will be ordered automatically to maintain referential integrity – no manual reordering required.
 
 ## ⚙️ Custom Export Strategy
 
