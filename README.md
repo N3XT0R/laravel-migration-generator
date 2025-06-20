@@ -6,24 +6,24 @@
 [![Maintainability](https://qlty.sh/badges/dafd3f82-6646-47ae-a73e-3007d27fd67d/maintainability.svg)](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
 [![License](https://poser.pugx.org/n3xt0r/laravel-migration-generator/license)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 
-> ✅ CI: Successfully tested against 16 environments (Laravel 10–12 / PHP 8.2–8.4 / MySQL 5.7 & 8.0)
+> ✅ CI: Successfully tested across MySQL 5.7/8.0, PostgreSQL 15 and MSSQL 2022 (Laravel 10–12 / PHP 8.2–8.4)
 
 ## 📦 Overview
 
 **Laravel Migration Generator**  
-_A powerful CLI tool to generate Laravel migration files from an existing MySQL/Postgres/MSSQL database schema._
+_A powerful CLI tool to generate Laravel migration files from an existing MySQL, PostgreSQL or MSSQL database._
 
-This tool provides a structured and extensible approach to reverse-engineering database schemas into Laravel-compatible
-migration files. It supports foreign key constraints, correct dependency order, and customizable mapping logic –
-enabling seamless integration into both legacy and modern Laravel projects (Laravel 5–12 supported).
+This tool provides a structured and extensible approach to reverse‑engineering database schemas into Laravel‑compatible
+migration files. It supports foreign key constraints, correct dependency order and customizable mapping logic – enabling
+seamless integration into both legacy and modern Laravel projects (Laravel 5–12 supported).
 
 ## ✨ Features
 
-- ✅ Detects tables, columns, indexes, and foreign keys with precision
+- ✅ Detects tables, columns, indexes and foreign keys with precision
 - 🔄 Automatically orders migrations to maintain referential integrity
 - 🧱 Extensible design via modular definition/mapping architecture
-- 🧩 Supports Laravel 5 to 12 (EOL versions maintained in read-only mode)
-- 🛠 Clean, testable, and maintainable codebase
+- 🧩 Supports Laravel 5 to 12 (EOL versions maintained in read‑only mode)
+- 🛠 Clean, testable and maintainable codebase
 
 ## 📊 Version Compatibility
 
@@ -41,32 +41,41 @@ enabling seamless integration into both legacy and modern Laravel projects (Lara
 | 12.x          | 8.2 – 8.4   | 7.0.0             | ❌ EOL       |
 | 12.x          | 8.2 – 8.4   | 8.0.0             | ✅ Supported |
 
-> ⚠️ **Important:** Version 8.0.0 introduces breaking API changes for **Laravel 10, 11, and 12**.  
+> ⚠️ **Important:** Version 8.0.0 introduces breaking API changes for **Laravel 10–12**.  
 > All supported Laravel versions receive the new features and updated APIs, requiring updates to dependent code.
-
-
 
 ---
 
 ## ✅ Database Compatibility
 
-| MySQL Version | Status      |
-|---------------|-------------|
-| 5.7           | ✅ Supported |
-| 8.0           | ✅ Supported |
+The generator works with all major engines:
 
-> The migration generator is fully compatible with MySQL 5.7 and MySQL 8.0.
-> Features like `CHECK` constraints or new data types in MySQL 8 are supported.
+### MySQL
 
-> ⚠️ EOL versions are not actively developed but remain functional for legacy compatibility.
+| Version | Status      |
+|---------|-------------|
+| 5.7     | ✅ Supported |
+| 8.0     | ✅ Supported |
+
+### PostgreSQL
+
+| Version | Status      |
+|---------|-------------|
+| 15      | ✅ Supported |
+
+### MSSQL
+
+| Version     | Status      |
+|-------------|-------------|
+| 2022-latest | ✅ Supported |
+
+> EOL database versions remain functional for legacy compatibility.
 
 ## ⚙ Requirements
 
 - PHP ≥ 8.2
-    - `pdo_mysql` extension
-    - `pdo_postgres` extension (optional)
-    - `pdo_sqlsrv` extension (optional)
-- MySQL ≥ 5.7
+    - `pdo_mysql`, `pdo_pgsql` or `pdo_sqlsrv` (depending on your database)
+- MySQL ≥ 5.7, PostgreSQL 15 or MSSQL 2022
 
 ## 🧰 Installation
 
@@ -156,7 +165,7 @@ covering Laravel, PHP, and MySQL versions to guarantee robust compatibility and 
 | 11              | 8.2, 8.3, 8.4 | 5.7, 8.0       | 6              |
 | 12              | 8.2, 8.3, 8.4 | 5.7, 8.0       | 6              |
 
-**Total: 16 unique test jobs** covering the supported environment combinations.
+**Total: 16 unique MySQL jobs** plus additional tests for PostgreSQL and MSSQL.
 
 ### Key CI features include:
 
@@ -203,3 +212,6 @@ support (e.g., PostgreSQL), or enhance the customization layers.
 - 📦 [Packagist Package](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 - 🧪 [CI & Test Coverage](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
 - 📘 [Laravel Documentation](https://laravel.com/docs)
+
+This README reflects the repository’s current features, including explicit support for MySQL, PostgreSQL and MSSQL,
+correct PDO extensions and updated CI information.
