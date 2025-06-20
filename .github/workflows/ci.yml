@@ -76,13 +76,13 @@ jobs:
             echo "Waiting for MySQL ($i)..."
             sleep 1
           done
-      - uses: actions/cache@v3
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
         with:
-          path: |
-            ~/.composer/cache/files
-          key: ${{ runner.laravel }}-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.laravel }}-php-${{ matrix.php }}-
+            ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-
 
       - name: Adjust Laravel/Testbench version per matrix
         run: |
@@ -165,13 +165,13 @@ jobs:
             echo "Waiting for Postgres ($i)..."
             sleep 1
           done
-      - uses: actions/cache@v3
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
         with:
-          path: |
-            ~/.composer/cache/files
-          key: ${{ runner.laravel }}-php-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.laravel }}-php-${{ matrix.php }}-
+            ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-
       - name: Adjust Laravel/Testbench version per matrix
         run: |
          composer remove laravel/framework orchestra/testbench --no-update || true
@@ -263,13 +263,15 @@ jobs:
               CREATE LOGIN testuser WITH PASSWORD = 'TestPassw0rd!';
               CREATE USER testuser FOR LOGIN testuser;
               ALTER ROLE db_owner ADD MEMBER testuser;"
-      - uses: actions/cache@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
         with:
-          path: |
-            ~/.composer/cache/files
-          key: ${{ runner.laravel }}-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ hashFiles('composer.json') }}
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.laravel }}-php-${{ matrix.php }}-
+            ${{ runner.os }}-php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-
+
       - name: Adjust Laravel/Testbench version per matrix
         run: |
           composer remove laravel/framework orchestra/testbench --no-update || true
