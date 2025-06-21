@@ -18,50 +18,65 @@ class NormalizationContext
 
     public function __construct(ResultEntity $initial)
     {
-        // Deep clone for immutability of original state
         $this->original = clone $initial;
         $this->previous = clone $initial;
         $this->current = $initial;
     }
 
-    /**
-     * Returns the original unmodified schema result.
-     */
     public function getOriginal(): ResultEntity
     {
         return $this->original;
     }
 
-    /**
-     * Returns the last state before the current processor ran.
-     */
     public function getPrevious(): ResultEntity
     {
         return $this->previous;
     }
 
-    /**
-     * Returns the current schema state.
-     */
     public function getCurrent(): ResultEntity
     {
         return $this->current;
     }
 
-    /**
-     * Updates the current state with a new result and stores the previous.
-     */
     public function update(ResultEntity $new): void
     {
         $this->previous = clone $this->current;
         $this->current = $new;
     }
 
-    /**
-     * Returns the current table result for a given table name.
-     */
     public function getTableResults(string $tableName): array
     {
         return $this->current->getResults()[$tableName] ?? [];
+    }
+
+    /**
+     * Checks whether current differs from previous.
+     */
+    public function hasChanged(): bool
+    {
+        return $this->serializeEntity($this->current) !== $this->serializeEntity($this->previous);
+    }
+
+    /**
+     * Returns basic diff information between current and previous for a specific table.
+     * Shows added and removed keys (not deep diffs).
+     */
+    public function diffTable(string $tableName): array
+    {
+        $current = $this->getCurrent()->getResults()[$tableName] ?? [];
+        $previous = $this->getPrevious()->getResults()[$tableName] ?? [];
+
+        $added = array_diff_key($current, $previous);
+        $removed = array_diff_key($previous, $current);
+
+        return [
+            'added_keys' => array_keys($added),
+            'removed_keys' => array_keys($removed),
+        ];
+    }
+
+    private function serializeEntity(ResultEntity $entity): string
+    {
+        return md5(json_encode($entity->getResults(), JSON_THROW_ON_ERROR));
     }
 }

@@ -68,8 +68,9 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     public function normalize(ResultEntity $result): ResultEntity
     {
         $context = new NormalizationContext($result);
+        $processors = $this->getProcessors();
 
-        foreach ($this->processors as $processor) {
+        foreach ($processors as $processor) {
             $updated = $processor->process($context);
             $context->update($updated);
         }
