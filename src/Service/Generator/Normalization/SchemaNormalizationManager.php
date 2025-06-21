@@ -17,9 +17,9 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\Process
 class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
 {
     /**
-     * @var ProcessorInterface[]
+     * @var ProcessorInterface|\Closure[]
      */
-    protected iterable $processors = [];
+    protected array $processors = [];
 
     /**
      * SchemaNormalizationManager constructor.
@@ -36,7 +36,7 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     /**
      * Adds a new processor to the normalization chain.
      */
-    public function addProcessor(ProcessorInterface|iterable $processor): void
+    public function addProcessor(ProcessorInterface|\Closure $processor): void
     {
         $this->processors[] = $processor;
     }
@@ -61,7 +61,10 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     {
         $processors = $this->getProcessors();
         foreach ($processors as $processor) {
-            $result = $processor->process($result);
+            if (!is_callable($processor)) {
+                throw new \LogicException('Processor is not callable.');
+            }
+            $result = $processor($result);
         }
 
         return $result;

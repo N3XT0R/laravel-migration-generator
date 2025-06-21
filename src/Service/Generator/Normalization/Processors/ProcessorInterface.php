@@ -6,5 +6,5 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 
 interface ProcessorInterface
 {
-    public function process(ResultEntity $result): ResultEntity;
+    public function __invoke(ResultEntity $result): ResultEntity;
 }
