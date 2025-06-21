@@ -54,7 +54,7 @@ class NormalizationContext
      */
     public function hasChanged(): bool
     {
-        return $this->serializeEntity($this->current) !== $this->serializeEntity($this->previous);
+        return $this->serializeEntity($this->getCurrent()) !== $this->serializeEntity($this->getPrevious());
     }
 
     /**
