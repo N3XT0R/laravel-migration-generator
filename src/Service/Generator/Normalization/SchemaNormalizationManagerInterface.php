@@ -12,7 +12,7 @@ interface SchemaNormalizationManagerInterface
 
     public function addProcessor(ProcessorInterface $processor): void;
 
-    public function normalize(ResultEntity $result): mixed;
+    public function normalize(ResultEntity $result): ResultEntity;
 
     public function getProcessors(): iterable;
 

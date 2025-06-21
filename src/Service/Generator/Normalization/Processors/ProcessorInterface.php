@@ -3,8 +3,9 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\NormalizationContext;
 
 interface ProcessorInterface
 {
-    public function __invoke(ResultEntity $result, ?ResultEntity $previousResult = null): ResultEntity;
+    public function process(NormalizationContext $context): ResultEntity;
 }

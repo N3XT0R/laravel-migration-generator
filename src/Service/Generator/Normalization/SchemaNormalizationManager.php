@@ -3,6 +3,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Normalization;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\NormalizationContext;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\ProcessorInterface;
 
 /**
@@ -17,14 +18,12 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\Process
 class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
 {
     /**
-     * @var ProcessorInterface|\Closure[]
+     * @var ProcessorInterface[]
      */
     protected array $processors = [];
 
     /**
-     * SchemaNormalizationManager constructor.
-     *
-     * @param iterable|ProcessorInterface[] $processors
+     * @param iterable<ProcessorInterface> $processors
      */
     public function __construct(iterable $processors = [])
     {
@@ -36,41 +35,45 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     /**
      * Adds a new processor to the normalization chain.
      */
-    public function addProcessor(ProcessorInterface|\Closure $processor): void
+    public function addProcessor(ProcessorInterface $processor): void
     {
         $this->processors[] = $processor;
     }
 
+    /**
+     * Returns all registered processors.
+     */
     public function getProcessors(): iterable
     {
         return $this->processors;
     }
 
+    /**
+     * Replaces all processors.
+     */
     public function setProcessors(iterable $processors = []): void
     {
-        $this->processors = $processors;
+        $this->processors = [];
+        foreach ($processors as $processor) {
+            $this->addProcessor($processor);
+        }
     }
 
     /**
-     * Executes all processors on the given schema result.
+     * Executes all processors on the given schema result using a shared context.
      *
      * @param ResultEntity $result
      * @return ResultEntity
      */
     public function normalize(ResultEntity $result): ResultEntity
     {
-        $processors = $this->getProcessors();
-        $previous = clone $result;
-        
-        foreach ($processors as $processor) {
-            if (!is_callable($processor)) {
-                throw new \LogicException('Processor is not callable.');
-            }
-            $current = $processor($result, $previous);
-            $previous = $result;
-            $result = $current;
+        $context = new NormalizationContext($result);
+
+        foreach ($this->processors as $processor) {
+            $updated = $processor->process($context);
+            $context->update($updated);
         }
 
-        return $result;
+        return $context->getCurrent();
     }
 }
