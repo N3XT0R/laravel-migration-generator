@@ -8,7 +8,11 @@
 [![Docs](https://img.shields.io/badge/docs-readthedocs-blue)](https://laravel-migration-generator.readthedocs.io/)
 [![DB Support](https://img.shields.io/badge/Database%20Support-MySQL%20%2F%20MariaDB%20%7C%20PostgreSQL%20%7C%20MSSQL-blueviolet)](https://laravel-migration-generator.readthedocs.io/)
 
-> ✅ CI: Successfully tested across MySQL 5.7/8.0, PostgreSQL 15 and MSSQL 2022 (Laravel 10–12 / PHP 8.2–8.4)
+> 🧱 **Original project launched in May 2020. Recently reactivated and extended with full CI coverage and support for
+PostgreSQL, MariaDB, MSSQL and MySQL 8.**
+>
+> ✅ **CI:** Successfully tested across **MySQL 5.7/8.0**, **PostgreSQL 15**, and **MSSQL 2022** – on **Laravel 10–12**
+> and **PHP 8.2–8.4**.
 
 ## 📦 Overview
 
