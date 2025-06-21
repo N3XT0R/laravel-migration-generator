@@ -6,6 +6,7 @@
 [![Maintainability](https://qlty.sh/badges/dafd3f82-6646-47ae-a73e-3007d27fd67d/maintainability.svg)](https://qlty.sh/gh/N3XT0R/projects/laravel-migration-generator)
 [![License](https://poser.pugx.org/n3xt0r/laravel-migration-generator/license)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 [![Docs](https://img.shields.io/badge/docs-readthedocs-blue)](https://laravel-migration-generator.readthedocs.io/)
+[![DB Support](https://img.shields.io/badge/Database%20Support-MySQL%20%2F%20MariaDB%20%7C%20PostgreSQL%20%7C%20MSSQL-blueviolet)](https://laravel-migration-generator.readthedocs.io/)
 
 > ✅ CI: Successfully tested across MySQL 5.7/8.0, PostgreSQL 15 and MSSQL 2022 (Laravel 10–12 / PHP 8.2–8.4)
 
