@@ -2,11 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [ feature-*, develop, dev-*, master ]
+    branches: [ feature/*, develop, dev-*, master ]
     tags:
       - '*'
   pull_request:
-    branches: [ feature-*, develop, dev-*, master ]
+    branches: [ feature/*, develop, dev-*, master ]
 
 jobs:
   test-mysql:
