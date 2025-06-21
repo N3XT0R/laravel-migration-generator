@@ -15,11 +15,11 @@ interface MigrationGeneratorInterface
     public function setMigrationDir(string $migrationDir): void;
 
     public function getMigrationDir(): string;
-
+    
     public function generateMigrationForTable(
         string $database,
         string $table,
-        MigrationTimingDto $timingDto
+        MigrationTimingDto $timingDto,
     ): bool;
 
     public function getMigrationFiles(): array;

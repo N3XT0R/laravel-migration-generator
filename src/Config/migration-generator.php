@@ -1,7 +1,7 @@
 <?php
 
-use N3XT0R\MigrationGenerator\Service\Generator\Definition;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition;
 
 return [
     'definitions' => [
@@ -31,5 +31,8 @@ return [
             'class' => Mapper\ForeignKeyMapper::class,
             'requires' => ['table'],
         ],
+    ],
+    'normalizer' => [
+
     ],
 ];

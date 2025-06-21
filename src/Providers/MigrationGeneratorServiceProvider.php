@@ -30,10 +30,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../Stubs/', 'migration-generator');
+        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
         $this->publishes(
             [
-                __DIR__.'/../Config/migration-generator.php' => config_path('migration-generator.php'),
+                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
             ],
             'migration-generator'
         );
@@ -46,7 +46,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../Config/migration-generator.php', 'migration-generator');
+        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
         $this->registerParserFactory();
         $this->registerParser();
         $this->registerCompilerEngine();
@@ -97,12 +97,12 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getDefinitions(): array
     {
-        return (array) app('config')->get('migration-generator.definitions');
+        return (array)app('config')->get('migration-generator.definitions');
     }
 
     protected function getMapper(): array
     {
-        return (array) app('config')->get('migration-generator.mapper');
+        return (array)app('config')->get('migration-generator.mapper');
     }
 
     protected function registerDefinitionResolver(): void
@@ -118,7 +118,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
             static function (Application $app, array $params) use ($definitions) {
                 $key = 'connection';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
+                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
                 }
 
                 return new DefinitionResolver($params[$key], $definitions);
@@ -139,7 +139,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
+                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
                 }
 
                 /**
@@ -166,6 +166,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 );
             }
         );
+    }
+
+    protected function registerNormalizer(): void
+    {
     }
 
     protected function registerCompilerEngine(): void
