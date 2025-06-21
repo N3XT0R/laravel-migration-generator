@@ -9,10 +9,7 @@ class PrimaryKeyProcessor implements ProcessorInterface
 {
     public function process(NormalizationContext $context): ResultEntity
     {
-        $current = $context->getCurrent();
-
-
-        return $current;
+        return $context->getCurrent();
     }
 
 }
