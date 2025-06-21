@@ -60,11 +60,15 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     public function normalize(ResultEntity $result): ResultEntity
     {
         $processors = $this->getProcessors();
+        $previous = clone $result;
+        
         foreach ($processors as $processor) {
             if (!is_callable($processor)) {
                 throw new \LogicException('Processor is not callable.');
             }
-            $result = $processor($result);
+            $current = $processor($result, $previous);
+            $previous = $result;
+            $result = $current;
         }
 
         return $result;
