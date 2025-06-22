@@ -12,7 +12,7 @@ class IndexDefinition extends AbstractDefinition
     protected function generateData(): array
     {
         $table = $this->getAttributeByName('tableName');
-        $tableResult = (array) $this->getAttributeByName('table');
+        $tableResult = (array)$this->getAttributeByName('table');
         $schema = $this->getSchema();
 
         $result = [];
@@ -43,7 +43,7 @@ class IndexDefinition extends AbstractDefinition
             $combinedIndexes[$index->getName()] = $indexEntity;
         }
 
-        return $combinedIndexes;
+        return array_values($combinedIndexes);
     }
 
 }
