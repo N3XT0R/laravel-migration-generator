@@ -35,7 +35,7 @@
         <testsuite name="Integration">
             <directory suffix="Test.php">./tests/Integration</directory>
             <exclude>./tests/Integration/Service/Generator/Definition/AbstractTableDefinitionTest.php</exclude>
-            <exclude>./tests/Integration/Service/Generator/Definition/MigrationGeneratorNormalizedTest.php</exclude>
+            <exclude>./tests/Integration/Service/Generator/MigrationGeneratorNormalizedTest.php</exclude>
         </testsuite>
     </testsuites>
     <php>
