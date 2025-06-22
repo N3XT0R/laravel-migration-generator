@@ -6,6 +6,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Resolver;
 use Doctrine\DBAL\Connection as DoctrineConnection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\AbstractIndexEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
@@ -91,9 +92,61 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
     {
         $result = new ResultEntity();
         $result->setTableName($table);
-        $result->setResults($definitionResult);
+        $result->setResults($this->getUniqueIndexes($table, $definitionResult));
 
         return $result;
+    }
+
+
+    protected function getUniqueIndexes(string $table, array $definitionResult): array
+    {
+        // Prepare output
+        $result = [];
+
+        // Flatten all AbstractIndexEntitys into a flat list by name
+        $indexEntitiesByName = [];
+
+        foreach ($definitionResult[$table] as $type => $definitions) {
+            foreach ($definitions as $key => $definition) {
+                // If not index entity, pass through unmodified
+                if (!$definition instanceof AbstractIndexEntity) {
+                    $result[$type][$key] = $definition;
+                    continue;
+                }
+
+                $name = $definition->getName();
+                $indexType = $definition->getIndexType();
+
+                // Group index-type entities by name
+                if (!isset($indexEntitiesByName[$name])) {
+                    $indexEntitiesByName[$name] = [];
+                }
+
+                $indexEntitiesByName[$name][] = $definition;
+            }
+        }
+
+        // Resolve index-name conflicts: keep foreignKey if present
+        foreach ($indexEntitiesByName as $name => $entities) {
+            // Determine if there's a foreignKey among them
+            $preferred = null;
+            foreach ($entities as $entity) {
+                if ($entity->getIndexType() === 'foreignKey') {
+                    $preferred = $entity;
+                    break;
+                }
+            }
+
+            // If no foreignKey, pick first one (arbitrary fallback)
+            if (!$preferred) {
+                $preferred = $entities[0];
+            }
+
+            $indexType = $preferred->getIndexType();
+            $result[$indexType][$name] = $preferred;
+        }
+
+        return [$table => $result];
     }
 
 }

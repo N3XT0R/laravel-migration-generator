@@ -9,6 +9,8 @@ class IndexEntity extends AbstractIndexEntity
     protected string $type = '';
     protected array $columns = [];
 
+    protected string $indexType = 'index';
+
 
     public function getType(): string
     {

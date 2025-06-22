@@ -140,7 +140,7 @@ class TableDefinition extends AbstractDefinition
         $type = $fieldEntity->getType();
 
         if (true === $unsigned && 'float' !== $type) {
-            $fieldEntity->setType('unsigned'.ucfirst($type));
+            $fieldEntity->setType('unsigned' . ucfirst($type));
         } elseif (true === $unsigned) {
             $fieldEntity->addOption('unsigned', $unsigned);
         }

@@ -13,6 +13,8 @@ class ForeignKeyEntity extends AbstractIndexEntity
     protected string $onDelete = '';
     protected string $onUpdate = '';
 
+    protected string $indexType = 'foreignKey';
+
     /**
      * @return string
      */

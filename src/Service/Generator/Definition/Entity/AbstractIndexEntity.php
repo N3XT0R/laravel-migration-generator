@@ -6,6 +6,8 @@ abstract class AbstractIndexEntity
 {
     protected string $name = '';
 
+    protected string $indexType = '';
+
     public function getName(): string
     {
         return $this->name;
@@ -15,4 +17,16 @@ abstract class AbstractIndexEntity
     {
         $this->name = $name;
     }
+
+    public function getIndexType(): string
+    {
+        return $this->indexType;
+    }
+
+    public function setIndexType(string $indexType): void
+    {
+        $this->indexType = $indexType;
+    }
+
+    
 }
