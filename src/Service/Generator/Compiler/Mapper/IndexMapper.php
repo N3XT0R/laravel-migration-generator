@@ -17,7 +17,6 @@ class IndexMapper extends AbstractMapper
         $result = [];
         $foreignKeyNames = [];
         foreach ($data as $field) {
-            dump($field);
             if ($field instanceof ForeignKeyEntity) {
                 $foreignKeyNames[] = $field->getName();
             }
@@ -30,7 +29,7 @@ class IndexMapper extends AbstractMapper
             if (in_array($field->getName(), $foreignKeyNames, true)) {
                 continue;
             }
-            
+
             $result[] = $this->generateIndex($field);
         }
 
