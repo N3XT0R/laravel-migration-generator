@@ -4,11 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
             $table->string('name');
         });
@@ -38,13 +37,14 @@ return new class extends Migration
             $table->string('name');
         });
 
-        Schema::create('role_user', function (Blueprint $table) {
+        Schema::create('role_customer', function (Blueprint $table) {
             $table->unsignedBigInteger('role_id');
-            $table->unsignedBigInteger('user_id');
-            $table->primary(['role_id', 'user_id']);
+            $table->unsignedBigInteger('customer_id');
+            $table->string('sort')->index('test');
+            $table->primary(['role_id', 'customer_id']);
 
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
 
         Schema::create('order_product', function (Blueprint $table) {
@@ -80,12 +80,12 @@ return new class extends Migration
         Schema::dropIfExists('product_tag');
         Schema::dropIfExists('category_product');
         Schema::dropIfExists('order_product');
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('role_customers');
         Schema::dropIfExists('tags');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('products');
         Schema::dropIfExists('roles');
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('customers');
     }
 };

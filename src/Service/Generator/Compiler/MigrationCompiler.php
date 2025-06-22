@@ -45,7 +45,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     }
 
     /**
-     * @param  array  $mapper
+     * @param array $mapper
      */
     public function setMapper(array $mapper): void
     {
@@ -71,7 +71,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     }
 
     /**
-     * @param  Filesystem  $filesystem
+     * @param Filesystem $filesystem
      */
     public function setFilesystem(Filesystem $filesystem): void
     {
@@ -87,7 +87,7 @@ class MigrationCompiler implements MigrationCompilerInterface
     }
 
     /**
-     * @param  array  $migrationFiles
+     * @param array $migrationFiles
      */
     public function setMigrationFiles(array $migrationFiles): void
     {
@@ -122,11 +122,12 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         foreach ($sortedMapper as $mappingName) {
             $mapping = app()->make($mapper[$mappingName]['class']);
-            if ($mapping instanceof MapperInterface) {
-                $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
-                foreach ($mapping->map($resultData) as $line) {
-                    $columns[] = $line;
-                }
+            if (!$mapping instanceof MapperInterface) {
+                continue;
+            }
+            $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
+            foreach ($mapping->map($resultData) as $line) {
+                $columns[] = $line;
             }
         }
 
@@ -143,8 +144,8 @@ class MigrationCompiler implements MigrationCompilerInterface
     private function resolveMigrationNamespace(string $customClass): string
     {
         return (!empty($customClass) && class_exists($customClass))
-            ? 'use '.$customClass.';'
-            : 'use '.Migration::class.';';
+            ? 'use ' . $customClass . ';'
+            : 'use ' . Migration::class . ';';
     }
 
     private function extractClassFromNamespace(string $namespaceLine): string
@@ -163,7 +164,8 @@ class MigrationCompiler implements MigrationCompilerInterface
         $tpl = $this->getRenderedTemplate();
 
         if (!empty($tpl)) {
-            $fileName = $this->generateFilename($name,
+            $fileName = $this->generateFilename(
+                $name,
                 $timingDto->getCurrentAmount(),
                 $timingDto->getMaxAmount(),
                 $timingDto->getTimestamp()
@@ -181,13 +183,13 @@ class MigrationCompiler implements MigrationCompilerInterface
             ? $this->getHourMinuteSecondPrefix($currentAmount, $maxAmount, $timestamp)
             : date('Y_m_d_His');
 
-        return $prefix.'_'.Str::snake($name).'.php';
+        return $prefix . '_' . Str::snake($name) . '.php';
     }
 
     private function writeTemplateToFile(string $path, string $fileName, string $content): bool
     {
         $filesystem = $this->getFilesystem();
-        $filePath = $path.DIRECTORY_SEPARATOR.$fileName;
+        $filePath = $path . DIRECTORY_SEPARATOR . $fileName;
         $success = false;
 
         if ($filesystem->exists($path) && !$filesystem->exists($filePath)) {

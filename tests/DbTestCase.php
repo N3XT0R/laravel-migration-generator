@@ -20,7 +20,12 @@ class DbTestCase extends TestCase
             $this->loadMigrationsFrom($this->resourceFolder . $migrationPath);
         }
 
-        $this->loadLaravelMigrations(['--database' => env('DB_CONNECTION', 'mysql')]);
+        $this->loadLaravelMigrations(['--database' => $this->getDatabaseFromEnv()]);
+    }
+
+    protected function getDatabaseFromEnv(): string
+    {
+        return (string)env('DB_CONNECTION', 'mysql');
     }
 
     public function getMigrations(): array

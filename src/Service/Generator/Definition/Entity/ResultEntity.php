@@ -48,7 +48,18 @@ class ResultEntity
 
     public function hasResultForTable(string $tableName): bool
     {
-        return array_key_exists($tableName, $this->results);
+        $results = $this->getResults();
+        return array_key_exists($tableName, $results);
+    }
+
+    public function getResultByTable(string $tableName)
+    {
+        $result = [];
+        if ($this->hasResultForTable($tableName)) {
+            $result = $this->getResults()[$tableName];
+        }
+
+        return $result;
     }
 
     public function hasResultForTableNameAndKey(string $tableName, string $key): bool
