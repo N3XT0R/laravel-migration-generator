@@ -137,6 +137,7 @@ class MigrationCompiler implements MigrationCompilerInterface
         string $tableName
     ): array {
         $columns = [];
+        $tableResults = $resultEntity->getResultByTable($tableName);
 
         foreach ($sortedMapper as $mappingName) {
             $mapping = app()->make($mapper[$mappingName]['class']);
@@ -144,9 +145,12 @@ class MigrationCompiler implements MigrationCompilerInterface
                 continue;
             }
 
-            $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
-            foreach ($mapping->map($resultData) as $line) {
-                $columns[] = $line;
+            if (!isset($tableResults[$mappingName])) {
+                continue;
+            }
+
+            foreach ($mapping->map($tableResults[$mappingName]) as $entity) {
+                $columns[] = $entity;
             }
         }
 
