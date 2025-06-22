@@ -8,14 +8,16 @@ class DbTestCase extends TestCase
 {
 
 
-    protected array $migrations = [];
+    protected array $migrations = [
+        'Database/Migrations/Default/',
+    ];
 
     protected function setUp(): void
     {
         parent::setUp();
         $migrations = $this->getMigrations();
         foreach ($migrations as $migrationPath) {
-            $this->loadMigrationsFrom($migrationPath);
+            $this->loadMigrationsFrom($this->resourceFolder . $migrationPath);
         }
 
         $this->loadLaravelMigrations(['--database' => env('DB_CONNECTION', 'mysql')]);
@@ -23,11 +25,6 @@ class DbTestCase extends TestCase
 
     public function getMigrations(): array
     {
-        if (0 === count($this->migrations)) {
-            $this->setMigrations([
-                $this->resourceFolder . 'Database/Migrations/Default/',
-            ]);
-        }
         return $this->migrations;
     }
 
