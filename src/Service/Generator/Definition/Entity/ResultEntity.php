@@ -52,7 +52,7 @@ class ResultEntity
         return array_key_exists($tableName, $results);
     }
 
-    public function getResultByTable(string $tableName)
+    public function getResultByTable(string $tableName): array
     {
         $result = [];
         if ($this->hasResultForTable($tableName)) {
