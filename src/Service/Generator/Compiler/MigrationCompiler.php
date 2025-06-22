@@ -117,19 +117,8 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         $migrationNamespace = $this->resolveMigrationNamespace($customMigrationClass);
         $migrationClass = $this->extractClassFromNamespace($migrationNamespace);
+        $columns = $this->collectMappedColumns($sortedMapper, $mapper, $resultEntity, $tableName);
 
-        $columns = [];
-
-        foreach ($sortedMapper as $mappingName) {
-            $mapping = app()->make($mapper[$mappingName]['class']);
-            if (!$mapping instanceof MapperInterface) {
-                continue;
-            }
-            $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
-            foreach ($mapping->map($resultData) as $line) {
-                $columns[] = $line;
-            }
-        }
 
         $data = [
             'migrationNamespace' => $migrationNamespace,
@@ -140,6 +129,30 @@ class MigrationCompiler implements MigrationCompilerInterface
 
         $this->setRenderedTemplate($this->render('migration-generator::CreateTableStub', $data));
     }
+
+    protected function collectMappedColumns(
+        array $sortedMapper,
+        array $mapper,
+        ResultEntity $resultEntity,
+        string $tableName
+    ): array {
+        $columns = [];
+
+        foreach ($sortedMapper as $mappingName) {
+            $mapping = app()->make($mapper[$mappingName]['class']);
+            if (!$mapping instanceof MapperInterface) {
+                continue;
+            }
+
+            $resultData = $resultEntity->getResultByTableNameAndKey($tableName, $mappingName);
+            foreach ($mapping->map($resultData) as $line) {
+                $columns[] = $line;
+            }
+        }
+
+        return $columns;
+    }
+
 
     private function resolveMigrationNamespace(string $customClass): string
     {
