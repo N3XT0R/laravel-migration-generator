@@ -100,66 +100,89 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
 
     protected function getUniqueIndexes(string $table, array $definitionResult): array
     {
-        $result = [];
+        $flatIndexEntities = $this->extractIndexEntitiesWithOrigin($definitionResult[$table]);
+        $filteredIndexes = $this->filterDuplicateIndexesByName($flatIndexEntities);
+        $rebuilt = $this->rebuildDefinitionResult($definitionResult[$table], $filteredIndexes);
 
-        // Flatten all AbstractIndexEntitys into flat list grouped by name
+        return [$table => $rebuilt];
+    }
+
+
+    protected function extractIndexEntitiesWithOrigin(array $definitions): array
+    {
         $indexEntitiesByName = [];
 
-        foreach ($definitionResult[$table] as $type => $definitions) {
-            foreach ($definitions as $key => $definition) {
+        foreach ($definitions as $originType => $entries) {
+            foreach ($entries as $definition) {
                 if (!$definition instanceof AbstractIndexEntity) {
-                    // Pass through unchanged
-                    $result[$type][$key] = $definition;
                     continue;
                 }
 
                 $name = $definition->getName();
 
-                // Save both the entity and its origin type
                 $indexEntitiesByName[$name][] = [
                     'entity' => $definition,
-                    'originType' => $type,
+                    'originType' => $originType,
                 ];
             }
         }
 
-        // Resolve duplicates by name, with rules
+        return $indexEntitiesByName;
+    }
+
+    protected function filterDuplicateIndexesByName(array $indexEntitiesByName): array
+    {
+        $filtered = [];
+
         foreach ($indexEntitiesByName as $name => $entries) {
-            $hasPrimary = false;
-            $hasForeign = false;
-            $primaryEntry = null;
-            $foreignEntry = null;
-            $fallbackEntry = null;
+            $primary = null;
+            $foreign = null;
+            $fallback = null;
 
             foreach ($entries as $entry) {
-                $entity = $entry['entity'];
-                $indexType = $entity->getIndexType();
+                $type = $entry['entity']->getIndexType();
 
-                if ($indexType === 'primary') {
-                    $hasPrimary = true;
-                    $primaryEntry = $entry;
-                } elseif ($indexType === 'foreignKey') {
-                    $hasForeign = true;
-                    $foreignEntry = $entry;
-                } elseif (!$fallbackEntry) {
-                    $fallbackEntry = $entry;
+                if ($type === 'primary') {
+                    $primary = $entry;
+                } elseif ($type === 'foreignKey') {
+                    $foreign = $entry;
+                } elseif (!$fallback) {
+                    $fallback = $entry;
                 }
             }
 
-            // Always keep primary
-            if ($hasPrimary && $primaryEntry !== null) {
-                $result[$primaryEntry['originType']][$name] = $primaryEntry['entity'];
-            }
-
-            // Prefer foreign if present and not already added
-            if ($hasForeign && $foreignEntry !== null) {
-                $result[$foreignEntry['originType']][$name] = $foreignEntry['entity'];
-            } elseif ($fallbackEntry !== null && !$hasForeign && !$hasPrimary) {
-                $result[$fallbackEntry['originType']][$name] = $fallbackEntry['entity'];
+            if ($primary) {
+                $filtered[$name] = $primary;
+            } elseif ($foreign) {
+                $filtered[$name] = $foreign;
+            } elseif ($fallback) {
+                $filtered[$name] = $fallback;
             }
         }
 
-        return [$table => $result];
+        return $filtered;
+    }
+
+    protected function rebuildDefinitionResult(array $original, array $filteredIndexes): array
+    {
+        $result = [];
+
+        // Erstmal alles übernehmen, was kein AbstractIndexEntity ist
+        foreach ($original as $type => $entries) {
+            foreach ($entries as $key => $entry) {
+                if (!$entry instanceof AbstractIndexEntity) {
+                    $result[$type][$key] = $entry;
+                }
+            }
+        }
+
+        // Jetzt die gefilterten Index-Elemente einfügen, an Ursprungsposition
+        foreach ($filteredIndexes as $name => $entry) {
+            $origin = $entry['originType'];
+            $result[$origin][$name] = $entry['entity'];
+        }
+
+        return $result;
     }
 
 
