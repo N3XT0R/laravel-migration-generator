@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create(
             'fields_test',
             static function (Blueprint $table) {
-                $table->bigInteger('id', true)->unsigned()->primary();
+                $table->bigInteger('id', true)->unsigned();
                 $table->smallInteger('small_int')->nullable();
                 $table->mediumInteger('medium_int')->unique();
                 $table->tinyInteger('tiny_int')->default(1)->comment('my tiny int');
