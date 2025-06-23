@@ -2,18 +2,17 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
 
     public function up(): void
     {
         Schema::create(
             'fields_test',
             static function (Blueprint $table) {
-                $table->bigInteger('id', true)->unsigned();
+                $table->bigInteger('id', true)->unsigned()->primary();
                 $table->smallInteger('small_int')->nullable();
                 $table->mediumInteger('medium_int')->unique();
                 $table->tinyInteger('tiny_int')->default(1)->comment('my tiny int');

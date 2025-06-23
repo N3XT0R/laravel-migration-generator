@@ -100,53 +100,67 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
 
     protected function getUniqueIndexes(string $table, array $definitionResult): array
     {
-        // Prepare output
         $result = [];
 
-        // Flatten all AbstractIndexEntitys into a flat list by name
+        // Flatten all AbstractIndexEntitys into flat list grouped by name
         $indexEntitiesByName = [];
 
         foreach ($definitionResult[$table] as $type => $definitions) {
             foreach ($definitions as $key => $definition) {
-                // If not index entity, pass through unmodified
                 if (!$definition instanceof AbstractIndexEntity) {
+                    // Pass through unchanged
                     $result[$type][$key] = $definition;
                     continue;
                 }
 
                 $name = $definition->getName();
-                $indexType = $definition->getIndexType();
 
-                // Group index-type entities by name
-                if (!isset($indexEntitiesByName[$name])) {
-                    $indexEntitiesByName[$name] = [];
-                }
-
-                $indexEntitiesByName[$name][] = $definition;
+                // Save both the entity and its origin type
+                $indexEntitiesByName[$name][] = [
+                    'entity' => $definition,
+                    'originType' => $type,
+                ];
             }
         }
 
-        // Resolve index-name conflicts: keep foreignKey if present
-        foreach ($indexEntitiesByName as $name => $entities) {
-            // Determine if there's a foreignKey among them
-            $preferred = null;
-            foreach ($entities as $entity) {
-                if ($entity->getIndexType() === 'foreignKey') {
-                    $preferred = $entity;
-                    break;
+        // Resolve duplicates by name, with rules
+        foreach ($indexEntitiesByName as $name => $entries) {
+            $hasPrimary = false;
+            $hasForeign = false;
+            $primaryEntry = null;
+            $foreignEntry = null;
+            $fallbackEntry = null;
+
+            foreach ($entries as $entry) {
+                $entity = $entry['entity'];
+                $indexType = $entity->getIndexType();
+
+                if ($indexType === 'primary') {
+                    $hasPrimary = true;
+                    $primaryEntry = $entry;
+                } elseif ($indexType === 'foreignKey') {
+                    $hasForeign = true;
+                    $foreignEntry = $entry;
+                } elseif (!$fallbackEntry) {
+                    $fallbackEntry = $entry;
                 }
             }
 
-            // If no foreignKey, pick first one (arbitrary fallback)
-            if (!$preferred) {
-                $preferred = $entities[0];
+            // Always keep primary
+            if ($hasPrimary && $primaryEntry !== null) {
+                $result[$primaryEntry['originType']][$name] = $primaryEntry['entity'];
             }
 
-            $indexType = $preferred->getIndexType();
-            $result[$indexType][$name] = $preferred;
+            // Prefer foreign if present and not already added
+            if ($hasForeign && $foreignEntry !== null) {
+                $result[$foreignEntry['originType']][$name] = $foreignEntry['entity'];
+            } elseif ($fallbackEntry !== null && !$hasForeign && !$hasPrimary) {
+                $result[$fallbackEntry['originType']][$name] = $fallbackEntry['entity'];
+            }
         }
 
         return [$table => $result];
     }
+
 
 }
