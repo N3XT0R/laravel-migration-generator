@@ -100,89 +100,56 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
 
     protected function getUniqueIndexes(string $table, array $definitionResult): array
     {
-        $flatIndexEntities = $this->extractIndexEntitiesWithOrigin($definitionResult[$table]);
-        $filteredIndexes = $this->filterDuplicateIndexesByName($flatIndexEntities);
-        $rebuilt = $this->rebuildDefinitionResult($definitionResult[$table], $filteredIndexes);
+        // Step 1: Separate index-like definitions
+        [$indexEntitiesByName, $result] = $this->extractIndexEntities($definitionResult[$table]);
 
-        return [$table => $rebuilt];
+        // Step 2: Resolve conflicts (e.g. foreignKey vs. index) but retain original group
+        $this->mergeResolvedIndexes($result, $indexEntitiesByName);
+
+        return [$table => $result];
     }
 
 
-    protected function extractIndexEntitiesWithOrigin(array $definitions): array
+    protected function extractIndexEntities(array $definitionsByType): array
     {
         $indexEntitiesByName = [];
+        $result = [];
 
-        foreach ($definitions as $originType => $entries) {
-            foreach ($entries as $definition) {
+        foreach ($definitionsByType as $type => $definitions) {
+            foreach ($definitions as $key => $definition) {
                 if (!$definition instanceof AbstractIndexEntity) {
+                    $result[$type][$key] = $definition;
                     continue;
                 }
 
                 $name = $definition->getName();
-
-                $indexEntitiesByName[$name][] = [
-                    'entity' => $definition,
-                    'originType' => $originType,
-                ];
+                $indexEntitiesByName[$name][] = ['entity' => $definition, 'originType' => $type];
             }
         }
 
-        return $indexEntitiesByName;
+        return [$indexEntitiesByName, $result];
     }
 
-    protected function filterDuplicateIndexesByName(array $indexEntitiesByName): array
+
+    protected function mergeResolvedIndexes(array &$result, array $indexEntitiesByName): void
     {
-        $filtered = [];
-
-        foreach ($indexEntitiesByName as $name => $entries) {
-            $primary = null;
-            $foreign = null;
-            $fallback = null;
-
-            foreach ($entries as $entry) {
-                $type = $entry['entity']->getIndexType();
-
-                if ($type === 'primary') {
-                    $primary = $entry;
-                } elseif ($type === 'foreignKey') {
-                    $foreign = $entry;
-                } elseif (!$fallback) {
-                    $fallback = $entry;
+        foreach ($indexEntitiesByName as $name => $candidates) {
+            $preferred = null;
+            foreach ($candidates as $item) {
+                if ($item['entity']->getIndexType() === 'foreignKey') {
+                    $preferred = $item;
+                    break;
                 }
             }
 
-            if ($primary) {
-                $filtered[$name] = $primary;
-            } elseif ($foreign) {
-                $filtered[$name] = $foreign;
-            } elseif ($fallback) {
-                $filtered[$name] = $fallback;
+            // fallback if no foreignKey
+            if (!$preferred) {
+                $preferred = $candidates[0];
             }
+
+            $originType = $preferred['originType'];
+            $result[$originType][$name] = $preferred['entity'];
         }
-
-        return $filtered;
-    }
-
-    protected function rebuildDefinitionResult(array $original, array $filteredIndexes): array
-    {
-        $result = [];
-
-        // Erstmal alles übernehmen, was kein AbstractIndexEntity ist
-        foreach ($original as $type => $entries) {
-            foreach ($entries as $key => $entry) {
-                if (!$entry instanceof AbstractIndexEntity) {
-                    $result[$type][$key] = $entry;
-                }
-            }
-        }
-
-        // Jetzt die gefilterten Index-Elemente einfügen, an Ursprungsposition
-        foreach ($filteredIndexes as $name => $entry) {
-            $origin = $entry['originType'];
-            $result[$origin][$name] = $entry['entity'];
-        }
-
-        return $result;
     }
 
 

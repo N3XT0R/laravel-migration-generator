@@ -7,7 +7,7 @@ class PrimaryKeyEntity extends AbstractIndexEntity
 
     protected array $columns = [];
 
-    protected string $indexType = 'primary';
+    protected string $indexType = 'index';
 
     public function getColumns(): array
     {
