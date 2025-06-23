@@ -18,6 +18,7 @@ return new class extends Migration
             'test_table',
             static function (Blueprint $table) {
                 $table->bigInteger('test', true)->unsigned();
+                $table->primary(['test'], 'PRIMARY');
                 
             }
         );

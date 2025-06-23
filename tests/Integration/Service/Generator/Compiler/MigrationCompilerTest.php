@@ -61,14 +61,12 @@ class MigrationCompilerTest extends TestCase
             [
                 'test_table' => [
                     'table' => [$fieldEntity],
-                    'primary' => $primaryKey,
+                    'primaryKey' => [$primaryKey],
                 ],
             ]
         );
-        dd($result->getResults());
         $this->compiler->generateByResult($result);
         $result = $this->compiler->getRenderedTemplate();
-        file_put_contents($this->resourceFolder . '/ExpectedResults/migrationCompilerResultWithPrimary.txt', $result);
         self::assertStringEqualsFile(
             $this->resourceFolder . '/ExpectedResults/migrationCompilerResultWithPrimary.txt',
             $result
