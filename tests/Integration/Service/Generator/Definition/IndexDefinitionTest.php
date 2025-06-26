@@ -44,7 +44,7 @@ class IndexDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param  array  $result
+     * @param array $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testIndexWorks(array $result): void
@@ -52,7 +52,7 @@ class IndexDefinitionTest extends DbTestCase
         /**
          * @var IndexEntity $index
          */
-        $index = $result['testi'];
+        $index = $result[1];
         $this->assertEquals('index', $index->getType());
         $this->assertEquals('testi', $index->getName());
         $this->assertEquals(
@@ -64,7 +64,7 @@ class IndexDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param  array  $result
+     * @param array $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testUniqueIndexWorks(array $result): void
@@ -72,7 +72,7 @@ class IndexDefinitionTest extends DbTestCase
         /**
          * @var IndexEntity $index
          */
-        $index = $result['fields_test_medium_int_unique'];
+        $index = $result[0];
         $this->assertEquals('unique', $index->getType());
         $this->assertEquals(
             [
