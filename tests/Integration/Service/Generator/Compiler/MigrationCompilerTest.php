@@ -66,6 +66,7 @@ class MigrationCompilerTest extends TestCase
             ]
         );
         $this->compiler->generateByResult($result);
+
         $result = $this->compiler->getRenderedTemplate();
         self::assertStringEqualsFile(
             $this->resourceFolder . '/ExpectedResults/migrationCompilerResultWithPrimary.txt',
