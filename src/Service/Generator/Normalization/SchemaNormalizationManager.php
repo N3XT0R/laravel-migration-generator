@@ -42,6 +42,7 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
 
     /**
      * Returns all registered processors.
+     * @return ProcessorInterface[]|iterable
      */
     public function getProcessors(): iterable
     {

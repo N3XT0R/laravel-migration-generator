@@ -22,10 +22,13 @@ class PrimaryKeyMapper extends AbstractMapper
     {
         $columns = $index->getColumns();
         $columnList = "['" . implode("', '", $columns) . "']";
-        $name = "'" . $index->getName() . "'";
+
+        $methodCall = !empty($index->getName())
+            ? "primary($columnList, '" . $index->getName() . "')"
+            : "primary($columnList)";
 
         return $this->chainMethodsToString([
-            "primary($columnList, $name)"
+            $methodCall
         ]);
     }
 }
