@@ -67,6 +67,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 $app['composer']
             );
         });
+
+        $this->commands([
+            Commands\MigrationGeneratorCommand::class,
+        ]);
     }
 
     protected function registerParserFactory(): void
@@ -123,9 +127,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerGenerator(): void
     {
+        $config = $this->getConfigSection('config');
         $this->app->bind(
             MigrationGeneratorInterface::class,
-            static function (Application $app, array $params) {
+            static function (Application $app, array $params) use ($config) {
                 $dbMap = [
                     'mysql' => 'pdo_mysql',
                     'sqlite' => 'pdo_sqlite',
@@ -157,7 +162,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
-                    $app->make(MigrationCompilerInterface::class)
+                    $app->make(MigrationCompilerInterface::class),
+                    (string)$config['migration_dir']
                 );
             }
         );
