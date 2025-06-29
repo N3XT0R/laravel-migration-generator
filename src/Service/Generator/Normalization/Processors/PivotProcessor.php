@@ -9,6 +9,12 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\Normalizat
 
 class PivotProcessor implements ProcessorInterface
 {
+
+    public function getKey(): string
+    {
+        return 'pivot';
+    }
+
     public function process(NormalizationContext $context): ResultEntity
     {
         $result = $context->getCurrent();

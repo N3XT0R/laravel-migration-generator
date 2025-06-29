@@ -5,6 +5,13 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\PivotProcessor;
 
 return [
+    'config' => [
+        'defaults' => [
+            'normalizer' => [
+                'enabled' => ['pivot'],
+            ],
+        ],
+    ],
     'definitions' => [
         'table' => [
             'class' => Definition\TableDefinition::class,

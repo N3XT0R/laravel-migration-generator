@@ -8,4 +8,6 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\Normalizat
 interface ProcessorInterface
 {
     public function process(NormalizationContext $context): ResultEntity;
+
+    public function getKey(): string;
 }

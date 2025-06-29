@@ -5,6 +5,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Normalization;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\NormalizationContext;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\ProcessorInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
 /**
  * Coordinates the execution of schema normalization processors.
@@ -23,9 +24,14 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     protected array $processors = [];
 
     /**
+     * @var string[]|null
+     */
+    protected ?array $enabledProcessors = null;
+
+    /**
      * @param iterable<ProcessorInterface> $processors
      */
-    public function __construct(iterable $processors = [])
+    public function __construct(iterable $processors = [], ?array $enabledProcessors = null)
     {
         foreach ($processors as $processor) {
             $this->addProcessor($processor);
@@ -37,6 +43,12 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
      */
     public function addProcessor(ProcessorInterface $processor): void
     {
+        if (is_array($this->getEnabledProcessors())) {
+            $key = $processor->getKey();
+            if (!in_array($key, $this->getEnabledProcessors(), true)) {
+                return;
+            }
+        }
         $this->processors[] = $processor;
     }
 
@@ -60,6 +72,16 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
         }
     }
 
+    public function getEnabledProcessors(): ?array
+    {
+        return $this->enabledProcessors;
+    }
+
+    public function setEnabledProcessors(?array $enabledProcessors): void
+    {
+        $this->enabledProcessors = $enabledProcessors;
+    }
+
     /**
      * Executes all processors on the given schema result using a shared context.
      *
@@ -70,8 +92,9 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     {
         $context = new NormalizationContext($result);
         $processors = $this->getProcessors();
+        $sortedProcessors = TopSort::sort($processors);
 
-        foreach ($processors as $processor) {
+        foreach ($sortedProcessors as $processor) {
             $updated = $processor->process($context);
             $context->update($updated);
         }

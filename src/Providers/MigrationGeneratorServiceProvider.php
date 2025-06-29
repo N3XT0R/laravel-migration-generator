@@ -14,6 +14,8 @@ use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManager;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactory;
@@ -52,6 +54,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->registerCompilerEngine();
         $this->registerCompiler();
         $this->registerDefinitionResolver();
+        $this->registerNormalizer();
         $this->registerGenerator();
         $this->registerCommands();
     }
@@ -95,23 +98,15 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         );
     }
 
-    protected function getDefinitions(): array
+    protected function getConfigSection(string $key): array
     {
-        return (array)app('config')->get('migration-generator.definitions');
-    }
-
-    protected function getMapper(): array
-    {
-        return (array)app('config')->get('migration-generator.mapper');
+        return (array)app('config')->get('migration-generator.' . $key);
     }
 
     protected function registerDefinitionResolver(): void
     {
-        $definitions = $this->getDefinitions();
-
-        foreach ($definitions as $definition) {
-            $this->app->bind($definition['class'], $definition['class']);
-        }
+        $definitions = $this->getConfigSection('definitions');
+        $this->bindClasses($definitions);
 
         $this->app->bind(
             DefinitionResolverInterface::class,
@@ -168,10 +163,6 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         );
     }
 
-    protected function registerNormalizer(): void
-    {
-    }
-
     protected function registerCompilerEngine(): void
     {
         $this->app->bind(ReplaceEngine::class, ReplaceEngine::class);
@@ -193,10 +184,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerCompiler(): void
     {
-        $mapper = $this->getMapper();
-        foreach ($mapper as $map) {
-            $this->app->bind($map['class'], $map['class']);
-        }
+        $mapper = $this->getConfigSection('mapper');
+        $this->bindClasses($mapper);
 
         $this->app->bind(
             MigrationCompilerInterface::class,
@@ -211,6 +200,31 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 $compiler->setMapper($mapper);
 
                 return $compiler;
+            }
+        );
+    }
+
+    protected function bindClasses(array $classes): void
+    {
+        foreach ($classes as $map) {
+            $this->app->bind($map['class'], $map['class']);
+        }
+    }
+
+
+    protected function registerNormalizer(): void
+    {
+        $normalizer = $this->getConfigSection('normalizer');
+        $this->bindClasses($normalizer);
+
+        $this->app->bind(
+            SchemaNormalizationManagerInterface::class,
+            static function (Application $app, array $params) use ($normalizer) {
+                $enabledProcessors = null;
+                if (array_key_exists('enabled', $params)) {
+                    $enabledProcessors = (array)$params['enabled'];
+                }
+                return new SchemaNormalizationManager($normalizer, $enabledProcessors);
             }
         );
     }
