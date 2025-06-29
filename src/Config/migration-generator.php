@@ -44,7 +44,7 @@ return [
     'normalizer' => [
         'pivot' => [
             'class' => PivotProcessor::class,
-            'requires' => ['primary', 'foreignKey', 'table'],
+            'requires' => [],
         ],
     ],
 ];
