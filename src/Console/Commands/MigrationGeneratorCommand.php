@@ -2,17 +2,18 @@
 
 namespace N3XT0R\MigrationGenerator\Console\Commands;
 
+use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
-use Illuminate\Support\Composer;
+use Illuminate\Support\Facades\Config;
 use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManager;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 
-class MigrationGeneratorCommand extends MigrateMakeCommand
+class MigrationGeneratorCommand extends Command
 {
 
     use ConfirmableTrait;
@@ -22,8 +23,8 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      *
      * @var string
      */
-    protected $signature = 'migrate:regenerate {{--table= : specific table}} 
-        {{--database= : The database connection to use}} '; //later for 1.1 : {{--force : force re-init in migrations-table}}
+    protected $signature = 'migrate:regenerate
+         {--database= : The database connection to use} '; //later for 1.1 : {{--force : force re-init in migrations-table}}
 
     /**
      * The console command description.
@@ -39,23 +40,11 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      */
     protected $migrator;
 
-    /**
-     * MigrationGeneratorCommand constructor.
-     * @param  MigrationCreator  $creator
-     * @param  Composer  $composer
-     * @param  Migrator|null  $migrator
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public function __construct(MigrationCreator $creator, Composer $composer, Migrator $migrator = null)
+    public function __construct()
     {
-        parent::__construct($creator, $composer);
-        if (null === $migrator) {
-            /**
-             * @var Migrator $migrator
-             */
-            $migrator = app()->make('migrator');
-        }
-        $this->setMigrator($migrator);
+        $this->extendSignatureWithNormalizers();
+        parent::__construct();
+        $this->setMigrator(app()->make('migrator'));
     }
 
     public function setMigrator(Migrator $migrator): void
@@ -68,13 +57,21 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         return $this->migrator;
     }
 
-    public function handle(): void
+    public function handle(): int
     {
         if (!$this->confirmToProceed()) {
-            return;
+            return Command::FAILURE;
         }
 
-        $table = (string) $this->option('table');
+        $enabled = $this->resolveEnabledNormalizers();
+        if (!$this->validateNormalizers($enabled)) {
+            return Command::FAILURE;
+        }
+
+        if (count($enabled) === 0) {
+            $enabled = null;
+        }
+
         $force = false;
         //$force = (bool)$this->option('force');
         $connectionName = $this->option('database') ?? config('database.default');
@@ -90,60 +87,33 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
             ]
         );
 
-        if (!empty($table)) {
-            $this->createMigrationForSingleTable($schemaParser, $connectionName, $table);
-        } else {
-            $this->createMigrationsForWholeSchema($schemaParser, $connectionName);
-        }
+        $this->createMigrationsForWholeSchema($schemaParser, $connectionName, $enabled);
 
-        if (true === $force) {
-            /**
-             * @todo reinitialize migrations table
-             */
-        }
+        return Command::SUCCESS;
     }
 
-
-    protected function createMigrationForSingleTable(
+    protected function createMigrationsForWholeSchema(
         SchemaParserInterface $schemaParser,
         string $connectionName,
-        string $table
+        ?array $enabledNormalizer
     ): void {
+        $laravel = $this->getLaravel();
         /**
          * @var MigrationGenerator $generator
          */
-        $generator = $this->getLaravel()->make(
+        $generator = $laravel->make(
             MigrationGeneratorInterface::class,
             ['connectionName' => $connectionName]
         );
 
-        $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
-        $tables = $schemaParser->getTablesFromSchema(
-            $database
-        );
-        if (!in_array($table, $tables, true)) {
-            $this->error('Table "'.$table.'" not exists in Schema "'.$database.'"');
-        } else {
-            if (true === $generator->generateMigrationForTable($database, $table)) {
-                /**
-                 * @todo
-                 */
-            } else {
-                $this->error('there occurred an error by creating migration for '.$table);
-                $this->error(implode(', ', $generator->getErrorMessages()));
-            }
-        }
-    }
-
-    protected function createMigrationsForWholeSchema(SchemaParserInterface $schemaParser, string $connectionName): void
-    {
         /**
-         * @var MigrationGenerator $generator
+         * @var SchemaNormalizationManager $normalizer
          */
-        $generator = $this->getLaravel()->make(
-            MigrationGeneratorInterface::class,
-            ['connectionName' => $connectionName]
+        $normalizer = $laravel->make(
+            SchemaNormalizationManagerInterface::class,
+            ['enabled' => $enabledNormalizer]
         );
+        $generator->setNormalizationManager($normalizer);
 
         $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
         $tables = $schemaParser->getSortedTablesFromSchema(
@@ -162,7 +132,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
             if (true === $generator->generateMigrationForTable($database, $table, $migrationTimingDto)) {
                 $bar->advance();
             } else {
-                $this->error('there occurred an error by creating migration for '.$table);
+                $this->error('there occurred an error by creating migration for ' . $table);
                 $this->error(implode(', ', $generator->getErrorMessages()));
                 break;
             }
@@ -176,7 +146,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
     /**
      * Prepare the migration database for running.
      *
-     * @param  string|null  $database
+     * @param string|null $database
      * @return void
      */
     protected function prepareDatabase(string $database = null): void
@@ -190,5 +160,37 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
                 ['--database' => $database]
             );
         }
+    }
+
+    protected function extendSignatureWithNormalizers(): void
+    {
+        $normalizers = array_keys(Config::get('migration-generator.normalizer', []));
+
+        if (!empty($normalizers)) {
+            $choices = implode(',', $normalizers);
+            $this->signature .= ' {--normalizer=* : Enabled normalizers (available: ' . $choices . ')}';
+        }
+    }
+
+    protected function resolveEnabledNormalizers(): array
+    {
+        $input = $this->option('normalizer');
+        $config = config('migration-generator.config.defaults.normalizer.enabled', []);
+
+        return !empty($input) ? (array)$input : (array)$config;
+    }
+
+    protected function validateNormalizers(array $enabled): bool
+    {
+        $result = true;
+        $available = array_keys(config('migration-generator.normalizer', []));
+        $invalid = array_diff($enabled, $available);
+
+        if (!empty($invalid)) {
+            $this->error('Invalid normalizer(s): ' . implode(', ', $invalid));
+            $result = false;
+        }
+
+        return $result;
     }
 }

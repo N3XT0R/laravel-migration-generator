@@ -16,11 +16,11 @@ abstract class TestCase extends OrchestraTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resourceFolder = __DIR__.'/Resources/';
+        $this->resourceFolder = __DIR__ . '/Resources/';
     }
 
     /**
-     * @param  Application  $app
+     * @param Application $app
      * @return array|string[]
      */
     protected function getPackageProviders($app): array
@@ -31,7 +31,7 @@ abstract class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param  Application  $app
+     * @param Application $app
      * @return array
      */
     protected function getPackageAliases($app): array
@@ -41,7 +41,7 @@ abstract class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param  Application  $app
+     * @param Application $app
      */
     protected function getEnvironmentSetUp($app): void
     {
@@ -88,7 +88,7 @@ abstract class TestCase extends OrchestraTestCase
         if (array_key_exists($dbConfig['name'], $dbMap)) {
             $dbConfig['driver'] = $dbMap[$dbConfig['name']];
         }
-        
+
 
         $connectionParams = [
             'dbname' => $dbConfig['database'],
@@ -99,5 +99,16 @@ abstract class TestCase extends OrchestraTestCase
         ];
 
         return DriverManager::getConnection($connectionParams);
+    }
+
+    /**
+     * Get the application timezone.
+     *
+     * @param \Illuminate\Foundation\Application $app
+     * @return string|null
+     */
+    protected function getApplicationTimezone($app): ?string
+    {
+        return 'Europe/Berlin';
     }
 }

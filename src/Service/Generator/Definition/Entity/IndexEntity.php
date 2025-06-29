@@ -4,11 +4,12 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 
-class IndexEntity
+class IndexEntity extends AbstractIndexEntity
 {
     protected string $type = '';
-    protected string $name = '';
     protected array $columns = [];
+
+    protected string $indexType = 'index';
 
 
     public function getType(): string
@@ -22,22 +23,6 @@ class IndexEntity
     public function setType(string $type): void
     {
         $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
     }
 
     /**
@@ -55,5 +40,5 @@ class IndexEntity
     {
         $this->columns = $columns;
     }
-    
+
 }

@@ -23,7 +23,7 @@ class ResultEntityTest extends TestCase
 
         $this->entity->setResults($results);
         $gotResults = $this->entity->getResults();
-        $this->assertSame($results, $gotResults);
+        self::assertSame($results, $gotResults);
     }
 
     public function testSetAndGetTableNameIsSame(): void
@@ -31,7 +31,7 @@ class ResultEntityTest extends TestCase
         $tableName = uniqid('table', true);
         $this->entity->setTableName($tableName);
         $gotTableName = $this->entity->getTableName();
-        $this->assertSame($tableName, $gotTableName);
+        self::assertSame($tableName, $gotTableName);
     }
 
     /**
@@ -49,7 +49,7 @@ class ResultEntityTest extends TestCase
         }
         $this->entity->setResults($value);
 
-        $this->assertSame($expectedResult, $this->entity->hasResultForTable($tableName));
+        self::assertSame($expectedResult, $this->entity->hasResultForTable($tableName));
     }
 
     /**
@@ -69,7 +69,7 @@ class ResultEntityTest extends TestCase
         }
         $this->entity->setResults($value);
 
-        $this->assertSame($expectedResult, $this->entity->hasResultForTableNameAndKey($tableName, $key));
+        self::assertSame($expectedResult, $this->entity->hasResultForTableNameAndKey($tableName, $key));
     }
 
     public function testGetResultByTableNameAndKeyWorks(): void
@@ -78,6 +78,31 @@ class ResultEntityTest extends TestCase
         $this->entity->setResults($results);
 
         $result = $this->entity->getResultByTableNameAndKey('testTable', 'testKey');
-        $this->assertEquals(['test'], $result);
+        self::assertEquals(['test'], $result);
+    }
+
+    public function testGetResultByTableNameAndKeyReturnsEmptyArray(): void
+    {
+        $results = ['testTable' => ['testKey' => ['test']]];
+        $this->entity->setResults($results);
+
+        $result = $this->entity->getResultByTableNameAndKey('testTable2', 'testKey');
+        self::assertCount(0, $result);
+    }
+
+    public function testGetResultByTableWorks(): void
+    {
+        $results = ['testTable' => ['testKey' => ['test']]];
+        $this->entity->setResults($results);
+        $result = $this->entity->getResultByTable('testTable');
+        self::assertEquals($results['testTable'], $result);
+    }
+
+    public function testGetResultByTableReturnsEmptyArray(): void
+    {
+        $results = ['testTable' => ['testKey' => ['test']]];
+        $this->entity->setResults($results);
+        $result = $this->entity->getResultByTable('testTable2');
+        self::assertCount(0, $result);
     }
 }

@@ -44,15 +44,12 @@ class IndexDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param  array  $result
+     * @param array $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testIndexWorks(array $result): void
     {
-        /**
-         * @var IndexEntity $index
-         */
-        $index = $result['testi'];
+        $index = $this->getIndexByName('testi', $result);
         $this->assertEquals('index', $index->getType());
         $this->assertEquals('testi', $index->getName());
         $this->assertEquals(
@@ -64,15 +61,12 @@ class IndexDefinitionTest extends DbTestCase
     }
 
     /**
-     * @param  array  $result
+     * @param array $result
      */
     #[Depends('testGenerateResultShouldWork')]
     public function testUniqueIndexWorks(array $result): void
     {
-        /**
-         * @var IndexEntity $index
-         */
-        $index = $result['fields_test_medium_int_unique'];
+        $index = $this->getIndexByName('fields_test_medium_int_unique', $result);
         $this->assertEquals('unique', $index->getType());
         $this->assertEquals(
             [
@@ -80,6 +74,19 @@ class IndexDefinitionTest extends DbTestCase
             ],
             $index->getColumns()
         );
+    }
+
+    protected function getIndexByName(string $name, array $result): ?IndexEntity
+    {
+        $indexResult = null;
+        foreach ($result as $index) {
+            if ($index->getName() === $name) {
+                $indexResult = $index;
+                break;
+            }
+        }
+        self::assertInstanceOf(IndexEntity::class, $indexResult);
+        return $indexResult;
     }
 
 

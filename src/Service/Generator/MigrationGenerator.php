@@ -5,6 +5,7 @@ namespace N3XT0R\MigrationGenerator\Service\Generator;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 
 class MigrationGenerator implements MigrationGeneratorInterface
@@ -12,13 +13,21 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
     protected DefinitionResolverInterface $resolver;
     protected MigrationCompilerInterface $compiler;
+
+    protected ?SchemaNormalizationManagerInterface $normalizationManager = null;
     protected string $migrationDir = '';
     protected array $errorMessages = [];
     protected array $migrationFiles = [];
 
-    public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
-    {
-        $this->setMigrationDir(database_path().DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR);
+    public function __construct(
+        DefinitionResolverInterface $resolver,
+        MigrationCompilerInterface $compiler,
+        string $migrationDir = ''
+    ) {
+        if (empty($migrationDir)) {
+            $migrationDir = database_path() . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR;
+        }
+        $this->setMigrationDir($migrationDir);
         $this->setResolver($resolver);
         $this->setCompiler($compiler);
     }
@@ -43,6 +52,16 @@ class MigrationGenerator implements MigrationGeneratorInterface
         return $this->compiler;
     }
 
+    public function getNormalizationManager(): ?SchemaNormalizationManagerInterface
+    {
+        return $this->normalizationManager;
+    }
+
+    public function setNormalizationManager(?SchemaNormalizationManagerInterface $normalizationManager): void
+    {
+        $this->normalizationManager = $normalizationManager;
+    }
+
     /**
      * @return string
      */
@@ -52,7 +71,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
     /**
-     * @param  string  $migrationDir
+     * @param string $migrationDir
      */
     public function setMigrationDir(string $migrationDir): void
     {
@@ -68,7 +87,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
     /**
-     * @param  array  $errorMessages
+     * @param array $errorMessages
      */
     public function setErrorMessages(array $errorMessages): void
     {
@@ -89,7 +108,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     }
 
     /**
-     * @param  array  $migrationFiles
+     * @param array $migrationFiles
      */
     public function setMigrationFiles(array $migrationFiles): void
     {
@@ -99,7 +118,7 @@ class MigrationGenerator implements MigrationGeneratorInterface
     public function generateMigrationForTable(
         string $database,
         string $table,
-        MigrationTimingDto $timingDto = new MigrationTimingDto()
+        MigrationTimingDto $timingDto = new MigrationTimingDto(),
     ): bool {
         $this->setErrorMessages([]);
         $result = false;
@@ -108,9 +127,16 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
         try {
             $schemaResult = $resolver->resolveTableSchema($database, $table);
+
+            $normalizationManager = $this->getNormalizationManager();
+            if ($normalizationManager) {
+                //dd($schemaResult);
+                $schemaResult = $normalizationManager->normalize($schemaResult);
+            }
+
             $compiler->generateByResult($schemaResult);
             $result = $compiler->writeToDisk(
-                'Create'.ucfirst($table).'Table',
+                'Create' . ucfirst($table) . 'Table',
                 $this->getMigrationDir(),
                 $timingDto,
             );

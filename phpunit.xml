@@ -35,10 +35,12 @@
         <testsuite name="Integration">
             <directory suffix="Test.php">./tests/Integration</directory>
             <exclude>./tests/Integration/Service/Generator/Definition/AbstractTableDefinitionTest.php</exclude>
+            <exclude>./tests/Integration/Service/Generator/MigrationGeneratorNormalizedTest.php</exclude>
         </testsuite>
     </testsuites>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>

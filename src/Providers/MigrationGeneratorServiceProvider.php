@@ -14,8 +14,11 @@ use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManager;
+use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactory;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactoryInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
@@ -30,10 +33,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../Stubs/', 'migration-generator');
+        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
         $this->publishes(
             [
-                __DIR__.'/../Config/migration-generator.php' => config_path('migration-generator.php'),
+                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
             ],
             'migration-generator'
         );
@@ -46,24 +49,22 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../Config/migration-generator.php', 'migration-generator');
+        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
         $this->registerParserFactory();
         $this->registerParser();
         $this->registerCompilerEngine();
         $this->registerCompiler();
         $this->registerDefinitionResolver();
+        $this->registerNormalizer();
         $this->registerGenerator();
         $this->registerCommands();
     }
 
     protected function registerCommands(): void
     {
-        $this->app->singleton('command.migrate.regenerate', function ($app) {
-            return new Commands\MigrationGeneratorCommand(
-                $app['migrator'],
-                $app['composer']
-            );
-        });
+        $this->commands([
+            Commands\MigrationGeneratorCommand::class,
+        ]);
     }
 
     protected function registerParserFactory(): void
@@ -95,30 +96,22 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         );
     }
 
-    protected function getDefinitions(): array
+    protected function getConfigSection(string $key): array
     {
-        return (array) app('config')->get('migration-generator.definitions');
-    }
-
-    protected function getMapper(): array
-    {
-        return (array) app('config')->get('migration-generator.mapper');
+        return (array)$this->app['config']->get('migration-generator.' . $key);
     }
 
     protected function registerDefinitionResolver(): void
     {
-        $definitions = $this->getDefinitions();
-
-        foreach ($definitions as $definition) {
-            $this->app->bind($definition['class'], $definition['class']);
-        }
+        $definitions = $this->getConfigSection('definitions');
+        $this->bindClasses($definitions);
 
         $this->app->bind(
             DefinitionResolverInterface::class,
             static function (Application $app, array $params) use ($definitions) {
                 $key = 'connection';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
+                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
                 }
 
                 return new DefinitionResolver($params[$key], $definitions);
@@ -128,9 +121,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerGenerator(): void
     {
+        $config = $this->getConfigSection('config');
         $this->app->bind(
             MigrationGeneratorInterface::class,
-            static function (Application $app, array $params) {
+            static function (Application $app, array $params) use ($config) {
                 $dbMap = [
                     'mysql' => 'pdo_mysql',
                     'sqlite' => 'pdo_sqlite',
@@ -139,7 +133,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
+                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
                 }
 
                 /**
@@ -159,10 +153,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'driver' => $dbConfig['driver'],
                 ];
                 $connection = DriverManager::getConnection($connectionParams);
-
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
-                    $app->make(MigrationCompilerInterface::class)
+                    $app->make(MigrationCompilerInterface::class),
+                    (string)$config['migration_dir']
                 );
             }
         );
@@ -189,10 +183,8 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerCompiler(): void
     {
-        $mapper = $this->getMapper();
-        foreach ($mapper as $map) {
-            $this->app->bind($map['class'], $map['class']);
-        }
+        $mapper = $this->getConfigSection('mapper');
+        $this->bindClasses($mapper);
 
         $this->app->bind(
             MigrationCompilerInterface::class,
@@ -207,6 +199,37 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 $compiler->setMapper($mapper);
 
                 return $compiler;
+            }
+        );
+    }
+
+    protected function bindClasses(array $classes): void
+    {
+        foreach ($classes as $map) {
+            $this->app->bind($map['class'], $map['class']);
+        }
+    }
+
+
+    protected function registerNormalizer(): void
+    {
+        $normalizer = $this->getConfigSection('normalizer');
+        $this->bindClasses($normalizer);
+
+        $this->app->bind(
+            SchemaNormalizationManagerInterface::class,
+            static function (Application $app, array $params) use ($normalizer) {
+                $sortedProcessors = TopSort::sort($normalizer);
+                $enabledProcessors = null;
+                if (array_key_exists('enabled', $params)) {
+                    $enabledProcessors = (array)$params['enabled'];
+                }
+                $normalizerClasses = [];
+                foreach ($sortedProcessors as $key) {
+                    $normalizerClasses[] = $app->get($normalizer[$key]['class']);
+                }
+
+                return new SchemaNormalizationManager($normalizerClasses, $enabledProcessors);
             }
         );
     }

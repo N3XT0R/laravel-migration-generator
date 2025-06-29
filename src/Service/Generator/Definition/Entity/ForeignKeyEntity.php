@@ -4,9 +4,8 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity;
 
 
-class ForeignKeyEntity
+class ForeignKeyEntity extends AbstractIndexEntity
 {
-    protected string $name = '';
     protected string $localTable = '';
     protected string $localColumn = '';
     protected string $referencedTable = '';
@@ -14,21 +13,7 @@ class ForeignKeyEntity
     protected string $onDelete = '';
     protected string $onUpdate = '';
 
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
+    protected string $indexType = 'foreignKey';
 
     /**
      * @return string
@@ -61,7 +46,7 @@ class ForeignKeyEntity
     {
         $this->localColumn = $localColumn;
     }
-    
+
 
     /**
      * @return string

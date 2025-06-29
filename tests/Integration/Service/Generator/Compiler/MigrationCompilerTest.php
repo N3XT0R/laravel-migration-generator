@@ -6,6 +6,7 @@ namespace Tests\Integration\Service\Generator\Compiler;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\PrimaryKeyEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use Tests\Resources\Classes\CustomMigration;
 use Tests\TestCase;
@@ -40,6 +41,37 @@ class MigrationCompilerTest extends TestCase
         $this->compiler->generateByResult($result);
         $result = $this->compiler->getRenderedTemplate();
         self::assertStringEqualsFile($this->resourceFolder . '/ExpectedResults/migrationCompilerResult.txt', $result);
+    }
+
+    public function testGenerateByResultWorksWithPrimaryKey(): void
+    {
+        $fieldEntity = new FieldEntity();
+        $fieldEntity->setColumnName('test');
+        $fieldEntity->setType('bigInteger');
+        $fieldEntity->addOption('unsigned', true);
+        $fieldEntity->addArgument('autoIncrement', true);
+        $result = new ResultEntity();
+        $result->setTableName('test_table');
+
+        $primaryKey = new PrimaryKeyEntity();
+        $primaryKey->setColumns(['test']);
+        $primaryKey->setName('PRIMARY');
+
+        $result->setResults(
+            [
+                'test_table' => [
+                    'table' => [$fieldEntity],
+                    'primaryKey' => [$primaryKey],
+                ],
+            ]
+        );
+        $this->compiler->generateByResult($result);
+
+        $result = $this->compiler->getRenderedTemplate();
+        self::assertStringEqualsFile(
+            $this->resourceFolder . '/ExpectedResults/migrationCompilerResultWithPrimary.txt',
+            $result
+        );
     }
 
     public function testGenerateByResultWorksWithCustomMigration(): void
