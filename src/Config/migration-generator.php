@@ -11,7 +11,7 @@ return [
                 'enabled' => ['pivot'],
             ],
         ],
-        'migration_dir' => database_path() . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR,
+        'migration_dir' => database_path('migrations'),
     ],
     'definitions' => [
         'table' => [
