@@ -113,10 +113,11 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         string $connectionName,
         ?array $enabledNormalizer
     ): void {
+        $laravel = $this->getLaravel();
         /**
          * @var MigrationGenerator $generator
          */
-        $generator = $this->getLaravel()->make(
+        $generator = $laravel->make(
             MigrationGeneratorInterface::class,
             ['connectionName' => $connectionName]
         );
@@ -124,7 +125,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
         /**
          * @var SchemaNormalizationManager $normalizer
          */
-        $normalizer = $this->getLaravel()->make(
+        $normalizer = $laravel->make(
             SchemaNormalizationManagerInterface::class,
             ['enabled' => $enabledNormalizer]
         );
