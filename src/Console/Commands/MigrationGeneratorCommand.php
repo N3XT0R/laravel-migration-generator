@@ -53,13 +53,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
     public function __construct(MigrationCreator $creator, Composer $composer, Migrator $migrator = null)
     {
         parent::__construct($creator, $composer);
-        if (null === $migrator) {
-            /**
-             * @var Migrator $migrator
-             */
-            $migrator = app()->make('migrator');
-        }
-        $this->setMigrator($migrator);
+        $this->setMigrator($migrator ?? app()->make('migrator'));
         $this->extendSignatureWithNormalizers();
     }
 
