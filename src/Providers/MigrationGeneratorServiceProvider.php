@@ -132,7 +132,6 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     protected function registerGenerator(): void
     {
         $config = $this->getConfigSection('config');
-        dd($config);
         $this->app->bind(
             MigrationGeneratorInterface::class,
             static function (Application $app, array $params) use ($config) {
@@ -164,7 +163,6 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'driver' => $dbConfig['driver'],
                 ];
                 $connection = DriverManager::getConnection($connectionParams);
-                dd($config['migration_dir']);
 
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
