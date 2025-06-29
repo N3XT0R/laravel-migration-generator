@@ -35,7 +35,7 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     {
         $this->setEnabledProcessors($enabledProcessors);
         foreach ($processors as $processor) {
-            $this->addProcessor($processor);
+            $this->setProcessors($processor);
         }
     }
 
