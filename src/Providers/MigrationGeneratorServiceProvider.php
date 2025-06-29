@@ -6,8 +6,6 @@ use Doctrine\DBAL\DriverManager;
 use Illuminate\Contracts\Container\Container as Application;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Database\Migrations\Migrator;
-use Illuminate\Support\Composer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Engines\EngineResolver;
 use N3XT0R\MigrationGenerator\Console\Commands;
@@ -64,14 +62,6 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function registerCommands(): void
     {
-        $this->app->singleton(Commands\MigrationGeneratorCommand::class, function ($app) {
-            return new Commands\MigrationGeneratorCommand(
-                $app->make('migration.creator'),
-                $app->make(Composer::class),
-                $app->make(Migrator::class)
-            );
-        });
-
         $this->commands([
             Commands\MigrationGeneratorCommand::class,
         ]);

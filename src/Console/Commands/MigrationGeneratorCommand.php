@@ -4,10 +4,7 @@ namespace N3XT0R\MigrationGenerator\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Database\Migrations\Migrator;
-use Illuminate\Support\Composer;
 use Illuminate\Support\Facades\Config;
 use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
@@ -16,7 +13,7 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizatio
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 
-class MigrationGeneratorCommand extends MigrateMakeCommand
+class MigrationGeneratorCommand extends Command
 {
 
     use ConfirmableTrait;
@@ -43,18 +40,11 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      */
     protected $migrator;
 
-    /**
-     * MigrationGeneratorCommand constructor.
-     * @param MigrationCreator $creator
-     * @param Composer $composer
-     * @param Migrator|null $migrator
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    public function __construct(MigrationCreator $creator, Composer $composer, Migrator $migrator = null)
+    public function __construct()
     {
         $this->extendSignatureWithNormalizers();
-        parent::__construct($creator, $composer);
-        $this->setMigrator($migrator ?? app()->make('migrator'));
+        parent::__construct();
+        $this->setMigrator(app()->make('migrator'));
     }
 
     public function setMigrator(Migrator $migrator): void
