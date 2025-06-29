@@ -89,4 +89,20 @@ class ResultEntityTest extends TestCase
         $result = $this->entity->getResultByTableNameAndKey('testTable2', 'testKey');
         self::assertCount(0, $result);
     }
+
+    public function testGetResultByTableWorks(): void
+    {
+        $results = ['testTable' => ['testKey' => ['test']]];
+        $this->entity->setResults($results);
+        $result = $this->entity->getResultByTable('testTable');
+        self::assertEquals($results['testTable'], $result);
+    }
+
+    public function testGetResultByTableReturnsEmptyArray(): void
+    {
+        $results = ['testTable' => ['testKey' => ['test']]];
+        $this->entity->setResults($results);
+        $result = $this->entity->getResultByTable('testTable2');
+        self::assertCount(0, $result);
+    }
 }
