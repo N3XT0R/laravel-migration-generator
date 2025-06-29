@@ -33,6 +33,7 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
      */
     public function __construct(iterable $processors = [], ?array $enabledProcessors = null)
     {
+        $this->setEnabledProcessors($enabledProcessors);
         foreach ($processors as $processor) {
             $this->addProcessor($processor);
         }

@@ -17,4 +17,8 @@ interface SchemaNormalizationManagerInterface
     public function getProcessors(): iterable;
 
     public function setProcessors(iterable $processors = []): void;
+
+    public function setEnabledProcessors(?array $enabledProcessors): void;
+
+    public function getEnabledProcessors(): ?array;
 }
