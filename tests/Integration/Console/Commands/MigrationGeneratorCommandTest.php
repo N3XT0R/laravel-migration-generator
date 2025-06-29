@@ -8,10 +8,12 @@ use Tests\DbTestCase;
 class MigrationGeneratorCommandTest extends DbTestCase
 {
 
+    protected string $migrationPath = '';
+
     protected function setUp(): void
     {
         parent::setUp();
-        config()->set('migration-generator.config.migration_dir', $this->migrationPath);
+        $this->migrationPath = (string)config()->get('migration-generator.config.migration_dir');
 
         if (!File::exists($this->migrationPath)) {
             File::makeDirectory($this->migrationPath);
@@ -33,6 +35,6 @@ class MigrationGeneratorCommandTest extends DbTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        //File::cleanDirectory($this->migrationPath);
+        File::cleanDirectory($this->migrationPath);
     }
 }
