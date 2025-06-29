@@ -205,7 +205,6 @@ class MigrationCompiler implements MigrationCompilerInterface
 
     private function writeTemplateToFile(string $path, string $fileName, string $content): bool
     {
-        dump($path);
         $filesystem = $this->getFilesystem();
         $filePath = $path . DIRECTORY_SEPARATOR . $fileName;
         $success = false;
