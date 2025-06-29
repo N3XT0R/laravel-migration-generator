@@ -19,9 +19,15 @@ class MigrationGenerator implements MigrationGeneratorInterface
     protected array $errorMessages = [];
     protected array $migrationFiles = [];
 
-    public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler)
-    {
-        $this->setMigrationDir(database_path() . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR);
+    public function __construct(
+        DefinitionResolverInterface $resolver,
+        MigrationCompilerInterface $compiler,
+        string $migrationDir = ''
+    ) {
+        if (empty($migrationDir)) {
+            $migrationDir = database_path() . DIRECTORY_SEPARATOR . 'migrations' . DIRECTORY_SEPARATOR;
+        }
+        $this->setMigrationDir($migrationDir);
         $this->setResolver($resolver);
         $this->setCompiler($compiler);
     }

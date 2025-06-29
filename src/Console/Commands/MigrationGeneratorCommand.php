@@ -27,7 +27,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      * @var string
      */
     protected $signature = 'migrate:regenerate
-        {{--database= : The database connection to use}} '; //later for 1.1 : {{--force : force re-init in migrations-table}}
+         {--database= : The database connection to use} '; //later for 1.1 : {{--force : force re-init in migrations-table}}
 
     /**
      * The console command description.
@@ -52,9 +52,9 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
      */
     public function __construct(MigrationCreator $creator, Composer $composer, Migrator $migrator = null)
     {
+        $this->extendSignatureWithNormalizers();
         parent::__construct($creator, $composer);
         $this->setMigrator($migrator ?? app()->make('migrator'));
-        $this->extendSignatureWithNormalizers();
     }
 
     public function setMigrator(Migrator $migrator): void
@@ -185,7 +185,7 @@ class MigrationGeneratorCommand extends MigrateMakeCommand
     protected function resolveEnabledNormalizers(): array
     {
         $input = $this->option('normalizer');
-        $config = config('migration-generator.config.defaults.normalizer', []);
+        $config = config('migration-generator.config.defaults.normalizer.enabled', []);
 
         return !empty($input) ? (array)$input : (array)$config;
     }

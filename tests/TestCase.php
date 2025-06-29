@@ -12,11 +12,13 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 abstract class TestCase extends OrchestraTestCase
 {
     protected $resourceFolder = '';
+    protected string $migrationPath = '';
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->resourceFolder = __DIR__ . '/Resources/';
+        $this->migrationPath = $this->resourceFolder . '/ExpectedMigrations/run/';
     }
 
     /**

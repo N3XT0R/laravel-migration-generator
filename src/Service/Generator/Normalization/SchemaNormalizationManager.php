@@ -5,7 +5,6 @@ namespace N3XT0R\MigrationGenerator\Service\Generator\Normalization;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\NormalizationContext;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\ProcessorInterface;
-use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 
 /**
  * Coordinates the execution of schema normalization processors.
@@ -35,7 +34,7 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     {
         $this->setEnabledProcessors($enabledProcessors);
         foreach ($processors as $processor) {
-            $this->setProcessors($processor);
+            $this->addProcessor($processor);
         }
     }
 
@@ -93,9 +92,8 @@ class SchemaNormalizationManager implements SchemaNormalizationManagerInterface
     {
         $context = new NormalizationContext($result);
         $processors = $this->getProcessors();
-        $sortedProcessors = TopSort::sort($processors);
 
-        foreach ($sortedProcessors as $processor) {
+        foreach ($processors as $processor) {
             $updated = $processor->process($context);
             $context->update($updated);
         }

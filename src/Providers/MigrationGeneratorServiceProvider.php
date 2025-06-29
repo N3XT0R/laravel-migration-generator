@@ -20,6 +20,7 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizatio
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolver;
 use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
+use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactory;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactoryInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
@@ -107,7 +108,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getConfigSection(string $key): array
     {
-        return (array)app('config')->get('migration-generator.' . $key);
+        return (array)$this->app['config']->get('migration-generator.' . $key);
     }
 
     protected function registerDefinitionResolver(): void
@@ -131,6 +132,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
     protected function registerGenerator(): void
     {
         $config = $this->getConfigSection('config');
+        dd($config);
         $this->app->bind(
             MigrationGeneratorInterface::class,
             static function (Application $app, array $params) use ($config) {
@@ -162,6 +164,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                     'driver' => $dbConfig['driver'],
                 ];
                 $connection = DriverManager::getConnection($connectionParams);
+                dd($config['migration_dir']);
 
                 return new MigrationGenerator(
                     $app->make(DefinitionResolverInterface::class, ['connection' => $connection]),
@@ -229,11 +232,17 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->app->bind(
             SchemaNormalizationManagerInterface::class,
             static function (Application $app, array $params) use ($normalizer) {
+                $sortedProcessors = TopSort::sort($normalizer);
                 $enabledProcessors = null;
                 if (array_key_exists('enabled', $params)) {
                     $enabledProcessors = (array)$params['enabled'];
                 }
-                return new SchemaNormalizationManager($normalizer, $enabledProcessors);
+                $normalizerClasses = [];
+                foreach ($sortedProcessors as $key) {
+                    $normalizerClasses[] = $app->get($normalizer[$key]['class']);
+                }
+
+                return new SchemaNormalizationManager($normalizerClasses, $enabledProcessors);
             }
         );
     }
