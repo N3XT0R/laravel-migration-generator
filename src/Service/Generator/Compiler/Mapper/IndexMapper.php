@@ -47,7 +47,13 @@ class IndexMapper extends AbstractMapper
             $method .= "'" . $columns[0] . "'";
         }
 
-        $method .= ", '" . $index->getName() . "')";
+        $name = trim($index->getName());
+        if ($name !== '') {
+            $method .= ", '" . $name . "'";
+        }
+
+        $method .= ')';
+
         $methods = [$method];
 
         return $this->chainMethodsToString($methods);

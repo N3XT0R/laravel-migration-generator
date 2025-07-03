@@ -5,7 +5,7 @@ namespace Tests\Unit\Generator\Definition\Entity;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ResultEntityTest extends TestCase
 {

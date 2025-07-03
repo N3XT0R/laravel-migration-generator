@@ -6,7 +6,7 @@ namespace Tests\Unit\Generator\Compiler\Mapper;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\AbstractMapper;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class AbstractMapperTest extends TestCase
 {
@@ -45,8 +45,8 @@ class AbstractMapperTest extends TestCase
     }
 
     /**
-     * @param  array  $methods
-     * @param  string  $expectedResult
+     * @param array $methods
+     * @param string $expectedResult
      */
     #[DataProvider('chainMethodProvider')]
     public function testChainMethodsToStringWorks(array $methods, string $expectedResult): void

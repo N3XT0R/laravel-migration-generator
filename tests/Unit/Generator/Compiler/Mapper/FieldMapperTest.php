@@ -7,7 +7,7 @@ namespace Tests\Unit\Generator\Compiler\Mapper;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\FieldMapper;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class FieldMapperTest extends TestCase
 {
