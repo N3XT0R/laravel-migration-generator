@@ -5,7 +5,7 @@ namespace Tests\Unit\Generator\Definition\Entity;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ForeignKeyEntity;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class ForeignKeyEntityTest extends TestCase
 {

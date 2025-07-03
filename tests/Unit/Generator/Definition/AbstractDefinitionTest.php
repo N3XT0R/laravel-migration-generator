@@ -40,8 +40,8 @@ class AbstractDefinitionTest extends TestCase
     }
 
     /**
-     * @param  string  $attributeName
-     * @param  bool  $expectedResult
+     * @param string $attributeName
+     * @param bool $expectedResult
      * @testWith ["test", true]
      *           ["test2", false]
      */
@@ -78,7 +78,7 @@ class AbstractDefinitionTest extends TestCase
     }
 
     /**
-     * @param  bool  $expectedResult
+     * @param bool $expectedResult
      * @testWith    [true]
      *              [false]
      */

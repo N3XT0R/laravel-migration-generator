@@ -8,7 +8,7 @@ use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ResultEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Context\NormalizationContext;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\PivotProcessor;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\ProcessorInterface;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class PivotProcessorTest extends TestCase
 {

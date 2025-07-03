@@ -3,7 +3,7 @@
 namespace Generator\Definition\Entity;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\AbstractIndexEntity;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class AbstractIndexEntityTest extends TestCase
 {

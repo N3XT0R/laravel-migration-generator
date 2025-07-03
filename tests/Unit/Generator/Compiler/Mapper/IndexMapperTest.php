@@ -6,7 +6,7 @@ namespace Tests\Unit\Generator\Compiler\Mapper;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\IndexMapper;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class IndexMapperTest extends TestCase
 {

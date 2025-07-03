@@ -5,7 +5,7 @@ namespace Tests\Unit\Sort;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Sort\TopSort;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class TopSortTest extends TestCase
 {
