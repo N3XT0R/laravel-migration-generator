@@ -130,7 +130,6 @@ class MigrationGenerator implements MigrationGeneratorInterface
 
             $normalizationManager = $this->getNormalizationManager();
             if ($normalizationManager) {
-                //dd($schemaResult);
                 $schemaResult = $normalizationManager->normalize($schemaResult);
             }
 
