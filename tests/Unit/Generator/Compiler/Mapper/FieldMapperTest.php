@@ -78,8 +78,8 @@ class FieldMapperTest extends TestCase
     }
 
     /**
-     * @param array $arguments
-     * @param string $expectedResult
+     * @param  array  $arguments
+     * @param  string  $expectedResult
      */
     #[DataProvider('argumentProvider')]
     public function testMapWorksWithArgumentsAndWithoutOptions(array $arguments, string $expectedResult): void
@@ -93,7 +93,18 @@ class FieldMapperTest extends TestCase
 
         $result = $this->mapper->map($data);
         $this->assertCount(1, $result);
-        $this->assertStringContainsString(sprintf("\$table->bigInteger(%s);", "'id'" . $expectedResult), $result[0]);
+        $this->assertStringContainsString(sprintf("\$table->bigInteger(%s);", "'id'".$expectedResult), $result[0]);
+    }
+
+    public function testMapWorkWithoutArgumentsAndWithoutOptions(): void
+    {
+        $field = new FieldEntity();
+        $field->setType('bigInteger');
+        $field->setColumnName('id');
+        $data = [$field];
+        $result = $this->mapper->map($data);
+        $this->assertCount(1, $result);
+        $this->assertStringContainsString("\$table->bigInteger('id');", $result[0]);
     }
 
     public static function optionProvider(): array
@@ -139,8 +150,8 @@ class FieldMapperTest extends TestCase
     }
 
     /**
-     * @param array $options
-     * @param string $expectedResult
+     * @param  array  $options
+     * @param  string  $expectedResult
      */
     #[DataProvider('optionProvider')]
     public function testMapWorksWithArgumentsAndWithOptions(array $options, string $expectedResult): void
