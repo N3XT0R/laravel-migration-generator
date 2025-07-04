@@ -175,7 +175,7 @@ They can help adapt legacy structures for better Laravel compatibility.
 Enable a normalizer via CLI:
 
 ```bash
-php artisan migrate:regenerate --normalizer=synthetic_pk
+php artisan migrate:regenerate --normalizer=pivot
 ```
 
 Or configure it in `config/migration-generator.php`:
