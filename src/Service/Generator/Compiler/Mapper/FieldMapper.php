@@ -25,7 +25,7 @@ class FieldMapper extends AbstractMapper
         $argumentString = $this->renderArguments($fieldEntity->getArguments());
 
         $methods = [
-            $fieldEntity->getType() . "('" . $fieldEntity->getColumnName() . "'" . $argumentString . ")",
+            $fieldEntity->getType()."('".$fieldEntity->getColumnName()."'".$argumentString.")",
             ...$this->getFluentOptions($fieldEntity->getOptions()),
         ];
 
@@ -37,20 +37,18 @@ class FieldMapper extends AbstractMapper
         $args = [];
 
         foreach ($arguments as $arg) {
-            if ($arg === null) {
-                continue;
-            }
-
-            if (is_bool($arg)) {
-                $args[] = $arg ? 'true' : 'false';
-            } elseif (is_int($arg)) {
-                $args[] = $arg;
-            } else {
-                $args[] = "'" . $arg . "'";
+            if (null !== $arg) {
+                if (is_bool($arg)) {
+                    $args[] = $arg ? 'true' : 'false';
+                } elseif (is_int($arg)) {
+                    $args[] = $arg;
+                } else {
+                    $args[] = "'".$arg."'";
+                }
             }
         }
 
-        return count($args) > 0 ? ', ' . implode(', ', $args) : '';
+        return count($args) > 0 ? ', '.implode(', ', $args) : '';
     }
 
     private function getFluentOptions(array $options): array
@@ -60,7 +58,7 @@ class FieldMapper extends AbstractMapper
         if (!empty($options['default'])) {
             $methods[] = $options['default'] === 'CURRENT_TIMESTAMP'
                 ? "default(DB::raw('CURRENT_TIMESTAMP'))"
-                : "default('" . $options['default'] . "')";
+                : "default('".$options['default']."')";
         }
 
         if (!empty($options['unsigned'])) {
@@ -72,7 +70,7 @@ class FieldMapper extends AbstractMapper
         }
 
         if (!empty($options['comment'])) {
-            $methods[] = "comment('" . addcslashes($options['comment'], "\\'") . "')";
+            $methods[] = "comment('".addcslashes($options['comment'], "\\'")."')";
         }
 
         return $methods;

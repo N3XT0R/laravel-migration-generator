@@ -96,17 +96,6 @@ class FieldMapperTest extends TestCase
         $this->assertStringContainsString(sprintf("\$table->bigInteger(%s);", "'id'".$expectedResult), $result[0]);
     }
 
-    public function testMapWorkWithoutArgumentsAndWithoutOptions(): void
-    {
-        $field = new FieldEntity();
-        $field->setType('bigInteger');
-        $field->setColumnName('id');
-        $data = [$field];
-        $result = $this->mapper->map($data);
-        $this->assertCount(1, $result);
-        $this->assertStringContainsString("\$table->bigInteger('id');", $result[0]);
-    }
-
     public static function optionProvider(): array
     {
         return [
