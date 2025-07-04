@@ -30,6 +30,10 @@ seamless integration into both legacy and modern Laravel projects (Laravel 5–1
 - 🧱 Extensible design via modular definition/mapping architecture
 - 🧩 Supports Laravel 5 to 12 (EOL versions maintained in read‑only mode)
 - 🛠 Clean, testable and maintainable codebase
+- 🧠 Optional schema normalization (via `--normalizer=`), including:
+    - Synthetic primary keys for legacy tables with composite keys
+    - Automatic preservation of uniqueness constraints
+    - Better Eloquent compatibility for complex schemas
 
 ## 🔍 Feature Comparison
 
@@ -154,6 +158,33 @@ Laravel and can be reused, extended, or mapped differently.
 
 These classes transform the internal representation into **valid Laravel migration code** (PHP). You can override them
 to adjust formatting, naming conventions, or structure.
+
+## 🧰 Schema Normalizers
+
+Schema Normalizers are optional pre-processing steps that transform your database schema before migration generation.
+They can help adapt legacy structures for better Laravel compatibility.
+
+### Available Normalizers
+
+| Normalizer | Description                                                                                                                                                                                                       |
+|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `pivot`    | Replaces composite primary keys with a synthetic auto-incrementing `id()` column and converts the original composite key into a named `unique()` constraint. Useful for legacy tables incompatible with Eloquent. |
+
+### Usage
+
+Enable a normalizer via CLI:
+
+```bash
+php artisan migrate:regenerate --normalizer=synthetic_pk
+```
+
+Or configure it in `config/migration-generator.php`:
+
+```php
+'normalizer' => [
+    'enabled' => ['pivot'],
+],
+```
 
 ## 🧪 Testing
 
