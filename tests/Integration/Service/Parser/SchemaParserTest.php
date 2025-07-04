@@ -5,6 +5,7 @@ namespace Tests\Integration\Service\Parser;
 
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 use Tests\DbTestCase;
 
@@ -48,7 +49,7 @@ class SchemaParserTest extends DbTestCase
                 'users',
             ],
         };
-        
+
 
         self::assertSame($expectedTables, $tables);
     }
@@ -84,5 +85,27 @@ class SchemaParserTest extends DbTestCase
 
         self::assertCount(count($expectedTables), $tables);
         self::assertSame($expectedTables, $tables);
+    }
+
+
+    public function testSetConnectionByNameWorksWithDefaultConnection(): void
+    {
+        $defaultConnection = DB::connection();
+
+        $this->parser->setConnectionByName();
+        $connection = $this->parser->getConnection();
+
+        self::assertSame($defaultConnection->getDatabaseName(), $connection->getDatabaseName());
+    }
+
+    public function testSetConnectionByNameWorksWithCustomConnection(): void
+    {
+        $connectionName = $this->getDatabaseFromEnv();
+        $customConnection = DB::connection($connectionName);
+
+        $this->parser->setConnectionByName($connectionName);
+        $connection = $this->parser->getConnection();
+
+        self::assertSame($customConnection->getDatabaseName(), $connection->getDatabaseName());
     }
 }
