@@ -155,3 +155,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Users upgrading from versions <8.0.0 must review code for interface changes, especially related to schema parser
   usage.
 - Version 8.0.0 replaces all prior versions for Laravel 10–12; backward compatibility with old APIs is not maintained.
+
+## [8.0.1]
+
+### Chore
+
+- pushed tag with RTD-Docs
+
+## [8.1.0] – 2025-07-04
+
+### Added
+
+- Support for schema normalization via `--normalizer=pivot`.
+  This feature replaces composite primary keys with a synthetic `$table->id()` column,
+  preserving the original key as a named `UNIQUE` constraint.
+  Useful for Eloquent compatibility with legacy schemas.
