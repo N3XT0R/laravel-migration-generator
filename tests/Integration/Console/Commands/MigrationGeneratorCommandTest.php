@@ -32,6 +32,19 @@ class MigrationGeneratorCommandTest extends DbTestCase
         self::assertNotEmpty($files, 'No Migrations generated');
     }
 
+    public function testCommandGeneratesNormalizedMigrationFiles(): void
+    {
+        config()->set('migration-generator.normalizer.enabled', []);
+        config()->set('migration-generator.defaults.normalizer', []);
+        $this->artisan('migrate:regenerate', [
+            '--database' => $this->getDatabaseFromEnv(),
+            '--normalizer' => 'pivot'
+        ])
+            ->assertExitCode(0);
+        $files = File::files($this->migrationPath);
+        self::assertNotEmpty($files, 'No Migrations generated');
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
