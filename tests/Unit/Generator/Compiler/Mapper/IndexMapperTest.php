@@ -5,6 +5,7 @@ namespace Tests\Unit\Generator\Compiler\Mapper;
 
 
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Mapper\IndexMapper;
+use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\ForeignKeyEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\IndexEntity;
 use PHPUnit\Framework\TestCase;
 
@@ -20,12 +21,12 @@ class IndexMapperTest extends TestCase
 
     public function testMapWithAnyOtherDataThanIndexShouldNotWork(): void
     {
-        $data = [1, 2, 3];
+        $data = [new ForeignKeyEntity(), new IndexEntity(), new IndexEntity()];
         $this->assertCount(0, $this->mapper->map($data));
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      * @testWith    ["index"]
      *              ["unique"]
      */
@@ -39,11 +40,11 @@ class IndexMapperTest extends TestCase
         $result = $this->mapper->map([$index]);
         $this->assertCount(1, $result);
 
-        $this->assertStringContainsString('$table->' . $index->getType() . '(\'test\', \'testIndex\');', $result[0]);
+        $this->assertStringContainsString('$table->'.$index->getType().'(\'test\', \'testIndex\');', $result[0]);
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      * @testWith    ["index"]
      *              ["unique"]
      */
@@ -58,7 +59,7 @@ class IndexMapperTest extends TestCase
         $this->assertCount(1, $result);
 
         $this->assertStringContainsString(
-            '$table->' . $index->getType() . '([\'test\', \'test2\'], \'testIndex2\');',
+            '$table->'.$index->getType().'([\'test\', \'test2\'], \'testIndex2\');',
             $result[0]
         );
     }
