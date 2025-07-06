@@ -9,6 +9,8 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Engines\EngineResolver;
 use N3XT0R\MigrationGenerator\Console\Commands;
+use N3XT0R\MigrationGenerator\Service\Executor\SchemaMigrationExecutor;
+use N3XT0R\MigrationGenerator\Service\Executor\SchemaMigrationExecutorInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\Engine\ReplaceEngine;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompiler;
 use N3XT0R\MigrationGenerator\Service\Generator\Compiler\MigrationCompilerInterface;
@@ -33,10 +35,10 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../Stubs/', 'migration-generator');
+        $this->loadViewsFrom(__DIR__.'/../Stubs/', 'migration-generator');
         $this->publishes(
             [
-                __DIR__ . '/../Config/migration-generator.php' => config_path('migration-generator.php'),
+                __DIR__.'/../Config/migration-generator.php' => config_path('migration-generator.php'),
             ],
             'migration-generator'
         );
@@ -49,7 +51,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../Config/migration-generator.php', 'migration-generator');
+        $this->mergeConfigFrom(__DIR__.'/../Config/migration-generator.php', 'migration-generator');
         $this->registerParserFactory();
         $this->registerParser();
         $this->registerCompilerEngine();
@@ -57,6 +59,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
         $this->registerDefinitionResolver();
         $this->registerNormalizer();
         $this->registerGenerator();
+        $this->registerExecutor();
         $this->registerCommands();
     }
 
@@ -98,7 +101,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
     protected function getConfigSection(string $key): array
     {
-        return (array)$this->app['config']->get('migration-generator.' . $key);
+        return (array)$this->app['config']->get('migration-generator.'.$key);
     }
 
     protected function registerDefinitionResolver(): void
@@ -111,7 +114,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
             static function (Application $app, array $params) use ($definitions) {
                 $key = 'connection';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
+                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
                 }
 
                 return new DefinitionResolver($params[$key], $definitions);
@@ -133,7 +136,7 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
 
                 $key = 'connectionName';
                 if (!array_key_exists($key, $params)) {
-                    throw new \InvalidArgumentException('missing key ' . $key . ' in params.');
+                    throw new \InvalidArgumentException('missing key '.$key.' in params.');
                 }
 
                 /**
@@ -232,5 +235,18 @@ class MigrationGeneratorServiceProvider extends ServiceProvider
                 return new SchemaNormalizationManager($normalizerClasses, $enabledProcessors);
             }
         );
+    }
+
+    protected function registerExecutor(): void
+    {
+        $this->app->bind(SchemaMigrationExecutorInterface::class, function ($app, $params) {
+            if (!array_key_exists('generator', $params)) {
+                throw new \InvalidArgumentException('missing key generator in params.');
+            }
+            return new SchemaMigrationExecutor(
+                $params['generator'],
+                $params['normalizer'] ?? null
+            );
+        });
     }
 }
