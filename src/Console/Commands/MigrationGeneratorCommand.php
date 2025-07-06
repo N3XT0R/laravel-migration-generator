@@ -6,10 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Support\Facades\Config;
-use N3XT0R\MigrationGenerator\Service\Generator\DTO\MigrationTimingDto;
-use N3XT0R\MigrationGenerator\Service\Generator\MigrationGenerator;
+use N3XT0R\MigrationGenerator\Service\Executor\SchemaMigrationExecutorInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\MigrationGeneratorInterface;
-use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Normalization\SchemaNormalizationManagerInterface;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserInterface;
 
@@ -87,66 +85,32 @@ class MigrationGeneratorCommand extends Command
             ]
         );
 
-        $this->createMigrationsForWholeSchema($schemaParser, $connectionName, $enabled);
-
-        return Command::SUCCESS;
-    }
-
-    protected function createMigrationsForWholeSchema(
-        SchemaParserInterface $schemaParser,
-        string $connectionName,
-        ?array $enabledNormalizer
-    ): void {
         $laravel = $this->getLaravel();
-        /**
-         * @var MigrationGenerator $generator
-         */
         $generator = $laravel->make(
             MigrationGeneratorInterface::class,
             ['connectionName' => $connectionName]
         );
 
-        /**
-         * @var SchemaNormalizationManager $normalizer
-         */
-        $normalizer = $laravel->make(
-            SchemaNormalizationManagerInterface::class,
-            ['enabled' => $enabledNormalizer]
-        );
-        $generator->setNormalizationManager($normalizer);
-
-        $database = $this->getMigrator()->resolveConnection($connectionName)->getDatabaseName();
-        $tables = $schemaParser->getSortedTablesFromSchema(
-            $database
-        );
-        $tableAmount = count($tables);
-        $bar = $this->output->createProgressBar($tableAmount);
-        $bar->setFormat('verbose');
-        $bar->start();
-        $migrationTimingDto = new MigrationTimingDto();
-        $migrationTimingDto->setMaxAmount($tableAmount);
-        $migrationTimingDto->setTimestamp(time());
-
-        foreach ($tables as $num => $table) {
-            $migrationTimingDto->setCurrentAmount($num);
-            if (true === $generator->generateMigrationForTable($database, $table, $migrationTimingDto)) {
-                $bar->advance();
-            } else {
-                $this->error('there occurred an error by creating migration for ' . $table);
-                $this->error(implode(', ', $generator->getErrorMessages()));
-                break;
-            }
+        $normalizer = null;
+        if (count($enabled) > 0) {
+            $normalizer = $laravel->make(
+                SchemaNormalizationManagerInterface::class,
+                ['enabled' => $enabled]
+            );
         }
 
-        $bar->finish();
-        $this->line('');
-    }
+        $executor = $laravel->make(SchemaMigrationExecutorInterface::class, [
+            'generator' => $generator,
+            'normalizer' => $normalizer
+        ]);
 
+        return $executor->run($schemaParser, $connectionName, $this->output);
+    }
 
     /**
      * Prepare the migration database for running.
      *
-     * @param string|null $database
+     * @param  string|null  $database
      * @return void
      */
     protected function prepareDatabase(string $database = null): void
@@ -168,7 +132,7 @@ class MigrationGeneratorCommand extends Command
 
         if (!empty($normalizers)) {
             $choices = implode(',', $normalizers);
-            $this->signature .= ' {--normalizer=* : Enabled normalizers (available: ' . $choices . ')}';
+            $this->signature .= ' {--normalizer=* : Enabled normalizers (available: '.$choices.')}';
         }
     }
 
@@ -187,7 +151,7 @@ class MigrationGeneratorCommand extends Command
         $invalid = array_diff($enabled, $available);
 
         if (!empty($invalid)) {
-            $this->error('Invalid normalizer(s): ' . implode(', ', $invalid));
+            $this->error('Invalid normalizer(s): '.implode(', ', $invalid));
             $result = false;
         }
 
