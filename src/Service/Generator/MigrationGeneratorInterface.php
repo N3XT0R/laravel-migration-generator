@@ -11,12 +11,11 @@ use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInter
 
 interface MigrationGeneratorInterface
 {
-    public function __construct(DefinitionResolverInterface $resolver, MigrationCompilerInterface $compiler);
 
     public function setMigrationDir(string $migrationDir): void;
 
     public function setResolver(DefinitionResolverInterface $resolver): void;
-    
+
     public function getResolver(): DefinitionResolverInterface;
 
     public function setCompiler(MigrationCompilerInterface $compiler): void;

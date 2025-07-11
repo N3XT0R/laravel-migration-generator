@@ -7,8 +7,6 @@ use N3XT0R\MigrationGenerator\Service\Generator\Normalization\Processors\Process
 
 interface SchemaNormalizationManagerInterface
 {
-    public function __construct(iterable $processors = []);
-
 
     public function addProcessor(ProcessorInterface $processor): void;
 
