@@ -179,3 +179,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Refactored MigrationGeneratorCommand to delegate migration execution to the new SchemaMigrationExecutor, aligning with
   the Separation of Concerns (SoC) principle.
 - Normalizer resolution is now conditional and injected only if active normalizers are defined.
+
+## [Unreleased]
+
+### Changed
+
+- Removed `__construct()` method definitions from `MigrationGeneratorInterface` and
+  `SchemaNormalizationManagerInterface` to improve consistency and comply with the Interface Segregation Principle (
+  SOLID). Thanks to Sven for the valuable input.
