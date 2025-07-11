@@ -5,12 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [master] - 2022-02-17
-
-## Changed
-
-- migrating away from travis for CI.
-
 ## [2.0.0] - 2021-01-16
 
 ### Added
@@ -170,3 +164,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   This feature replaces composite primary keys with a synthetic `$table->id()` column,
   preserving the original key as a named `UNIQUE` constraint.
   Useful for Eloquent compatibility with legacy schemas.
+
+## [8.2.0] – 2025-07-06
+
+### Added
+
+- Introduced SchemaMigrationExecutor and corresponding interface to separate execution logic from console command (
+  MigrationGeneratorCommand).
+- Added support for Laravel's container instantiation of SchemaMigrationExecutorInterface via service provider.
+- Enabled optional injection of SchemaNormalizationManagerInterface into executor for improved configurability.
+
+### Changed
+
+- Refactored MigrationGeneratorCommand to delegate migration execution to the new SchemaMigrationExecutor, aligning with
+  the Separation of Concerns (SoC) principle.
+- Normalizer resolution is now conditional and injected only if active normalizers are defined.
