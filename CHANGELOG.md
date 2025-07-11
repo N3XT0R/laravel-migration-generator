@@ -186,4 +186,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Removed `__construct()` method definitions from `MigrationGeneratorInterface` and
   `SchemaNormalizationManagerInterface` to improve consistency and comply with the Interface Segregation Principle (
-  SOLID). Thanks to Sven for the valuable input.
+  SOLID). Input by Sven helped identify the inconsistency – thanks!
