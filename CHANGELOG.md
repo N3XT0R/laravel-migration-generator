@@ -179,3 +179,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Refactored MigrationGeneratorCommand to delegate migration execution to the new SchemaMigrationExecutor, aligning with
   the Separation of Concerns (SoC) principle.
 - Normalizer resolution is now conditional and injected only if active normalizers are defined.
+
+## [8.3.0] – 2025-10-26
+
+### Changed
+
+- Updated laravel dependencies
