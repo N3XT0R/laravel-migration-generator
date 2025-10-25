@@ -184,4 +184,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Updated all composer dependencies
+- Maintenance release with dependency updates and stability improvements
