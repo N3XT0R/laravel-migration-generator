@@ -4,6 +4,7 @@ namespace Service\Parser;
 
 use Illuminate\Database\Connection;
 use N3XT0R\MigrationGenerator\Service\Parser\Drivers\MSSQLSchemaParser;
+use N3XT0R\MigrationGenerator\Service\Parser\Drivers\MySQL8SchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\Drivers\MySQLSchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\Drivers\PostgresSchemaParser;
 use N3XT0R\MigrationGenerator\Service\Parser\SchemaParserFactory;

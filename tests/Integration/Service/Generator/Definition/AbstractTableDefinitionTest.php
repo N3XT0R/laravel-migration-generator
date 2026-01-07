@@ -4,6 +4,7 @@ namespace Tests\Integration\Service\Generator\Definition;
 
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\FieldEntity;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\TableDefinition;
+use N3XT0R\MigrationGenerator\Service\Generator\Resolver\DefinitionResolverInterface;
 use PHPUnit\Framework\Attributes\Depends;
 use Tests\DbTestCase;
 
@@ -12,13 +13,15 @@ abstract class AbstractTableDefinitionTest extends DbTestCase
 
     protected string $dbConnection = '';
 
-    protected $definition;
+    protected TableDefinition $definition;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->skipUnlessDatabase($this->dbConnection);
-        $schema = $this->getDoctrineConnection($this->getDatabaseManager())->createSchemaManager();
+        $doctrine = $this->getDoctrineConnection($this->getDatabaseManager());
+        $this->app->make(DefinitionResolverInterface::class, ['connection' => $doctrine]);
+        $schema = $doctrine->createSchemaManager();
 
         $definition = new TableDefinition();
         $definition->setSchema($schema);
@@ -31,7 +34,7 @@ abstract class AbstractTableDefinitionTest extends DbTestCase
     {
         $this->definition->generate();
         $result = $this->definition->getResult();
-        $this->assertCount(14, $result);
+        $this->assertCount(15, $result);
         $this->assertContainsOnlyInstancesOf(FieldEntity::class, $result);
         foreach (array_keys($result) as $key) {
             $this->assertIsString($key);
