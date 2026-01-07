@@ -4,6 +4,7 @@
 namespace N3XT0R\MigrationGenerator\Service\Generator\Resolver;
 
 use Doctrine\DBAL\Connection as DoctrineConnection;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\DefinitionInterface;
 use N3XT0R\MigrationGenerator\Service\Generator\Definition\Entity\AbstractIndexEntity;
@@ -17,9 +18,9 @@ class DefinitionResolver extends AbstractResolver implements DoctrineTypeMapping
         $databasePlatform = $doctrineConnection->getDatabasePlatform();
 
         if ($databasePlatform) {
-            /**
-             * @todo implement own types for doctrineRegistry
-             */
+            if ($databasePlatform instanceof MySQLPlatform) {
+                $databasePlatform->registerDoctrineTypeMapping('enum', 'string');
+            }
         }
     }
 
