@@ -2,7 +2,7 @@
 
 project = 'Laravel Migration Generator'
 author = 'N3XT0R'
-release = '8.4.0'
+release = '8.4.1'
 version = release
 
 
