@@ -192,16 +192,16 @@ To run the tests:
 
 ```bash
 # mysql 5.7
-DB_CONNECTION=mysql DB_HOST=db_migration DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+DB_CONNECTION=mysql DB_HOST=db_migration DB_PASSWORD=your_password ./vendor/bin/phpunit
 
 # mysql 8
-DB_CONNECTION=mysql DB_HOST=mysql8 DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+DB_CONNECTION=mysql DB_HOST=mysql8 DB_PASSWORD=your_password ./vendor/bin/phpunit
 
 #postgres
-DB_CONNECTION=pgsql DB_HOST=postgres DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+DB_CONNECTION=pgsql DB_HOST=postgres DB_PASSWORD=your_password ./vendor/bin/phpunit
 
 # mssql
-DB_CONNECTION=sqlsrv DB_HOST=mssql DB_PASSWORD=dein_db_passwort ./vendor/bin/phpunit
+DB_CONNECTION=sqlsrv DB_HOST=mssql DB_PASSWORD=your_password ./vendor/bin/phpunit
 
 ```
 
