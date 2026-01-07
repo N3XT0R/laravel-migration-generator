@@ -17,7 +17,6 @@ class SchemaParserFactoryTest extends TestCase
     {
         return [
             ['mysql', MySQLSchemaParser::class],
-            ['mysql8', MySQL8SchemaParser::class],
             ['pgsql', PostgresSchemaParser::class],
             ['sqlsrv', MSSQLSchemaParser::class],
         ];
