@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.4-cli
 
 RUN apt-get update \
  && apt-get install -y unzip curl libzip-dev zlib1g-dev libpng-dev libjpeg-dev \
@@ -7,10 +7,14 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Microsoft ODBC Driver for SQL Server (Linux)
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
- && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list \
+RUN curl https://packages.microsoft.com/keys/microsoft.asc \
+    | gpg --dearmor \
+    | tee /usr/share/keyrings/microsoft.gpg > /dev/null \
+ && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] \
+    https://packages.microsoft.com/debian/12/prod bookworm main" \
+    > /etc/apt/sources.list.d/mssql-release.list \
  && apt-get update \
- && ACCEPT_EULA=Y apt-get install -y msodbcsql17
+ && ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
 
 # PHP Extensions
