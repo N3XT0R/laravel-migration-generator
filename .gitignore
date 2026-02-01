@@ -6,3 +6,4 @@ build/
 /coverage/clover.xml
 .hadolint.yaml
 .yamllint.yaml
+composer.lock
