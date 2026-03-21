@@ -63,9 +63,10 @@ seamless integration into both legacy and modern Laravel projects (Laravel 5–1
 | 10.x          | 8.1 – 8.3   | 5.0.0             | ❌ EOL                  |
 | 10.x          | 8.1 – 8.3   | 8.3.0 >= 8.0.0    | ❌ EOL                  |
 | 11.x          | 8.2 – 8.4   | 6.0.0             | ❌ EOL                  |
-| 11.x          | 8.2 – 8.4   | 8.x               | ⚠️ Security fixes only |
+| 11.x          | 8.2 – 8.4   | 8.x               | ❌ EOL                  |
 | 12.x          | 8.2 – 8.4   | 7.0.0             | ❌ EOL                  |
-| 12.x          | 8.2 – 8.5   | 8.x               | ✅ Supported            |
+| 12.x          | 8.2 – 8.5   | 8.x               | ⚠️ Security fixes only |
+| 13.x          | 8.3 – 8.5   | 9.x               | ✅ Supported            |
 
 > ⚠️ **Important:** Version 8.0.0 introduces breaking API changes for **Laravel 10–12**.  
 > All supported Laravel versions receive the new features and updated APIs, requiring updates to dependent code.
