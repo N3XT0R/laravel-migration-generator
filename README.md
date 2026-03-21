@@ -7,6 +7,7 @@
 [![License](https://poser.pugx.org/n3xt0r/laravel-migration-generator/license)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 [![Docs](https://img.shields.io/badge/docs-readthedocs-blue)](https://laravel-migration-generator.readthedocs.io/)
 [![DB Support](https://img.shields.io/badge/Database%20Support-MySQL%20%2F%20MariaDB%20%7C%20PostgreSQL%20%7C%20MSSQL-blueviolet)](https://laravel-migration-generator.readthedocs.io/)
+[![Total Downloads](https://img.shields.io/packagist/dt/n3xt0r/laravel-migration-generator.svg?style=flat-square)](https://packagist.org/packages/n3xt0r/laravel-migration-generator)
 
 > 🧱 **Original project launched in May 2020. Recently reactivated and extended with full CI coverage and support for
 PostgreSQL, MariaDB, MSSQL and MySQL 8.**
