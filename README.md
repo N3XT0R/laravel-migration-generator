@@ -101,7 +101,7 @@ The generator works with all major engines:
 
 ## ⚙ Requirements
 
-- PHP ≥ 8.2
+- PHP ≥ 8.3
     - `pdo_mysql`, `pdo_pgsql` or `pdo_sqlsrv` (depending on your database)
 - MySQL ≥ 5.7, PostgreSQL 15 or MSSQL 2022
 
