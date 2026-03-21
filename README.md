@@ -209,19 +209,6 @@ DB_CONNECTION=sqlsrv DB_HOST=mssql DB_PASSWORD=your_password ./vendor/bin/phpuni
 
 Docker and CI pipelines are already integrated for continuous validation and quality assurance.
 
-## ✅ CI Test Matrix
-
-This package undergoes continuous integration with GitHub Actions, running tests on an extensive environment matrix
-covering Laravel, PHP, and MySQL versions to guarantee robust compatibility and stability.
-
-| Laravel Version | PHP Versions  | MySQL Versions | Number of Jobs |
-|-----------------|---------------|----------------|----------------|
-| 10              | 8.2, 8.3      | 5.7, 8.0       | 4              |
-| 11              | 8.2, 8.3, 8.4 | 5.7, 8.0       | 6              |
-| 12              | 8.2, 8.3, 8.4 | 5.7, 8.0       | 6              |
-
-**Total: 16 unique MySQL jobs** plus additional tests for PostgreSQL and MSSQL.
-
 ### Key CI features include:
 
 - Dynamic installation of Laravel versions during test runs via Composer.
