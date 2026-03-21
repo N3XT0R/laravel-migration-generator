@@ -14,7 +14,7 @@ We aim to respond to all valid reports within **72 hours** and will coordinate d
 
 | Version | Status        | Notes                     |
 |---------|---------------|---------------------------|
-| 8.x     | ✅ Supported   | Actively maintained       |
+| 9.x     | ✅ Supported   | Actively maintained       |
 | < 8.0   | ❌ Unsupported | Legacy, no security fixes |
 
 If you're using an unsupported version, we strongly recommend upgrading to the latest stable release.
