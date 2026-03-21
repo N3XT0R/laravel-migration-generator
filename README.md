@@ -12,8 +12,8 @@
 > 🧱 **Original project launched in May 2020. Recently reactivated and extended with full CI coverage and support for
 PostgreSQL, MariaDB, MSSQL and MySQL 8.**
 >
-> ✅ **CI:** Successfully tested across **MySQL 5.7/8.0**, **PostgreSQL 15**, and **MSSQL 2022** – on **Laravel 10–12**
-> and **PHP 8.2–8.4**.
+> ✅ **CI:** Successfully tested across **MySQL 5.7/8.0**, **PostgreSQL 15**, and **MSSQL 2022** – on **Laravel 12-13**
+> and **PHP 8.3–8.5**.
 
 ## 📦 Overview
 
@@ -22,7 +22,7 @@ _A powerful CLI tool to generate Laravel migration files from an existing MySQL,
 
 This tool provides a structured and extensible approach to reverse‑engineering database schemas into Laravel‑compatible
 migration files. It supports foreign key constraints, correct dependency order and customizable mapping logic – enabling
-seamless integration into both legacy and modern Laravel projects (Laravel 5–12 supported).
+seamless integration into both legacy and modern Laravel projects (Laravel 5–13 supported).
 
 ## ✨ Features
 
@@ -41,7 +41,7 @@ seamless integration into both legacy and modern Laravel projects (Laravel 5–1
 | Feature / Tool                     | This Package (N3XT0R)               | kitloong                           | bennett‑treptow      | Xethron             |
 |------------------------------------|-------------------------------------|------------------------------------|----------------------|---------------------|
 | 🛠️ Supported Databases            | ✅ MySQL, PostgreSQL, MSSQL          | ✅ MySQL, PostgreSQL, MSSQL, SQLite | ✅ MySQL only         | ✅ MySQL only        |
-| ⚙ Laravel Compatibility            | ✅ 5–12 (version-aware testing)      | ✅ 5–10+                            | ⚠️ up to Laravel 11  | ❌ Legacy only       |
+| ⚙ Laravel Compatibility            | ✅ 5–13 (version-aware testing)      | ✅ 5–10+                            | ⚠️ up to Laravel 11  | ❌ Legacy only       |
 | 🧪 CI/CD with Matrix Testing       | ✅ Full GitHub Actions matrix        | ❌ Partial                          | ❌ Partial            | ❌ None              |
 | 🧩 Extensible Mapping Architecture | ✅ Yes (definition + mapping layers) | ❌ Monolithic                       | ❌ No                 | ❌ No                |
 | 🔒 Actively Maintained             | ✅ Yes (since 2023)                  | ✅ Yes                              | ✅ Partially          | ❌ No                |
